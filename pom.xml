@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <dotenv.version>5.2.2</dotenv.version>
     </properties>
 
     <dependencies>
@@ -42,6 +43,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>annotationProcessor</scope>
+        </dependency>
+        <!--DotEnv-->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>${dotenv.version}</version>
         </dependency>
     </dependencies>
 
