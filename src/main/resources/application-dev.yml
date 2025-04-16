@@ -1,0 +1,27 @@
+server:
+  port: 9090
+  ssl:
+    key-store: classpath:static/security/keystore.p12
+    key-store-password: mypassword
+    key-password: mypassword
+    key-alias: mykey
+    enabled: true
+  servlet:
+    context-path: /api
+
+
+spring:
+  application:
+    name: master-service-dev
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
