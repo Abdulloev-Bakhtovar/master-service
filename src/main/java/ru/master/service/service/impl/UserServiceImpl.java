@@ -5,13 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constants.Role;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.UserMapper;
 import ru.master.service.model.dto.request.UserDto;
 import ru.master.service.repository.UserRepo;
 import ru.master.service.service.SmsService;
 import ru.master.service.service.UserService;
-import ru.master.service.service.VerificationCodeService;
+import ru.master.service.service.VerificationService;
+
+import java.util.Arrays;
 
 @Service
 @Transactional
@@ -20,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
     private final UserMapper userMapper;
-    private final VerificationCodeService verificationCodeService;
+    private final VerificationService verificationService;
     private final SmsService smsService;
 
     @Override
@@ -33,10 +36,17 @@ public class UserServiceImpl implements UserService {
             );
         }
 
+        if (dto.getRole() == null || Arrays.stream(Role.values()).noneMatch(r -> r == dto.getRole())) {
+            throw new AppException(
+                    ErrorMessage.INVALID_ROLE,
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
         var user = userMapper.toEntity(dto);
         userRepo.save(user);
 
-        String code = verificationCodeService.saveCode(dto.getPhoneNumber());
+        String code = verificationService.saveCode(dto.getPhoneNumber());
         smsService.sendVerificationCode(dto.getPhoneNumber(), code);
     }
 }
