@@ -3,8 +3,7 @@ package ru.master.service.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.master.service.enums.Education;
-import ru.master.service.enums.MaritalStatus;
+import ru.master.service.enums.Role;
 
 @Getter
 @Setter
@@ -16,17 +15,8 @@ import ru.master.service.enums.MaritalStatus;
 public class User extends TimestampedEntity {
 
     String phoneNumber;
-    String firstName;
-    String lastName;
-    String city;
-    String email;
-    String profileImagePath;
-    Integer workExperience;
-    Boolean hasCriminalRecord;
+    boolean isVerified;
 
     @Enumerated(EnumType.STRING)
-    MaritalStatus maritalStatus;
-
-    @Enumerated(EnumType.STRING)
-    Education education;
+    private Role role;
 }
