@@ -1,10 +1,11 @@
-package ru.master.service.controller;
+package ru.master.service.auth.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.model.dto.request.UserDto;
-import ru.master.service.service.UserService;
+import ru.master.service.auth.model.dto.UserDto;
+import ru.master.service.auth.service.UserService;
+import ru.master.service.auth.model.dto.PhoneNumberDto;
 
 @RestController
 @RequestMapping("/auth")
@@ -17,5 +18,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody UserDto userDto) {
         userService.register(userDto);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public void login(@RequestBody PhoneNumberDto loginDto) {
+        userService.login(loginDto);
     }
 }
