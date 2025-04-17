@@ -1,4 +1,4 @@
-package ru.master.service.model.dto.request;
+package ru.master.service.auth.model.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
