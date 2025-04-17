@@ -1,4 +1,4 @@
-package ru.master.service.service;
+package ru.master.service.auth.service;
 
 public interface SmsService {
 

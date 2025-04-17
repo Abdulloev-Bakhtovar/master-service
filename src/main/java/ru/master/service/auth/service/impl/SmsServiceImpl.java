@@ -1,8 +1,8 @@
-package ru.master.service.service.impl;
+package ru.master.service.auth.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.master.service.service.SmsService;
+import ru.master.service.auth.service.SmsService;
 
 @Service
 @RequiredArgsConstructor
