@@ -1,4 +1,4 @@
-package ru.master.service.enums;
+package ru.master.service.constants;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

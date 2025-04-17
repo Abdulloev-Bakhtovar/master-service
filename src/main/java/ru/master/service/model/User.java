@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.master.service.enums.Role;
+import ru.master.service.constants.Role;
 
 @Getter
 @Setter
