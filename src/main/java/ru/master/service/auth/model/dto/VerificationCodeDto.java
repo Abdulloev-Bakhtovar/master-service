@@ -1,4 +1,4 @@
-package ru.master.service.model.dto.request;
+package ru.master.service.auth.model.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VerificationDto extends ResendCodeDto {
+public class VerificationCodeDto extends PhoneNumberDto {
 
     String code;
 }
