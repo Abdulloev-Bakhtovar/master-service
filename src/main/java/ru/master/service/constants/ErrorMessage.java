@@ -1,6 +1,7 @@
 package ru.master.service.constants;
 
 public class ErrorMessage {
+
     public static final String USER_ALREADY_EXISTS           = "User with phone number already exists.";
     public static final String USER_NOT_FOUND                = "User not found.";
     public static final String INVALID_ROLE                  = "Invalid role provided.";
@@ -8,4 +9,6 @@ public class ErrorMessage {
     public static final String CODE_EXPIRED_OR_NOT_FOUND     = "Verification code expired or not found.";
     public static final String INVALID_VERIFICATION_CODE     = "Invalid verification code.";
     public static final String USER_ALREADY_VERIFIED         = "User is already verified.";
+    public static final String ASSIGN_ADMIN_ROLE_FORBIDDEN   = "Only administrators can assign the ADMIN role";
+    public static final String USER_NOT_VERIFIED             = "User phone number is not verified";
 }
