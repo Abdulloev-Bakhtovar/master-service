@@ -25,6 +25,7 @@ spring:
     properties:
       hibernate:
         show_sql: true
+    open-in-view: false
 
   data:
     redis:
@@ -37,3 +38,39 @@ application:
     prefix: "verify:"
     ttl-minutes: 5
     code-length: 6
+
+  security:
+    jwt:
+      access-token:
+        expiration: 30 #minute
+      refresh-token:
+        expiration: 14400 #minute -> 10 day
+      keys:
+        public: ${JWT_PUBLIC_KEY_PATH}
+        private: ${JWT_PRIVATE_KEY_PATH}
+
+    cors-allowed-origins:
+      - "http://localhost:3000"
+      - "https://localhost:3000"
+      - "http://localhost:9090"
+      - "https://localhost:9090"
+    public-endpoints:
+      - "/auth/register"
+      - "/auth/verify"
+      - "/auth/resend-code"
+      - "/auth/login"
+      - "/auth/get-all-code"
+      - "/auth/refresh"
+      - "/v2/api-docs"
+      - "/v3/api-docs/**"
+      - "/swagger-resources/**"
+      - "/configuration/**"
+      - "/swagger-ui/**"
+      - "/webjars/**"
+    excluded-paths:
+      - "/api/auth/register"
+      - "/api/auth/verify"
+      - "/api/auth/resend-code"
+      - "/api/auth/login"
+      - "/api/auth/get-all-code"
+      - "/api/auth/refresh"
