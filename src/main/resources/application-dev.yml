@@ -1,5 +1,5 @@
 server:
-  port: 9090
+  port: 9093
   ssl:
     key-store: classpath:static/security/keystore.p12
     key-store-password: mypassword
@@ -25,3 +25,15 @@ spring:
     properties:
       hibernate:
         show_sql: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+
+application:
+  sms-verification:
+    prefix: "verify:"
+    ttl-minutes: 5
+    code-length: 6
