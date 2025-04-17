@@ -11,7 +11,7 @@ import ru.master.service.constants.Role;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
+public class UserDto extends TimestampedDto {
 
     String phoneNumber;
     boolean isVerified;
