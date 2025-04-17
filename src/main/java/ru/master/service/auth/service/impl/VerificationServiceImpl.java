@@ -1,20 +1,25 @@
-package ru.master.service.service.impl;
+package ru.master.service.auth.service.impl;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.auth.mapper.TokenMapper;
+import ru.master.service.auth.model.User;
+import ru.master.service.auth.model.dto.TokenDto;
+import ru.master.service.auth.repository.UserRepo;
+import ru.master.service.auth.service.JwtService;
+import ru.master.service.auth.service.SmsService;
+import ru.master.service.auth.service.VerificationService;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
-import ru.master.service.model.User;
-import ru.master.service.model.dto.request.ResendCodeDto;
-import ru.master.service.model.dto.request.VerificationDto;
-import ru.master.service.repository.UserRepo;
-import ru.master.service.service.SmsService;
-import ru.master.service.service.VerificationService;
+import ru.master.service.auth.model.dto.PhoneNumberDto;
+import ru.master.service.auth.model.dto.VerificationCodeDto;
 import ru.master.service.util.CodeGeneratorUtil;
+import ru.master.service.util.CookieUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +33,9 @@ public class VerificationServiceImpl implements VerificationService {
     private final SmsService smsService;
     private final RedisTemplate<String, String> redisTemplate;
     private final UserRepo userRepo;
+    private final JwtService jwtService;
+    private final CookieUtil cookieUtil;
+    private final TokenMapper tokenMapper;
 
     @Value("${application.sms-verification.prefix}")
     private String prefix;
@@ -59,7 +67,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     @Transactional
-    public void verifyCode(VerificationDto dto) {
+    public TokenDto verifyCode(VerificationCodeDto dto, HttpServletResponse response) {
         String key = prefix + dto.getPhoneNumber();
         String storedCode = redisTemplate.opsForValue().get(key);
 
@@ -78,12 +86,22 @@ public class VerificationServiceImpl implements VerificationService {
         }
 
         var user = getByPhoneNumber(dto.getPhoneNumber());
-        updateVerified(user);
+
+        if (!user.isVerified()){
+            updateVerified(user);
+        }
         redisTemplate.delete(key);
+
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        cookieUtil.addRefreshTokenToCookie(response, refreshToken);
+
+        return tokenMapper.toDto(accessToken);
     }
 
     @Override
-    public void resendCode(ResendCodeDto dto) {
+    public void resendCode(PhoneNumberDto dto) {
 
         var user = getByPhoneNumber(dto.getPhoneNumber());
 
