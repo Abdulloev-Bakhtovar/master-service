@@ -25,10 +25,20 @@ public class ErrorMessage {
     public static final String INVALID_TOKEN_TYPE = "Invalid token type";
     public static final String ONLY_ACCESS_TOKENS_ALLOWED = "Only access tokens are allowed";
     public static final String TOKEN_EXPIRED = "Token expired";
+    public static final String MALFORMED_JWT_TOKEN = "JWT token is malformed";
+    public static final String MISSING_JWT_ROLES = "JWT token missing required roles";
+
+    // JWT Key related
+    public static final String PRIVATE_KEY_FILE_NOT_FOUND = "Private key file not found. Please check the file path.";
+    public static final String PUBLIC_KEY_FILE_NOT_FOUND = "Public key file not found. Please check the file path.";
+    public static final String JWT_SIGNING_ERROR = "Error while signing JWT";
+    public static final String JWT_PARSING_ERROR = "Error while parsing JWT";
 
     // Client profile
     public static final String CLIENT_PROFILE_EXISTS = "Client profile already exists for this user";
     public static final String USER_AGREEMENT_ALREADY_EXISTS = "User agreement already exists for this user";
-    public static final String CITY_ALREADY_EXISTS = "City with name already exists.";;
+
+    // City related
+    public static final String CITY_ALREADY_EXISTS = "City with name already exists.";
     public static final String CITY_NOT_FOUND = "City not found with specified ID";
 }
