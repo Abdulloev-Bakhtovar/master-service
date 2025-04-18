@@ -13,4 +13,5 @@ import lombok.experimental.SuperBuilder;
 public class ClientProfileDto extends BaseProfileDto {
 
     String address;
+    UserAgreementDto userAgreementDto;
 }
