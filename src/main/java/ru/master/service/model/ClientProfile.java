@@ -14,7 +14,7 @@ import ru.master.service.auth.model.User;
 @AllArgsConstructor
 @Table(name = "client_profiles")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClientProfile extends TimestampedEntity {
+public class ClientProfile extends BaseProfile {
 
     String address;
 

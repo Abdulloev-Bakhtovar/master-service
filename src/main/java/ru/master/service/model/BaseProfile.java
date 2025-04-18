@@ -1,5 +1,8 @@
 package ru.master.service.model;
 
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -16,5 +19,8 @@ public abstract class BaseProfile extends TimestampedEntity {
 
     String firstName;
     String lastName;
-    String city;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    City city;
 }
