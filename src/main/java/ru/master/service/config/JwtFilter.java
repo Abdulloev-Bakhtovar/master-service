@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.service.JwtService;
 import ru.master.service.auth.service.TokenBlacklistService;
+import ru.master.service.constants.ErrorMessage;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -49,12 +50,12 @@ public class JwtFilter extends OncePerRequestFilter {
         userPhoneNumber = jwtService.extractPhoneNumber(jwt);
 
         if (!jwtService.isAccessToken(jwt)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Only access tokens are allowed");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorMessage.ONLY_ACCESS_TOKENS_ALLOWED);
             return;
         }
 
         if (tokenBlacklistService.isBlacklisted(jwt)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has been revoked");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorMessage.TOKEN_REVOKED);
             return;
         }
 
