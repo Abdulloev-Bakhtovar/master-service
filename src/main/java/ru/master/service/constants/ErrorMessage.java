@@ -25,4 +25,10 @@ public class ErrorMessage {
     public static final String INVALID_TOKEN_TYPE = "Invalid token type";
     public static final String ONLY_ACCESS_TOKENS_ALLOWED = "Only access tokens are allowed";
     public static final String TOKEN_EXPIRED = "Token expired";
+
+    // Client profile
+    public static final String CLIENT_PROFILE_EXISTS = "Client profile already exists for this user";
+    public static final String USER_AGREEMENT_ALREADY_EXISTS = "User agreement already exists for this user";
+    public static final String CITY_ALREADY_EXISTS = "City with name already exists.";;
+    public static final String CITY_NOT_FOUND = "City not found with specified ID";
 }
