@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ru.master.service.auth.model.TokenClaims;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.service.JwtService;
+import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.util.KeyProviderUtil;
 
@@ -69,7 +70,7 @@ public class JwtServiceImpl implements JwtService {
         List<?> roles = extractClaim(jwt, claims -> claims.get("roles", List.class));
 
         if (roles == null || roles.isEmpty()) {
-            throw new AppException("JWT token is malformed", HttpStatus.BAD_REQUEST);
+            throw new AppException(ErrorMessage.MISSING_JWT_ROLES, HttpStatus.BAD_REQUEST);
         }
 
         return roles.stream()
@@ -117,33 +118,35 @@ public class JwtServiceImpl implements JwtService {
                     .signWith(privateKey)
                     .compact();
         } catch (NoSuchFileException ex) {
-            throw new AppException("Private key file not found. Please check the file path.",
-                    HttpStatus.NOT_FOUND);
+            throw new AppException(ErrorMessage.PRIVATE_KEY_FILE_NOT_FOUND, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            throw new AppException("Error while signing JWT",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new AppException(ErrorMessage.JWT_SIGNING_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public boolean isTokenExpired(String token) {
-        boolean isExpired = extractExpiration(token).isBefore(Instant.now());
-        if (isExpired) {
-            throw new AppException("JWT token has expired", HttpStatus.UNAUTHORIZED);
+        try {
+            return extractExpiration(token).isBefore(Instant.now());
+        } catch (AppException e) {
+            if (e.getMessage().equals(ErrorMessage.TOKEN_EXPIRED)) {
+                return true;
+            }
+            throw e;
         }
-        return isExpired;
     }
 
     @Override
     public boolean isTokenSignatureValid(String token) {
         try {
             PublicKey publicKey = KeyProviderUtil.getPublicKey(this.publicKeyFromFile);
-
             Jwts.parser()
                     .verifyWith(publicKey)
                     .build()
                     .parseSignedClaims(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            throw new AppException(ErrorMessage.TOKEN_EXPIRED, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return false;
         }
@@ -162,16 +165,17 @@ public class JwtServiceImpl implements JwtService {
     private Claims extractAllClaims(String token) {
         try {
             PublicKey publicKey = KeyProviderUtil.getPublicKey(this.publicKeyFromFile);
-
             return Jwts.parser()
                     .verifyWith(publicKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
+        } catch (NoSuchFileException e) {
+            throw new AppException(ErrorMessage.PUBLIC_KEY_FILE_NOT_FOUND, HttpStatus.NOT_FOUND);
         } catch (ExpiredJwtException e) {
-            throw new AppException("JWT token has expired", HttpStatus.UNAUTHORIZED);
+            throw new AppException(ErrorMessage.TOKEN_EXPIRED, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            throw new AppException("JWT token is malformed", HttpStatus.UNAUTHORIZED);
+            throw new AppException(ErrorMessage.JWT_PARSING_ERROR, HttpStatus.UNAUTHORIZED);
         }
     }
 

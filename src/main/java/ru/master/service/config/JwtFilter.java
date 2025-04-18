@@ -15,6 +15,7 @@ import ru.master.service.auth.model.User;
 import ru.master.service.auth.service.JwtService;
 import ru.master.service.auth.service.TokenBlacklistService;
 import ru.master.service.constants.ErrorMessage;
+import ru.master.service.exception.AppException;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -39,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String userPhoneNumber;
+        String userPhoneNumber = null;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
@@ -47,7 +48,13 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        userPhoneNumber = jwtService.extractPhoneNumber(jwt);
+
+        try {
+            userPhoneNumber = jwtService.extractPhoneNumber(jwt);
+        } catch (AppException e) {
+            response.sendError(e.getStatus().value(), e.getMessage());
+            return;
+        }
 
         if (!jwtService.isAccessToken(jwt)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorMessage.ONLY_ACCESS_TOKENS_ALLOWED);
