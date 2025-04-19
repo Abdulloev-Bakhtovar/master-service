@@ -48,7 +48,7 @@ application:
   security:
     jwt:
       access-token:
-        expiration: 30 #minute
+        expiration: 120 #minute
       refresh-token:
         expiration: 14400 #minute -> 10 day
       keys:
