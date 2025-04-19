@@ -3,11 +3,10 @@ package ru.master.service.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.constants.Education;
 import ru.master.service.constants.MaritalStatus;
 
-import java.util.UUID;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,14 +22,5 @@ public class MasterProfileDto extends BaseProfileDto {
     boolean hasConviction;
     MaritalStatus maritalStatus;
     Education education;
-    boolean allowNotifications;
-    boolean allowLocation;
-    boolean personalDataConsent;
-    boolean serviceTermsConsent;
-    UUID cityId;
-    MultipartFile profilePhoto;
-    MultipartFile passportMainPhoto;
-    MultipartFile passportRegistrationPhoto;
-    MultipartFile snilsPhoto;
-    MultipartFile innPhoto;
+    List<ServiceCategoryDto> serviceCategoryDtos;
 }

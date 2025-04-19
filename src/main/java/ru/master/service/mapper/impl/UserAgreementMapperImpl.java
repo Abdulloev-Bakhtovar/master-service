@@ -22,16 +22,4 @@ public class UserAgreementMapperImpl implements UserAgreementMapper {
                 .user(user)
                 .build();
     }
-
-    @Override
-    public UserAgreementDto toDto(MasterProfileDto dto) {
-        if (dto == null) return null;
-
-        return UserAgreementDto.builder()
-                .allowLocation(dto.isAllowLocation())
-                .allowNotifications(dto.isAllowNotifications())
-                .serviceTermsConsent(dto.isServiceTermsConsent())
-                .personalDataConsent(dto.isPersonalDataConsent())
-                .build();
-    }
 }

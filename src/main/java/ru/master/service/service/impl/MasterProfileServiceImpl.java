@@ -9,12 +9,10 @@ import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterProfileMapper;
 import ru.master.service.mapper.UserAgreementMapper;
+import ru.master.service.model.dto.DocFileDto;
 import ru.master.service.model.dto.MasterProfileDto;
 import ru.master.service.repository.MasterProfileRepo;
-import ru.master.service.service.CityService;
-import ru.master.service.service.DocumentPhotoStorageService;
-import ru.master.service.service.MasterProfileService;
-import ru.master.service.service.UserAgreementService;
+import ru.master.service.service.*;
 import ru.master.service.util.AuthUtils;
 
 import java.io.IOException;
@@ -30,11 +28,12 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final UserAgreementService userAgreementService;
     private final MasterProfileRepo masterProfileRepo;
     private final MasterProfileMapper masterProfileMapper;
-    private final DocumentPhotoStorageService docPhotoStorageService;
+    private final DocumentFileStorageService docPhotoStorageService;
     private final UserAgreementMapper userAgreementMapper;
+    private final MasterSubServiceService masterSubServiceService;
 
     @Override
-    public void create(MasterProfileDto dto) throws IOException {
+    public void create(MasterProfileDto dto) {
         var user = authUtils.getAuthenticatedUser();
         var userId = user.getId();
         user = userRepo.findById(userId)
@@ -50,17 +49,33 @@ public class MasterProfileServiceImpl implements MasterProfileService {
             );
         }
 
-        var userAgreementDto = userAgreementMapper.toDto(dto);
-        userAgreementService.create(userAgreementDto, user);
+        userAgreementService.create(dto.getUserAgreementDto(), user);
         
-        var city = cityService.getById(dto.getCityId());
+        var city = cityService.getById(dto.getCityDto().getId());
         var masterProfile = masterProfileMapper.toEntity(dto, user, city);
-        masterProfileRepo.save(masterProfile);
 
-        docPhotoStorageService.storeFile(dto.getProfilePhoto(), "profile", userId);
-        docPhotoStorageService.storeFile(dto.getPassportMainPhoto(), "passport_main", userId);
-        docPhotoStorageService.storeFile(dto.getPassportRegistrationPhoto(), "passport_registration", userId);
-        docPhotoStorageService.storeFile(dto.getSnilsPhoto(), "snils", userId);
-        docPhotoStorageService.storeFile(dto.getInnPhoto(), "inn", userId);
+        masterProfile = masterProfileRepo.save(masterProfile);
+
+        masterSubServiceService.create(dto.getServiceCategoryDtos(), masterProfile);
+
+    }
+
+    @Override
+    public void addDocFile(DocFileDto docFileDto) throws IOException {
+        var user = authUtils.getAuthenticatedUser();
+        var userId = user.getId();
+
+        if (!userRepo.existsById(userId)) {
+            throw new AppException(
+                    ErrorMessage.USER_NOT_FOUND,
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        docPhotoStorageService.storeFile(docFileDto.getProfilePhoto(), "profile", userId);
+        docPhotoStorageService.storeFile(docFileDto.getPassportMainPhoto(), "passport_main", userId);
+        docPhotoStorageService.storeFile(docFileDto.getPassportRegistrationPhoto(), "passport_registration", userId);
+        docPhotoStorageService.storeFile(docFileDto.getSnilsPhoto(), "snils", userId);
+        docPhotoStorageService.storeFile(docFileDto.getInnPhoto(), "inn", userId);
     }
 }

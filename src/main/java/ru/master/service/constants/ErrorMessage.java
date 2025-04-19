@@ -49,4 +49,7 @@ public class ErrorMessage {
     public static final String UNSUPPORTED_FILE_TYPE = "Unsupported file type.";
     public static final String INVALID_FILE_NAME = "Invalid file name. File must have an extension.";
 
+    public static final String ENTITY_ALREADY_EXISTS = "%s already exists.";
+    public static final String ENTITY_NOT_FOUND = "%s not found.";
+    public static final String INVALID_ENTITY_STATE = "Invalid state for %s.";
 }

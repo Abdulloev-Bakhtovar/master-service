@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.config.DocFileProperties;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
-import ru.master.service.service.DocumentPhotoStorageService;
+import ru.master.service.service.DocumentFileStorageService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class DocumentPhotoStorageServiceImpl implements DocumentPhotoStorageService {
+public class DocumentFileStorageServiceImpl implements DocumentFileStorageService {
 
     private final DocFileProperties docFileProp;
     private Path rootLocation;

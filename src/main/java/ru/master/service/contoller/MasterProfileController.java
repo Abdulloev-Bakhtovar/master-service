@@ -2,10 +2,8 @@ package ru.master.service.contoller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.master.service.model.dto.DocFileDto;
 import ru.master.service.model.dto.MasterProfileDto;
 import ru.master.service.service.MasterProfileService;
 
@@ -18,8 +16,13 @@ public class MasterProfileController {
 
     private final MasterProfileService masterProfileService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void create(@ModelAttribute MasterProfileDto masterProfileDto) throws IOException {
+    @PostMapping
+    public void create(@RequestBody MasterProfileDto masterProfileDto) {
         masterProfileService.create(masterProfileDto);
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void addDocFile(@ModelAttribute DocFileDto docFileDto) throws IOException {
+        masterProfileService.addDocFile(docFileDto);
     }
 }
