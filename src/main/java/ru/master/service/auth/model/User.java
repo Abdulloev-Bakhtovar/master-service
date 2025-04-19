@@ -1,16 +1,24 @@
 package ru.master.service.auth.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constants.Role;
+import ru.master.service.constants.VerificationStatus;
+import ru.master.service.exception.AppException;
 import ru.master.service.model.TimestampedEntity;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 @Getter
 @Setter
@@ -23,22 +31,22 @@ import java.util.List;
 public class User extends TimestampedEntity implements UserDetails {
 
     String phoneNumber;
-    boolean isVerified;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    @Singular
-    List<Role> roles;
+    @Enumerated(EnumType.STRING)
+    VerificationStatus verificationStatus;
+
+    @Enumerated(EnumType.STRING)
+    Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .toList();
+        if (role == null) {
+            throw new AppException(
+                    ErrorMessage.ROLE_NOT_ASSIGNED,
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
@@ -49,10 +57,5 @@ public class User extends TimestampedEntity implements UserDetails {
     @Override
     public String getPassword() {
         return "";
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return isVerified;
     }
 }

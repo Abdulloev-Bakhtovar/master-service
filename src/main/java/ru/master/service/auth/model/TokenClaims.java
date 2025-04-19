@@ -1,15 +1,18 @@
 package ru.master.service.auth.model;
 
+import ru.master.service.constants.Role;
+import ru.master.service.constants.VerificationStatus;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public record TokenClaims(String phoneNumber, List<String> roles, String tokenType) {
+public record TokenClaims(String phoneNumber, Role role, String tokenType, VerificationStatus verificationStatus) {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("phoneNumber", phoneNumber);
-        if (roles != null) {
-            map.put("roles", roles);
+        map.put("verificationStatus", verificationStatus);
+        if (role != null) {
+            map.put("role", role);
         }
         map.put("tokenType", tokenType);
         return map;

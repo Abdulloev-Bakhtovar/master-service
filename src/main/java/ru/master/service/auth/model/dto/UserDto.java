@@ -3,6 +3,7 @@ package ru.master.service.auth.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import ru.master.service.constants.Role;
 
 @Getter
 @Setter
@@ -13,6 +14,5 @@ import lombok.experimental.SuperBuilder;
 public class UserDto extends TimestampedDto {
 
     String phoneNumber;
-    boolean isVerified;
-    RoleDto role;
+    Role role;
 }

@@ -9,15 +9,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.mapper.TokenMapper;
 import ru.master.service.auth.model.User;
+import ru.master.service.auth.model.dto.PhoneNumberDto;
 import ru.master.service.auth.model.dto.TokenDto;
+import ru.master.service.auth.model.dto.VerificationCodeDto;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.auth.service.JwtService;
 import ru.master.service.auth.service.SmsService;
 import ru.master.service.auth.service.VerificationService;
 import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constants.VerificationStatus;
 import ru.master.service.exception.AppException;
-import ru.master.service.auth.model.dto.PhoneNumberDto;
-import ru.master.service.auth.model.dto.VerificationCodeDto;
 import ru.master.service.util.CodeGeneratorUtil;
 import ru.master.service.util.CookieUtil;
 
@@ -86,15 +87,12 @@ public class VerificationServiceImpl implements VerificationService {
         }
 
         var user = getByPhoneNumber(dto.getPhoneNumber());
-
-        if (!user.isVerified()){
-            updateVerified(user);
-        }
-        redisTemplate.delete(key);
+        user.setVerificationStatus(VerificationStatus.PHONE_VERIFIED);
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
+        redisTemplate.delete(key);
         cookieUtil.addRefreshTokenToCookie(response, refreshToken);
 
         return tokenMapper.toDto(accessToken);
@@ -102,16 +100,6 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     public void resendCode(PhoneNumberDto dto) {
-
-        var user = getByPhoneNumber(dto.getPhoneNumber());
-
-        if (user.isVerified()) {
-            throw new AppException(
-                    ErrorMessage.USER_ALREADY_VERIFIED,
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-
         String code = this.saveCode(dto.getPhoneNumber());
         smsService.sendVerificationCode(dto.getPhoneNumber(), code);
     }
@@ -136,10 +124,5 @@ public class VerificationServiceImpl implements VerificationService {
                         ErrorMessage.USER_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
-    }
-
-    public void updateVerified(User user) {
-        user.setVerified(true);
-        userRepo.save(user);
     }
 }

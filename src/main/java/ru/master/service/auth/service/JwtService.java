@@ -2,6 +2,8 @@ package ru.master.service.auth.service;
 
 import org.springframework.security.core.GrantedAuthority;
 import ru.master.service.auth.model.User;
+import ru.master.service.constants.Role;
+import ru.master.service.constants.VerificationStatus;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -13,6 +15,10 @@ public interface JwtService {
     String extractUserId(String jwt);
 
     String extractTokenType(String jwt);
+
+    VerificationStatus extractVerificationStatus(String jwt);
+
+    Role extractRole(String jwt);
 
     Instant extractExpiration(String token);
 

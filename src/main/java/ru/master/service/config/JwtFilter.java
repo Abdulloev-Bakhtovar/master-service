@@ -73,6 +73,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 var authenticatedUser = User.builder()
                         .id(UUID.fromString(userId))
                         .phoneNumber(userPhoneNumber)
+                        .role(jwtService.extractRole(jwt))
                         .build();
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

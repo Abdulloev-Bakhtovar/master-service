@@ -5,10 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.repository.UserRepo;
+import ru.master.service.auth.service.AuthService;
 import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constants.Role;
+import ru.master.service.constants.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterProfileMapper;
-import ru.master.service.mapper.UserAgreementMapper;
 import ru.master.service.model.dto.DocFileDto;
 import ru.master.service.model.dto.MasterProfileDto;
 import ru.master.service.repository.MasterProfileRepo;
@@ -29,13 +31,21 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final MasterProfileRepo masterProfileRepo;
     private final MasterProfileMapper masterProfileMapper;
     private final DocumentFileStorageService docPhotoStorageService;
-    private final UserAgreementMapper userAgreementMapper;
     private final MasterSubServiceService masterSubServiceService;
+    private final AuthService authService;
 
     @Override
     public void create(MasterProfileDto dto) {
         var user = authUtils.getAuthenticatedUser();
         var userId = user.getId();
+
+        if (user.getRole() == Role.CLIENT || user.getRole() ==  Role.ADMIN) {
+            throw new AppException(
+                    ErrorMessage.INVALID_ROLE_FOR_OPERATION,
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
         user = userRepo.findById(userId)
                 .orElseThrow(() -> new AppException(
                         ErrorMessage.USER_NOT_FOUND,
@@ -58,6 +68,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
 
         masterSubServiceService.create(dto.getServiceCategoryDtos(), masterProfile);
 
+        authService.updateVerificationStatus(user, VerificationStatus.INFO_ENTERED);
     }
 
     @Override
@@ -77,5 +88,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
         docPhotoStorageService.storeFile(docFileDto.getPassportRegistrationPhoto(), "passport_registration", userId);
         docPhotoStorageService.storeFile(docFileDto.getSnilsPhoto(), "snils", userId);
         docPhotoStorageService.storeFile(docFileDto.getInnPhoto(), "inn", userId);
+
+        authService.updateVerificationStatus(user, VerificationStatus.DOCS_UPLOADED);
     }
 }

@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.repository.UserRepo;
+import ru.master.service.auth.service.AuthService;
 import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constants.Role;
+import ru.master.service.constants.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ClientProfileMapper;
 import ru.master.service.model.dto.ClientProfileDto;
@@ -26,11 +29,19 @@ public class ClientProfileServiceImpl implements ClientProfileService {
     private final UserRepo userRepo;
     private final UserAgreementService userAgreementService;
     private final CityService cityService;
+    private final AuthService authService;
 
     @Override
     public void create(ClientProfileDto dto) {
 
         var user = authUtils.getAuthenticatedUser();
+
+        if (user.getRole() == Role.MASTER || user.getRole() ==  Role.ADMIN) {
+            throw new AppException(
+                    ErrorMessage.INVALID_ROLE_FOR_OPERATION,
+                    HttpStatus.FORBIDDEN
+            );
+        }
 
         user = userRepo.findById(user.getId())
                 .orElseThrow(() -> new AppException(
@@ -51,5 +62,7 @@ public class ClientProfileServiceImpl implements ClientProfileService {
 
         var clientProfile = clientProfileMapper.toEntity(dto, user, city);
         clientProfileRepo.save(clientProfile);
+
+        authService.updateVerificationStatus(user, VerificationStatus.APPROVED);
     }
 }

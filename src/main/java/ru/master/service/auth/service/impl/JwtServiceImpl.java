@@ -12,6 +12,8 @@ import ru.master.service.auth.model.TokenClaims;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.service.JwtService;
 import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constants.Role;
+import ru.master.service.constants.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.util.KeyProviderUtil;
 
@@ -21,8 +23,8 @@ import java.security.PublicKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -50,6 +52,23 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
+    public VerificationStatus extractVerificationStatus(String jwt) {
+        return extractClaim(jwt, claims -> claims.get("verificationStatus", VerificationStatus.class));
+    }
+
+    @Override
+    public Role extractRole(String jwt) {
+        String roleStr = extractClaim(jwt, claims -> claims.get("role", String.class));
+        try {
+            return Role.valueOf(roleStr);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new AppException(
+                    ErrorMessage.INVALID_JWT_ROLE,
+                    HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @Override
     public String extractUserId(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
     }
@@ -67,25 +86,27 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public Collection<? extends GrantedAuthority> extractAuthorities(String jwt) {
-        List<?> roles = extractClaim(jwt, claims -> claims.get("roles", List.class));
+        Role role = extractRole(jwt);
 
-        if (roles == null || roles.isEmpty()) {
-            throw new AppException(ErrorMessage.MISSING_JWT_ROLES, HttpStatus.BAD_REQUEST);
+        if (role == null) {
+            throw new AppException(
+                    ErrorMessage.MISSING_JWT_ROLES,
+                    HttpStatus.UNAUTHORIZED
+            );
         }
 
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.toString()))
-                .toList();
+        return Collections.singletonList(
+                new SimpleGrantedAuthority(role.name())
+        );
     }
 
     @Override
     public String generateAccessToken(User user) {
         TokenClaims claims = new TokenClaims(
                 user.getPhoneNumber(),
-                user.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .toList(),
-                TOKEN_TYPE_ACCESS
+                user.getRole(),
+                TOKEN_TYPE_ACCESS,
+                user.getVerificationStatus()
         );
         return generateToken(user, accessTokenExpiration, claims.toMap());
     }
@@ -95,7 +116,8 @@ public class JwtServiceImpl implements JwtService {
         TokenClaims claims = new TokenClaims(
                 user.getPhoneNumber(),
                 null,
-                TOKEN_TYPE_REFRESH
+                TOKEN_TYPE_REFRESH,
+                user.getVerificationStatus()
         );
         return generateToken(user, refreshTokenExpiration, claims.toMap());
     }

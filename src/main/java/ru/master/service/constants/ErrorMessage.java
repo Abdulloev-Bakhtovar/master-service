@@ -52,4 +52,22 @@ public class ErrorMessage {
     public static final String ENTITY_ALREADY_EXISTS = "%s already exists.";
     public static final String ENTITY_NOT_FOUND = "%s not found.";
     public static final String INVALID_ENTITY_STATE = "Invalid state for %s.";
+
+    // Role-related errors
+    public static final String INVALID_ROLE_FOR_OPERATION = "This operation is not permitted for your account type";
+    public static final String ROLE_NOT_ASSIGNED = "User account has no assigned role";
+    public static final String UNAUTHORIZED_ACCESS = "Insufficient permissions for this operation";
+
+    // JWT/Token errors
+    public static final String INVALID_JWT_ROLE = "Invalid role claim in authorization token";
+    public static final String MISSING_JWT_ROLE = "Authorization token missing required role claim";
+
+    // Specific access requirements
+    public static final String MASTER_ACCESS_REQUIRED = "Master account privileges required";
+    public static final String ADMIN_ACCESS_REQUIRED = "Administrator privileges required";
+    public static final String CLIENT_RESTRICTION = "Operation not available for client accounts";
+
+    // Token validation
+    public static final String TOKEN_VERIFICATION_FAILED = "Token verification failed";
+    public static final String EXPIRED_TOKEN = "Session expired. Please reauthenticate";
 }

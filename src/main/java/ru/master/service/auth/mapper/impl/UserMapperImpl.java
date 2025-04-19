@@ -3,25 +3,23 @@ package ru.master.service.auth.mapper.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.master.service.auth.mapper.UserMapper;
-import ru.master.service.auth.model.Role;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.model.dto.UserDto;
-
-import java.util.Collections;
+import ru.master.service.constants.VerificationStatus;
 
 @Component
 @RequiredArgsConstructor
 public class UserMapperImpl implements UserMapper {
 
     @Override
-    public User toEntity(UserDto userDto, Role role) {
+    public User toEntity(UserDto dto) {
 
-        if(userDto == null) return null;
+        if(dto == null) return null;
 
         return User.builder()
-                .phoneNumber(userDto.getPhoneNumber())
-                .roles(Collections.singletonList(role))
-                .isVerified(false)
+                .phoneNumber(dto.getPhoneNumber())
+                .role(dto.getRole())
+                .verificationStatus(VerificationStatus.PHONE_NOT_VERIFIED)
                 .build();
     }
 }
