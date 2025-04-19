@@ -30,7 +30,7 @@ public class UserAgreementServiceImpl implements UserAgreementService {
             );
         }
 
-        var userAgr = userAgrMapper.toEntity(dto, user);
+        var userAgr = userAgrMapper.toDto(dto, user);
         userAgrRepo.save(userAgr);
     }
 }

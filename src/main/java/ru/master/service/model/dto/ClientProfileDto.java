@@ -14,4 +14,5 @@ public class ClientProfileDto extends BaseProfileDto {
 
     String address;
     UserAgreementDto userAgreementDto;
+    CityDto cityDto;
 }

@@ -41,4 +41,12 @@ public class ErrorMessage {
     // City related
     public static final String CITY_ALREADY_EXISTS = "City with name already exists.";
     public static final String CITY_NOT_FOUND = "City not found with specified ID";
+
+    // Master profile
+    public static final String MASTER_PROFILE_EXISTS = "Master profile already exists for this user";
+
+    // Document photo
+    public static final String UNSUPPORTED_FILE_TYPE = "Unsupported file type.";
+    public static final String INVALID_FILE_NAME = "Invalid file name. File must have an extension.";
+
 }

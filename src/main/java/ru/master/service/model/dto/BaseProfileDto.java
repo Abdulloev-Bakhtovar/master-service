@@ -15,5 +15,4 @@ public abstract class BaseProfileDto extends TimestampedDto {
 
     String firstName;
     String lastName;
-    CityDto cityDto;
 }

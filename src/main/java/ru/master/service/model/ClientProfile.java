@@ -1,10 +1,10 @@
 package ru.master.service.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.master.service.auth.model.User;
 
 @Getter
 @Setter
@@ -17,8 +17,4 @@ import ru.master.service.auth.model.User;
 public class ClientProfile extends BaseProfile {
 
     String address;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    User user;
 }
