@@ -39,6 +39,9 @@ spring:
       max-request-size: 10MB
       enabled: true
 
+  logging:
+    config: classpath:logback.xml
+
 application:
   sms-verification:
     prefix: "verify:"

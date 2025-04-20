@@ -34,3 +34,4 @@ build/
 /.env
 /src/main/resources/static/security/
 /src/main/resources/static/doc_photo/
+/logs/
