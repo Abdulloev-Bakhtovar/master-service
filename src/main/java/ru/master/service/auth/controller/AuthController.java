@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.auth.model.dto.PhoneNumberDto;
 import ru.master.service.auth.model.dto.TokenDto;
 import ru.master.service.auth.model.dto.UserDto;
 import ru.master.service.auth.service.AuthService;
@@ -23,11 +22,11 @@ public class AuthController {
         authService.register(userDto);
     }
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public void login(@RequestBody PhoneNumberDto loginDto) {
         authService.login(loginDto);
-    }
+    }*/
 
     @GetMapping("/refresh")
     @ResponseStatus(HttpStatus.OK)
