@@ -14,4 +14,5 @@ import ru.master.service.auth.model.dto.BaseDto;
 public class CityDto extends BaseDto {
 
     String name;
+    boolean isVisible;
 }

@@ -14,6 +14,7 @@ public class CityMapperImpl implements CityMapper {
 
         return City.builder()
                 .name(dto.getName())
+                .isVisible(dto.isVisible())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class CityMapperImpl implements CityMapper {
         return CityDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
+                .isVisible(entity.isVisible())
                 .build();
     }
 }

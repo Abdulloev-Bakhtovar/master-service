@@ -17,4 +17,5 @@ import lombok.experimental.SuperBuilder;
 public class City extends BaseEntity {
 
     String name;
+    boolean isVisible;
 }
