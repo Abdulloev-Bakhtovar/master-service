@@ -14,6 +14,15 @@ import java.util.List;
 public class SecurityProperties {
 
     private List<String> corsAllowedOrigins = List.of();
-    private List<String> publicEndpoints = List.of();
+
     private List<String> excludedPaths = List.of();
+
+    private List<PublicEndpoint> publicEndpoints = List.of();
+
+    @Getter
+    @Setter
+    public static class PublicEndpoint {
+        private String method;
+        private String path;
+    }
 }
