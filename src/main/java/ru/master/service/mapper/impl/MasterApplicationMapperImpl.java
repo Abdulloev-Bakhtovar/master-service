@@ -21,10 +21,18 @@ public class MasterApplicationMapperImpl implements MasterApplicationMapper {
     }
 
     @Override
-    public void toEntity(User admin, User user, VerificationStatus verificationStatus, MasterApplication existsApplication) {
+    public void toEntity(User admin,
+                         User user,
+                         VerificationStatus verificationStatus,
+                         MasterApplication existsApplication,
+                         String rejectionReason) {
 
         user.setVerificationStatus(verificationStatus);
         existsApplication.setUser(user);
         existsApplication.setReviewedByAdminId(admin.getId());
+
+        if (rejectionReason != null && !rejectionReason.isEmpty()) {
+            existsApplication.setRejectionReason(rejectionReason);
+        }
     }
 }

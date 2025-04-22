@@ -8,5 +8,9 @@ public interface MasterApplicationMapper {
 
     MasterApplication toEntity(User user, VerificationStatus verificationStatus);
 
-    void toEntity(User admin, User user, VerificationStatus verificationStatus, MasterApplication existsApplication);
+    void toEntity(User admin,
+                  User user,
+                  VerificationStatus verificationStatus,
+                  MasterApplication existsApplication,
+                  String rejectionReason);
 }

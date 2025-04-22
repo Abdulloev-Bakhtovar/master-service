@@ -122,7 +122,7 @@ public class MasterApplicationServiceImpl implements MasterApplicationService {
 
         var existsApplication = getByUserId(user);
 
-        masterApplicationMapper.toEntity(admin, user, rejected, existsApplication);
+        masterApplicationMapper.toEntity(admin, user, rejected, existsApplication, dto.getRejectionReason());
         userRepo.save(user);
 
         return existsApplication;
