@@ -22,4 +22,18 @@ public class UserMapperImpl implements UserMapper {
                 .verificationStatus(VerificationStatus.PHONE_NOT_VERIFIED)
                 .build();
     }
+
+    @Override
+    public UserDto toDto(User user) {
+        if(user == null) return null;
+
+        return UserDto.builder()
+                .id(user.getId())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
+                .verificationStatus(user.getVerificationStatus())
+                .build();
+    }
 }
