@@ -1,12 +1,12 @@
 package ru.master.service.contoller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.master.service.model.dto.ClientProfileDto;
 import ru.master.service.service.ClientProfileService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/client-profiles")
@@ -14,11 +14,6 @@ import java.util.List;
 public class ClientProfileController {
 
     private final ClientProfileService clientProfileService;
-
-    @GetMapping
-    public List<ClientProfileDto> getAll() {
-        return new ArrayList<>();
-    }
 
     @PostMapping
     public void create(@RequestBody ClientProfileDto clientProfileDto) {
