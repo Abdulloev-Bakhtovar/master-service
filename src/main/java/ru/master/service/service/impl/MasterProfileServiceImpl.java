@@ -33,6 +33,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final DocumentFileStorageService docPhotoStorageService;
     private final MasterSubServiceService masterSubServiceService;
     private final AuthService authService;
+    private final MasterApplicationService masterApplicationService;
 
     @Override
     public void create(MasterProfileDto dto) {
@@ -76,12 +77,11 @@ public class MasterProfileServiceImpl implements MasterProfileService {
         var user = authUtils.getAuthenticatedUser();
         var userId = user.getId();
 
-        if (!userRepo.existsById(userId)) {
-            throw new AppException(
-                    ErrorMessage.USER_NOT_FOUND,
-                    HttpStatus.NOT_FOUND
-            );
-        }
+        user = userRepo.findById(userId)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.USER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
 
         docPhotoStorageService.storeFile(docFileDto.getProfilePhoto(), "profile", userId);
         docPhotoStorageService.storeFile(docFileDto.getPassportMainPhoto(), "passport_main", userId);
@@ -90,5 +90,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
         docPhotoStorageService.storeFile(docFileDto.getInnPhoto(), "inn", userId);
 
         authService.updateVerificationStatus(user, VerificationStatus.DOCS_UPLOADED);
+
+        masterApplicationService.create(user);
     }
 }
