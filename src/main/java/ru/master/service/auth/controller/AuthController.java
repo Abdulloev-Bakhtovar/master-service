@@ -16,17 +16,11 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/register")
+    @PostMapping("/register-or-login")
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody UserDto userDto) {
         authService.register(userDto);
     }
-
-    /*@PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    public void login(@RequestBody PhoneNumberDto loginDto) {
-        authService.login(loginDto);
-    }*/
 
     @GetMapping("/refresh")
     @ResponseStatus(HttpStatus.OK)

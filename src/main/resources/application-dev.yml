@@ -64,8 +64,7 @@ application:
       - "http://localhost:9090"
       - "https://localhost:9090"
     public-endpoints:
-      - "/auth/register"
-      - "/auth/login"
+      - "/auth/register-or-login"
       - "/auth/logout"
       - "/auth/refresh"
       - "/auth/verify"
@@ -78,8 +77,7 @@ application:
       - "/swagger-ui/**"
       - "/webjars/**"
     excluded-paths:
-      - "/api/auth/register"
-      - "/api/auth/login"
+      - "/api/auth/register-or-login"
       - "/api/auth/refresh"
       - "/api/auth/logout"
       - "/api/auth/verify"
