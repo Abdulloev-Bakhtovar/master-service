@@ -22,4 +22,20 @@ public class UserAgreementMapperImpl implements UserAgreementMapper {
                 .user(user)
                 .build();
     }
+
+    @Override
+    public UserAgreementDto toDto(UserAgreement entity) {
+        if (entity == null) return null;
+
+        return UserAgreementDto.builder()
+                .id(entity.getId())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .personalDataConsent(entity.isPersonalDataConsent())
+                .notificationsAllowed(entity.isNotificationsAllowed())
+                .locationAccessAllowed(entity.isLocationAccessAllowed())
+                .serviceTermsAccepted(entity.getServiceTermsAccepted())
+                .serviceRulesAccepted(entity.getServiceRulesAccepted())
+                .build();
+    }
 }

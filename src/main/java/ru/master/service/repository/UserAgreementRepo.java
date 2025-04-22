@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface UserAgreementRepo extends JpaRepository<UserAgreement, UUID> {
 
     boolean existsByUserId(UUID id);
+
+    UserAgreement findByUserId(UUID id);
 }
