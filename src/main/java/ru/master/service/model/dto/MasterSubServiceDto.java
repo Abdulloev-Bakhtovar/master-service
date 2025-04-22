@@ -1,4 +1,16 @@
 package ru.master.service.model.dto;
 
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+import ru.master.service.model.SubServiceCategory;
+
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterSubServiceDto {
+    SubServiceCategory subServiceCategory;
 }
