@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.mapper.TokenMapper;
 import ru.master.service.auth.mapper.UserMapper;
 import ru.master.service.auth.model.User;
-import ru.master.service.auth.model.dto.PhoneNumberDto;
 import ru.master.service.auth.model.dto.TokenDto;
 import ru.master.service.auth.model.dto.UserDto;
 import ru.master.service.auth.repository.UserRepo;
@@ -40,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthUtils authUtils;
 
     @Override
-    public void register(UserDto dto) {
+    public void registerOrLogin(UserDto dto) {
 
         if (!userRepo.existsByPhoneNumber(dto.getPhoneNumber())) {
             
@@ -57,27 +56,6 @@ public class AuthServiceImpl implements AuthService {
 
         String code = verificationService.saveCode(dto.getPhoneNumber());
         smsService.sendVerificationCode(dto.getPhoneNumber(), code);
-    }
-
-    @Override
-    public void login(PhoneNumberDto dto) {
-
-        /*var user = userRepo.findByPhoneNumber(dto.getPhoneNumber())
-                .orElseThrow(() -> new AppException(
-                        ErrorMessage.USER_NOT_FOUND,
-                        HttpStatus.NOT_FOUND
-                ));
-
-        // TODO
-        if (!user.isVerified()) {
-            throw new AppException(
-                    ErrorMessage.USER_NOT_VERIFIED,
-                    HttpStatus.FORBIDDEN
-            );
-        }
-
-        String code = verificationService.saveCode(dto.getPhoneNumber());
-        smsService.sendVerificationCode(dto.getPhoneNumber(), code);*/
     }
 
     @Override

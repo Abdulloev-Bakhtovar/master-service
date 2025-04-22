@@ -18,8 +18,8 @@ public class AuthController {
 
     @PostMapping("/register-or-login")
     @ResponseStatus(HttpStatus.CREATED)
-    public void register(@RequestBody UserDto userDto) {
-        authService.register(userDto);
+    public void registerOrLogin(@RequestBody UserDto userDto) {
+        authService.registerOrLogin(userDto);
     }
 
     @GetMapping("/refresh")
