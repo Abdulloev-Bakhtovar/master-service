@@ -3,6 +3,7 @@ package ru.master.service.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,13 +40,14 @@ public class SecurityConfig {
                     configuration.setMaxAge(3600L);
                     return configuration;
                 }))
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers(
-                                        securityProperties.getPublicEndpoints().toArray(String[]::new)
-                                ).permitAll()
-                                .anyRequest()
-                                .authenticated()
-                )
+                .authorizeHttpRequests(auth -> {
+                    for (SecurityProperties.PublicEndpoint endpoint : securityProperties.getPublicEndpoints()) {
+                        HttpMethod method = HttpMethod.valueOf(endpoint.getMethod().toUpperCase());
+                        String path = endpoint.getPath();
+                        auth.requestMatchers(method, path).permitAll();
+                    }
+                    auth.anyRequest().authenticated();
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
