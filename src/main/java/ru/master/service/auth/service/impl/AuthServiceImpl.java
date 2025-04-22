@@ -99,7 +99,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void updateVerificationStatus(User user, VerificationStatus verificationStatus) {
         user.setVerificationStatus(verificationStatus);
-        userRepo.save(user); // TODO
     }
 
     private void addToBlacklist(HttpServletRequest request) {
