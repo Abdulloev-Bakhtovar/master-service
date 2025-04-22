@@ -13,4 +13,6 @@ public interface CityService {
     City getById(UUID id);
 
     void create(CityDto dto);
+
+    void changeVisibility(UUID id, boolean isVisible);
 }

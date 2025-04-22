@@ -54,4 +54,16 @@ public class CityServiceImpl implements CityService {
         var city = cityMapper.toEntity(dto);
         cityRepo.save(city);
     }
+
+    @Override
+    public void changeVisibility(UUID id, boolean isVisible) {
+        var city = cityRepo.findById(id)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.CITY_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        city.setVisible(isVisible);
+        cityRepo.save(city);
+    }
 }
