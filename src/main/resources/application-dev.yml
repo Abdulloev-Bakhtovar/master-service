@@ -63,19 +63,6 @@ application:
       - "https://localhost:3000"
       - "http://localhost:9090"
       - "https://localhost:9090"
-    public-endpoints:
-      - "/auth/register-or-login"
-      - "/auth/logout"
-      - "/auth/refresh"
-      - "/auth/verify"
-      - "/auth/resend-code"
-      - "/auth/get-all-code"
-      - "/v2/api-docs"
-      - "/v3/api-docs/**"
-      - "/swagger-resources/**"
-      - "/configuration/**"
-      - "/swagger-ui/**"
-      - "/webjars/**"
     excluded-paths:
       - "/api/auth/register-or-login"
       - "/api/auth/refresh"
@@ -84,6 +71,40 @@ application:
       - "/api/auth/resend-code"
       - "/api/auth/get-all-code"
       - "/api/auth/refresh"
+      - "/api/enums/**"
+    public-endpoints:
+      - method: POST
+        path: /auth/register-or-login
+      - method: GET
+        path: /auth/refresh
+      - method: GET
+        path: /auth/logout
+      - method: POST
+        path: /auth/verify
+      - method: POST
+        path: /auth/resend-code
+      - method: GET
+        path: /auth/get-all-code
+      - method: GET
+        path: /enums/**
+      - method: GET
+        path: /cities
+      - method: GET
+        path: /service-categories
+      - method: GET
+        path: /subservice-categories
+      - method: GET
+        path: /v2/api-docs
+      - method: GET
+        path: /v3/api-docs/**
+      - method: GET
+        path: /swagger-resources/**
+      - method: GET
+        path: /configuration/**
+      - method: GET
+        path: /swagger-ui/**
+      - method: GET
+        path: /webjars/**
 
   doc-file:
     allowed-types:
