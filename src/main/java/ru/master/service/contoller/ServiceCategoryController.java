@@ -9,7 +9,7 @@ import ru.master.service.service.ServiceCategoryService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/service-category")
+@RequestMapping("/service-categories")
 @RequiredArgsConstructor
 public class ServiceCategoryController {
 

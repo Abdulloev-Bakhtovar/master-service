@@ -10,7 +10,7 @@ import ru.master.service.service.MasterProfileService;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/master-profile")
+@RequestMapping("/master-profiles")
 @RequiredArgsConstructor
 public class MasterProfileController {
 

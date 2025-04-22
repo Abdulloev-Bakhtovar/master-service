@@ -9,7 +9,7 @@ import ru.master.service.service.SubServiceCategoryService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/subservice-category")
+@RequestMapping("/subservice-categories")
 @RequiredArgsConstructor
 public class SubServiceCategoryController {
 
