@@ -16,12 +16,12 @@ public class MasterProfileController {
 
     private final MasterProfileService masterProfileService;
 
-    @PostMapping
+    @PostMapping("/info")
     public void create(@RequestBody MasterProfileDto masterProfileDto) {
         masterProfileService.create(masterProfileDto);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void addDocFile(@ModelAttribute DocFileDto docFileDto) throws IOException {
         masterProfileService.addDocFile(docFileDto);
     }
