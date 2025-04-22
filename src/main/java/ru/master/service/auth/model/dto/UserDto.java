@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import ru.master.service.constants.Role;
+import ru.master.service.constants.VerificationStatus;
 
 @Getter
 @Setter
@@ -15,4 +16,5 @@ public class UserDto extends TimestampedDto {
 
     String phoneNumber;
     Role role;
+    VerificationStatus verificationStatus;
 }
