@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Education {
+public enum Education implements DisplayableEnum {
 
     HIGHER("Высшее"),
     SECONDARY("Среднее"),

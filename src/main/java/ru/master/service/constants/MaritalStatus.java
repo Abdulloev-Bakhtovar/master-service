@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MaritalStatus {
+public enum MaritalStatus implements DisplayableEnum {
 
     MARRIED("Женат/Замужем"),
     SINGLE("Холост/Не замужем"),
