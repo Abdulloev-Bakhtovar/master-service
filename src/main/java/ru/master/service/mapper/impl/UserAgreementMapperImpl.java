@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.master.service.auth.model.User;
 import ru.master.service.mapper.UserAgreementMapper;
 import ru.master.service.model.UserAgreement;
-import ru.master.service.model.dto.MasterProfileDto;
 import ru.master.service.model.dto.UserAgreementDto;
 
 @Component
@@ -15,10 +14,11 @@ public class UserAgreementMapperImpl implements UserAgreementMapper {
         if (dto == null) return null;
 
         return UserAgreement.builder()
-                .allowNotifications(dto.isAllowNotifications())
-                .allowLocation(dto.isAllowLocation())
                 .personalDataConsent(dto.isPersonalDataConsent())
-                .serviceTermsConsent(dto.getServiceTermsConsent()) //TODO
+                .notificationsAllowed(dto.isNotificationsAllowed())
+                .locationAccessAllowed(dto.isLocationAccessAllowed())
+                .serviceTermsAccepted(dto.getServiceTermsAccepted())
+                .serviceRulesAccepted(dto.getServiceRulesAccepted())
                 .user(user)
                 .build();
     }

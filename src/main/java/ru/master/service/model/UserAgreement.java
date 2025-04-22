@@ -18,26 +18,32 @@ import ru.master.service.auth.model.User;
 public class UserAgreement extends TimestampedEntity {
 
     /**
-     * Разрешение на получение push-уведомлений от системы
-     */
-    boolean allowNotifications;
-
-    /**
-     * Разрешение на использование геолокации устройства
-     */
-    boolean allowLocation;
-
-    /**
-     * Флаг согласия на обработку персональных данных
-     * (обязательное для заполнения)
+     * Согласие на обработку персональных данных.
+     * Обязательно для всех пользователей (мастеров и клиентов).
      */
     boolean personalDataConsent;
 
     /**
-     * Флаг принятия условий обслуживания
-     * Всегда null для клиентов, предназначен для мастера
+     * Разрешение на получение push-уведомлений от системы.
      */
-    Boolean serviceTermsConsent;
+    boolean notificationsAllowed;
+
+    /**
+     * Разрешение на доступ к геолокации устройства.
+     */
+    boolean locationAccessAllowed;
+
+    /**
+     * Согласие с условиями использования приложения.
+     * (доступно только для мастеров, для клиентов может быть null)
+     */
+    Boolean serviceTermsAccepted;
+
+    /**
+     * Согласие с правилами оказания услуг.
+     * (доступно только для мастеров, для клиентов может быть null)
+     */
+    Boolean serviceRulesAccepted;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
