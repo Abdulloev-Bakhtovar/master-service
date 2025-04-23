@@ -40,7 +40,7 @@ spring:
       enabled: true
 
 logging:
-  config: classpath:logging/logback-dev.xml
+  config: classpath:logging/logback-master.xml
 
 application:
   sms-verification:
