@@ -6,7 +6,7 @@ import ru.master.service.constants.DocumentType;
 import java.io.IOException;
 import java.util.UUID;
 
-public interface DocumentFileStorageService {
+public interface FileStorageService {
 
     void storeFile(MultipartFile file, DocumentType docType, UUID entityId) throws IOException;
 }

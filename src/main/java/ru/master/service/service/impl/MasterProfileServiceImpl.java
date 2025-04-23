@@ -31,7 +31,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final UserAgreementService userAgreementService;
     private final MasterProfileRepo masterProfileRepo;
     private final MasterProfileMapper masterProfileMapper;
-    private final DocumentFileStorageService docPhotoStorageService;
+    private final FileStorageService docPhotoStorageService;
     private final MasterSubServiceService masterSubServiceService;
     private final AuthService authService;
     private final MasterApplicationService masterApplicationService;

@@ -9,7 +9,7 @@ import ru.master.service.config.DocFileProperties;
 import ru.master.service.constants.DocumentType;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
-import ru.master.service.service.DocumentFileStorageService;
+import ru.master.service.service.FileStorageService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class DocumentFileStorageServiceImpl implements DocumentFileStorageService {
+public class FileStorageServiceImpl implements FileStorageService {
 
     private final DocFileProperties docFileProp;
     private Path imagesRootLocation;

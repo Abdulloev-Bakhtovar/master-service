@@ -11,7 +11,7 @@ import ru.master.service.mapper.NewsMapper;
 import ru.master.service.model.dto.NewsDto;
 import ru.master.service.repository.CityRepo;
 import ru.master.service.repository.NewsRepo;
-import ru.master.service.service.DocumentFileStorageService;
+import ru.master.service.service.FileStorageService;
 import ru.master.service.service.NewsService;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class NewsServiceImpl implements NewsService {
     private final CityRepo cityRepo;
     private final NewsRepo newsRepo;
     private final NewsMapper newsMapper;
-    private final DocumentFileStorageService documentFileStorageService;
+    private final FileStorageService fileStorageService;
 
     @Override
     public void create(NewsDto dto) throws IOException {
@@ -38,6 +38,6 @@ public class NewsServiceImpl implements NewsService {
         var news = newsMapper.toEntity(dto, city);
         newsRepo.save(news);
 
-        documentFileStorageService.storeFile(dto.getPhoto(), DocumentType.NEWS_PHOTO, news.getId());
+        fileStorageService.storeFile(dto.getPhoto(), DocumentType.NEWS_PHOTO, news.getId());
     }
 }
