@@ -19,7 +19,7 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
     private final SubServiceCategoryMapper subServiceMapper;
 
     @Override
-    public ServiceCategory toEntity(ServiceCategoryDto dto, Set<SubServiceCategory> subServices) {
+    public ServiceCategory toEntity(ServiceCategoryDto dto, List<SubServiceCategory> subServices) {
         if (dto == null) return null;
 
         return ServiceCategory.builder()

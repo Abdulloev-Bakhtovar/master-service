@@ -47,7 +47,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
         }
 
         var subServices = Optional.ofNullable(dto.getSubServiceCategoryDtos())
-                .orElse(Collections.emptySet())
+                .orElse(Collections.emptyList())
                 .stream()
                 .map(subDto -> subServiceCategoryRepo.findById(subDto.getId())
                         .orElseThrow(() -> new AppException(
@@ -55,7 +55,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
                                 HttpStatus.NOT_FOUND
                         ))
                 )
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         var serviceCategory = serviceCategoryMapper.toEntity(dto, subServices);
         serviceCategoryRepo.save(serviceCategory);

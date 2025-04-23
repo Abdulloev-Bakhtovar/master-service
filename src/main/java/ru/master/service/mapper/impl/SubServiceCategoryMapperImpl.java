@@ -5,7 +5,8 @@ import ru.master.service.mapper.SubServiceCategoryMapper;
 import ru.master.service.model.SubServiceCategory;
 import ru.master.service.model.dto.SubServiceCategoryDto;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,20 +33,20 @@ public class SubServiceCategoryMapperImpl implements SubServiceCategoryMapper {
     }
 
     @Override
-    public Set<SubServiceCategory> toEntityList(Set<SubServiceCategoryDto> dtos) {
-        if (dtos == null) return new HashSet<>();
+    public List<SubServiceCategory> toEntityList(Set<SubServiceCategoryDto> dtos) {
+        if (dtos == null) return new ArrayList<>();
 
         return dtos.stream()
                 .map(this::toEntity)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Set<SubServiceCategoryDto> toDtoList(Set<SubServiceCategory> entities) {
-        if (entities == null) return new HashSet<>();
+    public List<SubServiceCategoryDto> toDtoList(List<SubServiceCategory> entities) {
+        if (entities == null) return new ArrayList<>();
 
         return entities.stream()
                 .map(this::toDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

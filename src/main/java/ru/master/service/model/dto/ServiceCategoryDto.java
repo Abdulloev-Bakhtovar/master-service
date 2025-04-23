@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,5 +15,5 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceCategoryDto extends BaseCategoryDto {
 
-    Set<SubServiceCategoryDto> subServiceCategoryDtos;
+    List<SubServiceCategoryDto> subServiceCategoryDtos;
 }

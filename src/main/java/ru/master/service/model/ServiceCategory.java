@@ -5,8 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,5 +24,5 @@ public class ServiceCategory extends BaseCategory {
             joinColumns = @JoinColumn(name = "service_id"),
             inverseJoinColumns = @JoinColumn(name = "subservice_id")
     )
-    Set<SubServiceCategory> subServices = new HashSet<>();
+    List<SubServiceCategory> subServices = new ArrayList<>();
 }

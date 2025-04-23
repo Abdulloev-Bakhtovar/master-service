@@ -14,7 +14,6 @@ import ru.master.service.model.UserAgreement;
 import ru.master.service.model.dto.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -107,9 +106,9 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
     }
 
     private List<ServiceCategoryDto> buildServiceCategoryDtos(MasterProfileCreateDto dto) {
-        Set<SubServiceCategoryDto> subServiceCategories = dto.getSubServiceCategoryIds().stream()
+        List<SubServiceCategoryDto> subServiceCategories = dto.getSubServiceCategoryIds().stream()
                 .map(this::buildSubServiceCategoryDto)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         return dto.getServiceCategoryIds().stream()
                 .map(id -> ServiceCategoryDto.builder()
