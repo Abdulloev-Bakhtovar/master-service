@@ -47,4 +47,19 @@ public class NewsController {
 
         newsService.create(newsDto);
     }
+
+    @PatchMapping("/{id}/hidden")
+    public void hidden(@PathVariable UUID id) {
+        newsService.changeVisibility(id, false);
+    }
+
+    @PatchMapping("/{id}/visible")
+    public void visible(@PathVariable UUID id) {
+        newsService.changeVisibility(id, true);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable UUID id) {
+        newsService.delete(id);
+    }
 }

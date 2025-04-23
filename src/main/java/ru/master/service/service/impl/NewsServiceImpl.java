@@ -16,6 +16,7 @@ import ru.master.service.service.NewsService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -47,5 +48,22 @@ public class NewsServiceImpl implements NewsService {
         newsRepo.save(news);
 
         fileStorageService.storeFile(dto.getPhoto(), DocumentType.NEWS_PHOTO, news.getId());
+    }
+
+    @Override
+    public void changeVisibility(UUID id, boolean isVisible) {
+        var news = newsRepo.findById(id)
+                .orElseThrow(() -> new AppException(
+                        "News " + ErrorMessage.ENTITY_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        news.setVisible(isVisible);
+        newsRepo.save(news);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        newsRepo.deleteById(id);
     }
 }
