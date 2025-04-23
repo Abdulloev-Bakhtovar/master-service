@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.auth.service.AuthService;
+import ru.master.service.constants.DocumentType;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.constants.Role;
 import ru.master.service.constants.VerificationStatus;
@@ -83,11 +84,11 @@ public class MasterProfileServiceImpl implements MasterProfileService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        docPhotoStorageService.storeFile(docFileDto.getProfilePhoto(), "profile", userId);
-        docPhotoStorageService.storeFile(docFileDto.getPassportMainPhoto(), "passport_main", userId);
-        docPhotoStorageService.storeFile(docFileDto.getPassportRegistrationPhoto(), "passport_registration", userId);
-        docPhotoStorageService.storeFile(docFileDto.getSnilsPhoto(), "snils", userId);
-        docPhotoStorageService.storeFile(docFileDto.getInnPhoto(), "inn", userId);
+        docPhotoStorageService.storeFile(docFileDto.getProfilePhoto(), DocumentType.PROFILE, userId);
+        docPhotoStorageService.storeFile(docFileDto.getPassportMainPhoto(), DocumentType.PASSPORT_MAIN, userId);
+        docPhotoStorageService.storeFile(docFileDto.getPassportRegistrationPhoto(), DocumentType.PASSPORT_REGISTRATION, userId);
+        docPhotoStorageService.storeFile(docFileDto.getSnilsPhoto(), DocumentType.SNILS, userId);
+        docPhotoStorageService.storeFile(docFileDto.getInnPhoto(), DocumentType.INN, userId);
 
         authService.updateVerificationStatus(user, VerificationStatus.DOCS_UPLOADED);
 
