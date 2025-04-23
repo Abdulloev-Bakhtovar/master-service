@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.config.DocFileProperties;
+import ru.master.service.constants.DocumentType;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.service.DocumentFileStorageService;
@@ -22,27 +23,44 @@ import java.util.UUID;
 public class DocumentFileStorageServiceImpl implements DocumentFileStorageService {
 
     private final DocFileProperties docFileProp;
-    private Path rootLocation;
+    private Path imagesRootLocation;
 
     @PostConstruct
     public void init() throws IOException {
-        rootLocation = Paths.get(docFileProp.getFilePath());
-        if (!Files.exists(rootLocation)) {
-            Files.createDirectories(rootLocation);
+        // Основной путь: filePath + imagesSubDir
+        this.imagesRootLocation = Paths.get(docFileProp.getFilePath())
+                .resolve(docFileProp.getImagesSubDir());
+
+        if (!Files.exists(imagesRootLocation)) {
+            Files.createDirectories(imagesRootLocation);
+        }
+
+        // Создаем все подкаталоги для каждого типа документа
+        for (DocumentType type : DocumentType.values()) {
+            Path typeDir = imagesRootLocation.resolve(type.getSubDirectory());
+            if (!Files.exists(typeDir)) {
+                Files.createDirectories(typeDir);
+            }
         }
     }
 
     @Override
-    public void storeFile(MultipartFile file, String prefix, UUID userId) throws IOException {
+    public void storeFile(MultipartFile file, DocumentType docType, UUID entityId) throws IOException {
         if (file == null || file.isEmpty()) {
             return;
         }
 
         String contentType = file.getContentType();
         String extension = getExtension(file, contentType);
-        String filename = prefix + "_" + userId + extension;
 
-        Path destination = rootLocation.resolve(filename);
+        // Формирование имени файла
+        String filename = docType.getPrefix() + "_" + entityId + extension;
+
+        // Полный путь: корень + подкаталог типа + имя файла
+        Path destination = imagesRootLocation
+                .resolve(docType.getSubDirectory())
+                .resolve(filename);
+
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -56,12 +74,10 @@ public class DocumentFileStorageServiceImpl implements DocumentFileStorageServic
         }
 
         String originalFilename = file.getOriginalFilename();
-
         if (originalFilename == null || !originalFilename.contains(".")) {
             throw new AppException(
                     ErrorMessage.INVALID_FILE_NAME,
-                    HttpStatus.BAD_REQUEST
-            );
+                    HttpStatus.BAD_REQUEST);
         }
 
         return originalFilename.substring(originalFilename.lastIndexOf("."));
