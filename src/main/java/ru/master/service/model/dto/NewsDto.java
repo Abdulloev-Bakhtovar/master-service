@@ -1,25 +1,22 @@
-package ru.master.service.model;
+package ru.master.service.model.dto;
 
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.springframework.web.multipart.MultipartFile;
+import ru.master.service.auth.model.dto.TimestampedDto;
 
 @Getter
 @Setter
-@Entity
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "news")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class News extends TimestampedEntity {
+public class NewsDto extends TimestampedDto {
 
     String title;
     String content;
+    CityDto cityDto;
     boolean isVisible;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id")
-    City city;
+    MultipartFile photo;
 }
