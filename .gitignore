@@ -33,5 +33,5 @@ build/
 .vscode/
 /.env
 /src/main/resources/static/security/
-/src/main/resources/static/doc_photo/
 /logs/
+/src/main/resources/static/photos/

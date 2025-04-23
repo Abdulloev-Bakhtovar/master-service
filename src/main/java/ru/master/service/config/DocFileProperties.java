@@ -12,7 +12,7 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties(prefix = "application.doc-file")
 public class DocFileProperties {
-
     private List<String> allowedTypes;
     private String filePath;
+    private String imagesSubDir = "photos";
 }

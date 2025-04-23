@@ -39,8 +39,8 @@ spring:
       max-request-size: 10MB
       enabled: true
 
-  logging:
-    config: classpath:logback.xml
+logging:
+  config: classpath:logging/logback-dev.xml
 
 application:
   sms-verification:
@@ -111,4 +111,5 @@ application:
       - image/png
       - image/jpeg
       - image/jpg
-    file-path: "./src/main/resources/static/doc_photo"
+    file-path: "./src/main/resources/static"
+    images-sub-dir: "photos"
