@@ -10,28 +10,28 @@ import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.constants.VerificationStatus;
 import ru.master.service.exception.AppException;
-import ru.master.service.mapper.MasterApplicationMapper;
 import ru.master.service.mapper.MasterProfileMapper;
-import ru.master.service.model.MasterApplication;
+import ru.master.service.mapper.MasterRequestMapper;
+import ru.master.service.model.dto.MasterRequestDto;
 import ru.master.service.model.dto.NewMasterRequestDto;
-import ru.master.service.model.dto.MasterApplicationDto;
-import ru.master.service.repository.MasterApplicationRepo;
 import ru.master.service.repository.MasterProfileRepo;
+import ru.master.service.repository.MasterRequestRepo;
 import ru.master.service.repository.MasterSubServiceRepo;
 import ru.master.service.repository.UserAgreementRepo;
-import ru.master.service.service.MasterApplicationService;
+import ru.master.service.service.MasterRequestService;
 import ru.master.service.util.AuthUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MasterApplicationServiceImpl implements MasterApplicationService {
+public class MasterRequestServiceImpl implements MasterRequestService {
 
-    private final MasterApplicationRepo masterApplicationRepo;
-    private final MasterApplicationMapper masterApplicationMapper;
+    private final MasterRequestRepo masterRequestRepo;
+    private final MasterRequestMapper masterRequestMapper;
     private final AuthUtils authUtils;
     private final UserRepo userRepo;
     private final MasterProfileRepo masterProfileRepo;
@@ -57,8 +57,12 @@ public class MasterApplicationServiceImpl implements MasterApplicationService {
                             "Master profile " + ErrorMessage.ENTITY_NOT_FOUND,
                             HttpStatus.NOT_FOUND
                     ));
-
-            NewMasterRequestDto masterProfileDto = masterProfileMapper.toDto(masterProfile);
+            var masterRequest = masterRequestRepo.findByUserId(user.getId())
+                    .orElseThrow(() -> new AppException(
+                            "Master request " + ErrorMessage.ENTITY_NOT_FOUND,
+                            HttpStatus.NOT_FOUND
+                    ));
+            NewMasterRequestDto masterProfileDto = masterProfileMapper.toDto(masterProfile, masterRequest);
             dtos.add(masterProfileDto);
         }
 
@@ -66,9 +70,33 @@ public class MasterApplicationServiceImpl implements MasterApplicationService {
     }
 
     @Override
-    public List<MasterApplicationDto> getAll1() {
-        List<MasterApplicationDto> dtos = new ArrayList<>();
-        var masterApplications = masterApplicationRepo.findAll();
+    public MasterRequestDto getById(UUID id) {
+
+        var masterRequest = masterRequestRepo.findById(id)
+                .orElseThrow(() -> new AppException(
+                        "Master request " + ErrorMessage.ENTITY_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        var user = masterRequest.getUser();
+        var masterProfile = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        "Master profile " + ErrorMessage.ENTITY_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        var userAgreement = userAgreementRepo.findByUserId(user.getId());
+        var userDto = userMapper.toDto(user);
+        var masterSubServices = masterSubServiceRepo.findAllByMasterProfileId(masterProfile.getId());
+
+        var masterProfileDto = masterProfileMapper.toDto(masterProfile, masterSubServices, userAgreement);
+
+        return masterRequestMapper.toDto(masterRequest, masterProfileDto, userDto);
+    }
+
+    public List<MasterRequestDto> getAll1() {
+        List<MasterRequestDto> dtos = new ArrayList<>();
+        var masterApplications = masterRequestRepo.findAll();
 
         for (var masterApplication : masterApplications) {
             var user = userRepo.findById(masterApplication.getUser().getId())
@@ -90,7 +118,7 @@ public class MasterApplicationServiceImpl implements MasterApplicationService {
 
             var masterProfileDto = masterProfileMapper.toDto(masterProfile, masterSubServices, userAgreement);
 
-            var masterApplicationDto = MasterApplicationDto.builder()
+            var masterApplicationDto = MasterRequestDto.builder()
                     .id(masterApplication.getId())
                     .masterProfileDto(masterProfileDto)
                     .userDto(userDto)
@@ -105,33 +133,30 @@ public class MasterApplicationServiceImpl implements MasterApplicationService {
     @Override
     public void create(User user) {
 
-        if (masterApplicationRepo.existsByUserId(user.getId())) {
+        if (masterRequestRepo.existsByUserId(user.getId())) {
             throw new AppException(
                     "Application " + ErrorMessage.ENTITY_ALREADY_EXISTS,
                     HttpStatus.CONFLICT);
         }
 
-        var application = masterApplicationMapper.toEntity(user, VerificationStatus.UNDER_REVIEW);
+        var application = masterRequestMapper.toEntity(user, VerificationStatus.UNDER_REVIEW);
         userRepo.save(user);
-        masterApplicationRepo.save(application);
+        masterRequestRepo.save(application);
     }
 
     @Override
-    public void approve(MasterApplicationDto dto) {
+    public void approve(MasterRequestDto dto) {
 
-        var existsApplication = getExistsApplication(dto, VerificationStatus.APPROVED);
-        masterApplicationRepo.save(existsApplication);
+        processMasterRequest(dto, VerificationStatus.APPROVED);
     }
 
     @Override
-    public void reject(MasterApplicationDto dto) {
+    public void reject(MasterRequestDto dto) {
 
-        var existsApplication = getExistsApplication(dto, VerificationStatus.REJECTED);
-        masterApplicationRepo.save(existsApplication);
-
+        processMasterRequest(dto, VerificationStatus.REJECTED);
     }
 
-    private MasterApplication getExistsApplication(MasterApplicationDto dto, VerificationStatus rejected) {
+    private void processMasterRequest(MasterRequestDto dto, VerificationStatus rejected) {
         var admin = authUtils.getAuthenticatedUser();
 
         admin = userRepo.findById(admin.getId())
@@ -140,26 +165,13 @@ public class MasterApplicationServiceImpl implements MasterApplicationService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        var user = userRepo.findById(dto.getUserDto().getId())
+        var masterRequest = masterRequestRepo.findById(dto.getId())
                 .orElseThrow(() -> new AppException(
-                        ErrorMessage.USER_NOT_FOUND,
+                        "Master request " + ErrorMessage.ENTITY_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 
-        var existsApplication = getByUserId(user);
-
-        masterApplicationMapper.toEntity(admin, user, rejected, existsApplication, dto.getRejectionReason());
-        userRepo.save(user);
-
-        return existsApplication;
-    }
-
-    public MasterApplication getByUserId(User user) {
-
-        return masterApplicationRepo.findByUserId(user.getId())
-                .orElseThrow(() -> new AppException(
-                        "Application " + ErrorMessage.ENTITY_NOT_FOUND,
-                        HttpStatus.NOT_FOUND
-                ));
+        masterRequestMapper.toEntity(admin, masterRequest, rejected, dto.getRejectionReason());
+        masterRequestRepo.save(masterRequest);
     }
 }

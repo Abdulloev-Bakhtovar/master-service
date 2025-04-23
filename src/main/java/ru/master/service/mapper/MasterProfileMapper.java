@@ -1,10 +1,7 @@
 package ru.master.service.mapper;
 
 import ru.master.service.auth.model.User;
-import ru.master.service.model.City;
-import ru.master.service.model.MasterProfile;
-import ru.master.service.model.MasterSubService;
-import ru.master.service.model.UserAgreement;
+import ru.master.service.model.*;
 import ru.master.service.model.dto.NewMasterRequestDto;
 import ru.master.service.model.dto.MasterProfileCreateDto;
 import ru.master.service.model.dto.MasterProfileDto;
@@ -21,5 +18,5 @@ public interface MasterProfileMapper {
 
     MasterProfileDto toDto(MasterProfileCreateDto request);
 
-    NewMasterRequestDto toDto(MasterProfile masterProfile);
+    NewMasterRequestDto toDto(MasterProfile masterProfile, MasterRequest masterRequest);
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MasterApplicationDto extends TimestampedDto {
+public class MasterRequestDto extends TimestampedDto {
 
     String rejectionReason;
     UUID reviewedByAdminId;

@@ -35,7 +35,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final FileStorageService docPhotoStorageService;
     private final MasterSubServiceService masterSubServiceService;
     private final AuthService authService;
-    private final MasterApplicationService masterApplicationService;
+    private final MasterRequestService masterRequestService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -76,6 +76,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
         masterProfile = masterProfileRepo.save(masterProfile);
         masterSubServiceService.create(dto.getServiceCategoryDtos(), masterProfile);
         authService.updateVerificationStatus(user, VerificationStatus.UNDER_REVIEW);
+        masterRequestService.create(user);
     }
 
     private void addDocFile(MasterProfileDto dto, UUID userId) throws IOException {

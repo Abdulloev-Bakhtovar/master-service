@@ -7,10 +7,7 @@ import ru.master.service.mapper.CityMapper;
 import ru.master.service.mapper.MasterProfileMapper;
 import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.mapper.UserAgreementMapper;
-import ru.master.service.model.City;
-import ru.master.service.model.MasterProfile;
-import ru.master.service.model.MasterSubService;
-import ru.master.service.model.UserAgreement;
+import ru.master.service.model.*;
 import ru.master.service.model.dto.*;
 
 import java.util.List;
@@ -72,11 +69,11 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
     }
 
     @Override
-    public NewMasterRequestDto toDto(MasterProfile masterProfile) {
+    public NewMasterRequestDto toDto(MasterProfile masterProfile, MasterRequest masterRequest) {
         if (masterProfile == null) return null;
 
         return NewMasterRequestDto.builder()
-                .id(masterProfile.getId())
+                .id(masterRequest.getId())
                 .firstName(masterProfile.getFirstName())
                 .lastName(masterProfile.getLastName())
                 .phoneNumber(masterProfile.getUser().getPhoneNumber())

@@ -14,9 +14,9 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "master_applications")
+@Table(name = "master_requests")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MasterApplication extends TimestampedEntity {
+public class MasterRequest extends TimestampedEntity {
 
     String rejectionReason;
     UUID reviewedByAdminId;
