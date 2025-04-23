@@ -15,6 +15,7 @@ import ru.master.service.service.FileStorageService;
 import ru.master.service.service.NewsService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Transactional
@@ -25,6 +26,13 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepo newsRepo;
     private final NewsMapper newsMapper;
     private final FileStorageService fileStorageService;
+
+    @Override
+    public List<NewsDto> getAll() {
+        return newsRepo.findByIsVisibleTrue().stream()
+                .map(newsMapper::toDto)
+                .toList();
+    }
 
     @Override
     public void create(NewsDto dto) throws IOException {

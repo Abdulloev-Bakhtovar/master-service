@@ -1,13 +1,18 @@
 package ru.master.service.mapper.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.master.service.mapper.CityMapper;
 import ru.master.service.mapper.NewsMapper;
 import ru.master.service.model.City;
 import ru.master.service.model.News;
 import ru.master.service.model.dto.NewsDto;
 
 @Component
+@RequiredArgsConstructor
 public class NewsMapperImpl implements NewsMapper {
+
+    private final CityMapper cityMapper;
 
     @Override
     public News toEntity(NewsDto dto, City city) {
@@ -18,6 +23,21 @@ public class NewsMapperImpl implements NewsMapper {
                 .content(dto.getContent())
                 .city(city)
                 .isVisible(dto.isVisible())
+                .build();
+    }
+
+    @Override
+    public NewsDto toDto(News entity) {
+        if (entity == null) return null;
+
+        return NewsDto.builder()
+                .id(entity.getId())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .cityDto(cityMapper.toDto(entity.getCity()))
+                .isVisible(entity.isVisible())
                 .build();
     }
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.master.service.model.News;
 import ru.master.service.model.dto.CityDto;
 import ru.master.service.model.dto.NewsDto;
 import ru.master.service.service.NewsService;
@@ -21,8 +20,8 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping
-    public List<News> getNews() {
-        return List.of();
+    public List<NewsDto> getNews() {
+        return newsService.getAll();
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
