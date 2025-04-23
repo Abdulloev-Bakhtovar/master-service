@@ -5,6 +5,7 @@ import ru.master.service.model.City;
 import ru.master.service.model.MasterProfile;
 import ru.master.service.model.MasterSubService;
 import ru.master.service.model.UserAgreement;
+import ru.master.service.model.dto.NewMasterRequestDto;
 import ru.master.service.model.dto.MasterProfileCreateDto;
 import ru.master.service.model.dto.MasterProfileDto;
 
@@ -19,4 +20,6 @@ public interface MasterProfileMapper {
                            UserAgreement userAgreement);
 
     MasterProfileDto toDto(MasterProfileCreateDto request);
+
+    NewMasterRequestDto toDto(MasterProfile masterProfile);
 }

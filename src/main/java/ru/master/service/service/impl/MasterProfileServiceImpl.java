@@ -38,6 +38,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final MasterApplicationService masterApplicationService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void create(MasterProfileCreateDto createDto) throws IOException {
 
         var dto = masterProfileMapper.toDto(createDto);
@@ -74,7 +75,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
 
         masterProfile = masterProfileRepo.save(masterProfile);
         masterSubServiceService.create(dto.getServiceCategoryDtos(), masterProfile);
-        authService.updateVerificationStatus(user, VerificationStatus.INFO_ENTERED);
+        authService.updateVerificationStatus(user, VerificationStatus.UNDER_REVIEW);
     }
 
     private void addDocFile(MasterProfileDto dto, UUID userId) throws IOException {

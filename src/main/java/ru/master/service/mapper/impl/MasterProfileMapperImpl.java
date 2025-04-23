@@ -71,6 +71,20 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
         return buildMasterProfileDto(dto);
     }
 
+    @Override
+    public NewMasterRequestDto toDto(MasterProfile masterProfile) {
+        if (masterProfile == null) return null;
+
+        return NewMasterRequestDto.builder()
+                .id(masterProfile.getId())
+                .firstName(masterProfile.getFirstName())
+                .lastName(masterProfile.getLastName())
+                .phoneNumber(masterProfile.getUser().getPhoneNumber())
+                .workExperience(masterProfile.getWorkExperience())
+                .cityDto(cityMapper.toDto(masterProfile.getCity()))
+                .build();
+    }
+
     private MasterProfileDto buildMasterProfileDto(MasterProfileCreateDto dto) {
         return MasterProfileDto.builder()
                 .firstName(dto.getFirstName())

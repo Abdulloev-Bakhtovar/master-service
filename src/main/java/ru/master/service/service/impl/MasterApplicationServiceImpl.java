@@ -13,6 +13,7 @@ import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterApplicationMapper;
 import ru.master.service.mapper.MasterProfileMapper;
 import ru.master.service.model.MasterApplication;
+import ru.master.service.model.dto.NewMasterRequestDto;
 import ru.master.service.model.dto.MasterApplicationDto;
 import ru.master.service.repository.MasterApplicationRepo;
 import ru.master.service.repository.MasterProfileRepo;
@@ -40,7 +41,32 @@ public class MasterApplicationServiceImpl implements MasterApplicationService {
     private final UserAgreementRepo userAgreementRepo;
 
     @Override
-    public List<MasterApplicationDto> getAll() {
+    public List<NewMasterRequestDto> getAll() {
+
+        List<NewMasterRequestDto> dtos = new ArrayList<>();
+        var users = userRepo.findByVerificationStatus(VerificationStatus.UNDER_REVIEW);
+
+        for (var user : users) {
+            var exsistUser = userRepo.findById(user.getId())
+                    .orElseThrow(() -> new AppException(
+                            ErrorMessage.USER_NOT_FOUND,
+                            HttpStatus.NOT_FOUND
+                    ));
+            var masterProfile = masterProfileRepo.findByUserId(exsistUser.getId())
+                    .orElseThrow(() -> new AppException(
+                            "Master profile " + ErrorMessage.ENTITY_NOT_FOUND,
+                            HttpStatus.NOT_FOUND
+                    ));
+
+            NewMasterRequestDto masterProfileDto = masterProfileMapper.toDto(masterProfile);
+            dtos.add(masterProfileDto);
+        }
+
+        return dtos;
+    }
+
+    @Override
+    public List<MasterApplicationDto> getAll1() {
         List<MasterApplicationDto> dtos = new ArrayList<>();
         var masterApplications = masterApplicationRepo.findAll();
 

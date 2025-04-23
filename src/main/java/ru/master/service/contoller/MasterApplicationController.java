@@ -3,6 +3,7 @@ package ru.master.service.contoller;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.master.service.model.dto.NewMasterRequestDto;
 import ru.master.service.model.dto.MasterApplicationDto;
 import ru.master.service.service.MasterApplicationService;
 
@@ -17,7 +18,7 @@ public class MasterApplicationController {
     private final MasterApplicationService masterApplicationService;
 
     @GetMapping
-    public List<MasterApplicationDto> getAll() {
+    public List<NewMasterRequestDto> getAll() {
         return masterApplicationService.getAll();
     }
 
