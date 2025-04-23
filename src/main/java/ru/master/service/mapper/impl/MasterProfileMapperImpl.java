@@ -11,9 +11,12 @@ import ru.master.service.model.City;
 import ru.master.service.model.MasterProfile;
 import ru.master.service.model.MasterSubService;
 import ru.master.service.model.UserAgreement;
-import ru.master.service.model.dto.MasterProfileDto;
+import ru.master.service.model.dto.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -62,5 +65,61 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
                 .serviceCategoryDtos(serviceCategoryMapper.toDtoList(masterSubServices))
                 .userAgreementDto(userAgreementMapper.toDto(userAgreement))
                 .build();
+    }
+
+    @Override
+    public MasterProfileDto toDto(MasterProfileCreateDto dto) {
+        return buildMasterProfileDto(dto);
+    }
+
+    private MasterProfileDto buildMasterProfileDto(MasterProfileCreateDto dto) {
+        return MasterProfileDto.builder()
+                .firstName(dto.getFirstName())
+                .lastName(dto.getLastName())
+                .email(dto.getEmail())
+                .workExperience(dto.getWorkExperience())
+                .hasConviction(dto.isHasConviction())
+                .maritalStatus(dto.getMaritalStatus())
+                .education(dto.getEducation())
+                .cityDto(buildCityDto(dto.getCityId()))
+                .userAgreementDto(buildUserAgreementDto(dto))
+                .serviceCategoryDtos(buildServiceCategoryDtos(dto))
+                .profilePhoto(dto.getProfilePhoto())
+                .passportMainPhoto(dto.getPassportMainPhoto())
+                .passportRegistrationPhoto(dto.getPassportRegistrationPhoto())
+                .snilsPhoto(dto.getSnilsPhoto())
+                .innPhoto(dto.getInnPhoto())
+                .build();
+    }
+
+    private CityDto buildCityDto(UUID cityId) {
+        return CityDto.builder().id(cityId).build();
+    }
+
+    private UserAgreementDto buildUserAgreementDto(MasterProfileCreateDto dto) {
+        return UserAgreementDto.builder()
+                .personalDataConsent(dto.isPersonalDataConsent())
+                .notificationsAllowed(dto.isNotificationsAllowed())
+                .locationAccessAllowed(dto.isLocationAccessAllowed())
+                .serviceTermsAccepted(dto.getServiceTermsAccepted())
+                .serviceRulesAccepted(dto.getServiceRulesAccepted())
+                .build();
+    }
+
+    private List<ServiceCategoryDto> buildServiceCategoryDtos(MasterProfileCreateDto dto) {
+        Set<SubServiceCategoryDto> subServiceCategories = dto.getSubServiceCategoryIds().stream()
+                .map(this::buildSubServiceCategoryDto)
+                .collect(Collectors.toSet());
+
+        return dto.getServiceCategoryIds().stream()
+                .map(id -> ServiceCategoryDto.builder()
+                        .id(id)
+                        .subServiceCategoryDtos(subServiceCategories)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private SubServiceCategoryDto buildSubServiceCategoryDto(UUID id) {
+        return SubServiceCategoryDto.builder().id(id).build();
     }
 }

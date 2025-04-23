@@ -1,13 +1,10 @@
 package ru.master.service.service;
 
-import ru.master.service.model.dto.DocFileDto;
-import ru.master.service.model.dto.MasterProfileDto;
+import ru.master.service.model.dto.MasterProfileCreateDto;
 
 import java.io.IOException;
 
 public interface MasterProfileService {
 
-    void create(MasterProfileDto dto);
-
-    void addDocFile(DocFileDto docFileDto) throws IOException;
+    void create(MasterProfileCreateDto dto) throws IOException;
 }
