@@ -15,8 +15,6 @@ public class SecurityProperties {
 
     private List<String> corsAllowedOrigins = List.of();
 
-    private List<String> excludedPaths = List.of();
-
     private List<PublicEndpoint> publicEndpoints = List.of();
 
     @Getter

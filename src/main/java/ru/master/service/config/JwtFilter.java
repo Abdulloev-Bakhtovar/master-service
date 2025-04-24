@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        if (isExcludedPath(request.getRequestURI())) {
+        if (isPublicEndpoint(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -93,9 +93,16 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean isExcludedPath(String requestURI) {
-        return securityProperties.getExcludedPaths().stream()
-                .anyMatch(requestURI::startsWith);
+    private boolean isPublicEndpoint(HttpServletRequest request) {
+        String method = request.getMethod();
+        String uri = request.getRequestURI();
+
+        return securityProperties.getPublicEndpoints().stream()
+                .anyMatch(endpoint ->
+                        endpoint.getMethod().equalsIgnoreCase(method) &&
+                                uri.matches(endpoint.getPath().replaceAll("\\*", ".*"))
+                );
     }
+
 }
 
