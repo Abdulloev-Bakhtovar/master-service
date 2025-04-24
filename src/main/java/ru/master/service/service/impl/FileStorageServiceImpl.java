@@ -3,6 +3,7 @@ package ru.master.service.service.impl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.config.DocFileProperties;
@@ -63,6 +64,49 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
     }
+
+    @Override
+    public byte[] loadFile(DocumentType docType, UUID entityId) {
+        String filenamePrefix = docType.getPrefix() + "_" + entityId;
+
+        Path dir = imagesRootLocation.resolve(docType.getSubDirectory());
+
+        try {
+            // Найти файл по префиксу (расширение может быть разным)
+            try (var files = Files.list(dir)) {
+                Path filePath = files
+                        .filter(p -> p.getFileName().toString().startsWith(filenamePrefix))
+                        .findFirst()
+                        .orElseThrow(() -> new AppException("File not found", HttpStatus.NOT_FOUND));
+
+                return Files.readAllBytes(filePath);
+            }
+        } catch (IOException e) {
+            throw new AppException("Error loading file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public MediaType getMediaType(DocumentType docType, UUID entityId) {
+        String filenamePrefix = docType.getPrefix() + "_" + entityId;
+        Path dir = imagesRootLocation.resolve(docType.getSubDirectory());
+
+        try (var files = Files.list(dir)) {
+            Path filePath = files
+                    .filter(p -> p.getFileName().toString().startsWith(filenamePrefix))
+                    .findFirst()
+                    .orElseThrow(() -> new AppException("File not found", HttpStatus.NOT_FOUND));
+
+            String fileName = filePath.getFileName().toString();
+            if (fileName.endsWith(".png")) return MediaType.IMAGE_PNG;
+            if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) return MediaType.IMAGE_JPEG;
+
+            return MediaType.APPLICATION_OCTET_STREAM;
+        } catch (IOException e) {
+            throw new AppException("Error determining media type", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     private String getExtension(MultipartFile file, String contentType) {
         if (!docFileProp.getAllowedTypes().contains(contentType)) {
