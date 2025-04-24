@@ -18,8 +18,8 @@ public class ServiceCategoryController {
     private final ServiceCategoryService serviceCategoryService;
 
     @GetMapping
-    public List<ServiceCategoryDto> getAll() {
-        return serviceCategoryService.getAll();
+    public List<ServiceCategoryDto> getAll(@RequestParam(required = false) String name) {
+        return serviceCategoryService.getAll(name);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ServiceCategoryService {
 
-    List<ServiceCategoryDto> getAll();
+    List<ServiceCategoryDto> getAll(String name);
 
     void create(ServiceCategoryReqDto dto) throws Exception;
 }

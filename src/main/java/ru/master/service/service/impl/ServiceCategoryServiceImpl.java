@@ -9,6 +9,7 @@ import ru.master.service.constants.EntityName;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceCategoryMapper;
+import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.dto.ServiceCategoryDto;
 import ru.master.service.model.dto.request.ServiceCategoryReqDto;
 import ru.master.service.repository.ServiceCategoryRepo;
@@ -35,8 +36,15 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     private final FileStorageService fileStorageService;
 
     @Override
-    public List<ServiceCategoryDto> getAll() {
-        return serviceCategoryRepo.findAll().stream()
+    public List<ServiceCategoryDto> getAll(String name) {
+        List<ServiceCategory> categories;
+        if (name == null || name.isBlank()) {
+            categories = serviceCategoryRepo.findAll();
+        } else {
+            categories = serviceCategoryRepo.findByNameContainingIgnoreCase(name);
+        }
+
+        return categories.stream()
                 .map(serviceCategoryMapper::toDto)
                 .toList();
     }
