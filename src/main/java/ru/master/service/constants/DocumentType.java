@@ -12,7 +12,8 @@ public enum DocumentType {
     PASSPORT_REGISTRATION("passport_registration", "users/passport"),
     SNILS("snils", "users/snils"),
     INN("inn", "users/inn"),
-    NEWS_PHOTO("news_photo", "news");
+    NEWS_PHOTO("news_photo", "news"),
+    SERVICE_CATEGORY_PHOTO("service_category_photo", "service_category");
 
     private final String prefix;
     private final String subDirectory;

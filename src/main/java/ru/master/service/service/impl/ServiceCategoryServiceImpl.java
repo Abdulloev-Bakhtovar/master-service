@@ -4,15 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.constants.DocumentType;
 import ru.master.service.constants.EntityName;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.model.dto.ServiceCategoryDto;
+import ru.master.service.model.dto.request.ServiceCategoryReqDto;
 import ru.master.service.repository.ServiceCategoryRepo;
 import ru.master.service.repository.SubServiceCategoryRepo;
+import ru.master.service.service.FileStorageService;
 import ru.master.service.service.ServiceCategoryService;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +32,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     private final ServiceCategoryRepo serviceCategoryRepo;
     private final ServiceCategoryMapper serviceCategoryMapper;
     private final SubServiceCategoryRepo subServiceCategoryRepo;
+    private final FileStorageService fileStorageService;
 
     @Override
     public List<ServiceCategoryDto> getAll() {
@@ -37,7 +42,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     }
 
     @Override
-    public void create(ServiceCategoryDto dto) {
+    public void create(ServiceCategoryReqDto dto) throws IOException {
 
         if (serviceCategoryRepo.existsByName(dto.getName())) {
             throw new AppException(
@@ -46,10 +51,10 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
             );
         }
 
-        var subServices = Optional.ofNullable(dto.getSubServiceCategoryDtos())
+        var subServices = Optional.ofNullable(dto.getSubServiceCategoryIds())
                 .orElse(Collections.emptyList())
                 .stream()
-                .map(subDto -> subServiceCategoryRepo.findById(subDto.getId())
+                .map(id -> subServiceCategoryRepo.findById(id)
                         .orElseThrow(() -> new AppException(
                                 String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SUB_SERVICE_CATEGORY.get()),
                                 HttpStatus.NOT_FOUND
@@ -59,5 +64,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
 
         var serviceCategory = serviceCategoryMapper.toEntity(dto, subServices);
         serviceCategoryRepo.save(serviceCategory);
+
+        fileStorageService.storeFile(dto.getPhoto(), DocumentType.SERVICE_CATEGORY_PHOTO, serviceCategory.getId());
     }
 }

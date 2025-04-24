@@ -2,8 +2,10 @@ package ru.master.service.contoller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.ServiceCategoryDto;
+import ru.master.service.model.dto.request.ServiceCategoryReqDto;
 import ru.master.service.service.ServiceCategoryService;
 
 import java.util.List;
@@ -20,9 +22,9 @@ public class ServiceCategoryController {
         return serviceCategoryService.getAll();
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody ServiceCategoryDto dto) {
+    public void create(@ModelAttribute ServiceCategoryReqDto dto) throws Exception {
         serviceCategoryService.create(dto);
     }
 }

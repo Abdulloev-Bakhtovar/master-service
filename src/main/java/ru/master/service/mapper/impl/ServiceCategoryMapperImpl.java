@@ -8,9 +8,9 @@ import ru.master.service.model.MasterSubService;
 import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.SubServiceCategory;
 import ru.master.service.model.dto.ServiceCategoryDto;
+import ru.master.service.model.dto.request.ServiceCategoryReqDto;
 
 import java.util.List;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
     private final SubServiceCategoryMapper subServiceMapper;
 
     @Override
-    public ServiceCategory toEntity(ServiceCategoryDto dto, List<SubServiceCategory> subServices) {
+    public ServiceCategory toEntity(ServiceCategoryReqDto dto, List<SubServiceCategory> subServices) {
         if (dto == null) return null;
 
         return ServiceCategory.builder()
