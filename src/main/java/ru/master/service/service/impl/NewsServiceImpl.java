@@ -9,6 +9,7 @@ import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.NewsMapper;
 import ru.master.service.model.dto.NewsDto;
+import ru.master.service.model.dto.request.NewsCreateReqDto;
 import ru.master.service.repository.CityRepo;
 import ru.master.service.repository.NewsRepo;
 import ru.master.service.service.FileStorageService;
@@ -36,9 +37,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void create(NewsDto dto) throws IOException {
+    public void create(NewsCreateReqDto dto) throws IOException {
 
-        var city = cityRepo.findById(dto.getCityDto().getId())
+        var city = cityRepo.findById(dto.getCityId())
                 .orElseThrow(() -> new AppException(
                         "City " + ErrorMessage.ENTITY_NOT_FOUND,
                         HttpStatus.NOT_FOUND

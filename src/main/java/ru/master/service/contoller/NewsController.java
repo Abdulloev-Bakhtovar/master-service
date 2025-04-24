@@ -1,13 +1,13 @@
 package ru.master.service.contoller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.constants.DocumentType;
-import ru.master.service.model.dto.CityDto;
 import ru.master.service.model.dto.NewsDto;
+import ru.master.service.model.dto.request.NewsCreateReqDto;
 import ru.master.service.service.FileStorageService;
 import ru.master.service.service.NewsService;
 
@@ -28,28 +28,10 @@ public class NewsController {
         return newsService.getAll();
     }
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void create(
-            @RequestParam String title,
-            @RequestParam UUID cityId,
-            @RequestParam String content,
-            @RequestParam boolean isVisible,
-            @RequestParam MultipartFile photo
-    ) throws IOException {
-
-        var cityDto = CityDto.builder()
-                .id(cityId)
-                .build();
-
-        var newsDto = NewsDto.builder()
-                .title(title)
-                .content(content)
-                .isVisible(isVisible)
-                .cityDto(cityDto)
-                .photo(photo)
-                .build();
-
-        newsService.create(newsDto);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(@ModelAttribute NewsCreateReqDto dto) throws IOException {
+        newsService.create(dto);
     }
 
     @PatchMapping("/{id}/hidden")
