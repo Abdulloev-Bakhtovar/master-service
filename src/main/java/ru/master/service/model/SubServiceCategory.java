@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "service_subcategories")
+@Table(name = "subservice_categories")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SubServiceCategory extends BaseCategory {
 }
