@@ -33,7 +33,6 @@ public class MasterSubServiceServiceImpl implements MasterSubServiceService {
 
     @Override
     public void create(List<ServiceCategoryDto> dtos, MasterProfile masterProfile) {
-
         for (ServiceCategoryDto selected : dtos) {
             var service = serviceCategoryRepo.findById(selected.getId())
                     .orElseThrow(() -> new AppException(
@@ -41,24 +40,23 @@ public class MasterSubServiceServiceImpl implements MasterSubServiceService {
                             HttpStatus.NOT_FOUND)
                     );
 
-            for (SubServiceCategoryDto subService : selected.getSubServiceCategoryDtos()) {
-                var sub = subServiceCategoryRepo.findById(subService.getId())
+            for (SubServiceCategoryDto subDto : selected.getSubServiceCategoryDtos()) {
+                var sub = subServiceCategoryRepo.findById(subDto.getId())
                         .orElseThrow(() -> new AppException(
                                 format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SUB_SERVICE_CATEGORY.get()),
                                 HttpStatus.NOT_FOUND)
                         );
-                // Проверка, что sub принадлежит service
+
+                // Если подуслуга не относится к этой услуге — пропускаем её
                 if (!service.getSubServices().contains(sub)) {
-                    throw new AppException(
-                            "Subservice does not belong to selected service",
-                            HttpStatus.BAD_REQUEST
-                    );
+                    continue;
                 }
 
-                MasterSubService masterSubService = masterSubServiceMapper.toEntity(masterProfile, service, sub);
+                MasterSubService masterSubService = masterSubServiceMapper
+                        .toEntity(masterProfile, service, sub);
                 masterSubServiceRepo.save(masterSubService);
             }
         }
-
     }
+
 }
