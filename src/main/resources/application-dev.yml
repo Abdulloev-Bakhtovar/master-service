@@ -89,6 +89,8 @@ application:
       - method: GET
         path: /news/*/image
       - method: GET
+        path: /users/*/verification-status
+      - method: GET
         path: /v2/api-docs
       - method: GET
         path: /v3/api-docs/**
