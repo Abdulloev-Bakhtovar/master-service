@@ -94,42 +94,6 @@ public class MasterRequestServiceImpl implements MasterRequestService {
         return masterRequestMapper.toDto(masterRequest, masterProfileDto, userDto);
     }
 
-    public List<MasterRequestDto> getAll1() {
-        List<MasterRequestDto> dtos = new ArrayList<>();
-        var masterApplications = masterRequestRepo.findAll();
-
-        for (var masterApplication : masterApplications) {
-            var user = userRepo.findById(masterApplication.getUser().getId())
-                    .orElseThrow(() -> new AppException(
-                            ErrorMessage.USER_NOT_FOUND,
-                            HttpStatus.NOT_FOUND
-                    ));
-            var masterProfile = masterProfileRepo.findByUserId(user.getId())
-                    .orElseThrow(() -> new AppException(
-                    "Master profile " + ErrorMessage.ENTITY_NOT_FOUND,
-                    HttpStatus.NOT_FOUND
-            ));
-
-            var userAgreement = userAgreementRepo.findByUserId(user.getId());
-
-            var userDto = userMapper.toDto(user);
-
-            var masterSubServices = masterSubServiceRepo.findAllByMasterProfileId(masterProfile.getId());
-
-            var masterProfileDto = masterProfileMapper.toDto(masterProfile, masterSubServices, userAgreement);
-
-            var masterApplicationDto = MasterRequestDto.builder()
-                    .id(masterApplication.getId())
-                    .masterProfileDto(masterProfileDto)
-                    .userDto(userDto)
-                    .build();
-
-            dtos.add(masterApplicationDto);
-        }
-
-        return dtos;
-    }
-
     @Override
     public void create(User user) {
 
