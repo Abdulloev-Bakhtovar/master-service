@@ -8,6 +8,7 @@ import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.auth.service.UserService;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
+import ru.master.service.model.dto.EnumDto;
 
 @Service
 @Transactional
@@ -18,13 +19,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public String getVerificationStatusByPhoneNumber(String phoneNumber) {
+    public EnumDto getVerificationStatusByPhoneNumber(String phoneNumber) {
         var user = userRepo.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new AppException(
                         ErrorMessage.USER_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 
-        return user.getVerificationStatus().toString();
+        return EnumDto.builder()
+                .name(user.getVerificationStatus().name())
+                .displayName(user.getVerificationStatus().getDisplayName())
+                .build();
     }
 }

@@ -1,6 +1,8 @@
 package ru.master.service.auth.service;
 
+import ru.master.service.model.dto.EnumDto;
+
 public interface UserService {
 
-    String getVerificationStatusByPhoneNumber(String phoneNumber);
+    EnumDto getVerificationStatusByPhoneNumber(String phoneNumber);
 }
