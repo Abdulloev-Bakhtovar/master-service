@@ -61,8 +61,9 @@ public class ClientProfileServiceImpl implements ClientProfileService {
         userAgreementService.create(dto.getUserAgreementDto(), user);
 
         var clientProfile = clientProfileMapper.toEntity(dto, user, city);
-        clientProfileRepo.save(clientProfile);
 
         authService.updateVerificationStatus(user, VerificationStatus.APPROVED);
+
+        clientProfileRepo.save(clientProfile);
     }
 }

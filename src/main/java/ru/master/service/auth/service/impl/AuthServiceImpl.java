@@ -81,7 +81,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Transactional
     public void delete(HttpServletRequest request, HttpServletResponse response) {
 
         var user = authUtils.getAuthenticatedUser();
