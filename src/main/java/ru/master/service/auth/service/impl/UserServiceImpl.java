@@ -9,8 +9,6 @@ import ru.master.service.auth.service.UserService;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 
-import java.util.UUID;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -20,8 +18,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public String getVerificationStatusByUserId(UUID id) {
-        var user = userRepo.findById(id)
+    public String getVerificationStatusByPhoneNumber(String phoneNumber) {
+        var user = userRepo.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new AppException(
                         ErrorMessage.USER_NOT_FOUND,
                         HttpStatus.NOT_FOUND

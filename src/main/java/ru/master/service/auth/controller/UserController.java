@@ -16,9 +16,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/{id}")
-    public String getVerificationStatusByUserId(@PathVariable UUID id) {
-        return userService.getVerificationStatusByUserId(id);
+    @GetMapping("/{phoneNumber}/verification-status")
+    public String getVerificationStatusByPhoneNumber(@PathVariable String phoneNumber) {
+        return userService.getVerificationStatusByPhoneNumber(phoneNumber);
     }
 
 }
