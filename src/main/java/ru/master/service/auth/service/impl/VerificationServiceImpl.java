@@ -87,7 +87,7 @@ public class VerificationServiceImpl implements VerificationService {
         }
 
         var user = getByPhoneNumber(dto.getPhoneNumber());
-        user.setVerificationStatus(VerificationStatus.PHONE_VERIFIED);
+        user.setVerificationStatus(VerificationStatus.INFO_NOT_ENTERED);
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
