@@ -15,4 +15,6 @@ public interface ServiceCategoryMapper {
     ServiceCategoryDto toDto(ServiceCategory entity);
 
     List<ServiceCategoryDto> toDtoList(List<MasterSubService> masterSubServices);
+
+    ServiceCategoryDto toDtoWithSubService(ServiceCategory entity);
 }

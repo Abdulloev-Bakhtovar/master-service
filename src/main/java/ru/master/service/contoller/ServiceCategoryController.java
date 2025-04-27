@@ -22,6 +22,11 @@ public class ServiceCategoryController {
         return serviceCategoryService.getAll(name);
     }
 
+    @GetMapping("/with-sub-service")
+    public List<ServiceCategoryDto> getAllWithSubService() {
+        return serviceCategoryService.getAllWithSubService();
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@ModelAttribute ServiceCategoryReqDto dto) throws Exception {

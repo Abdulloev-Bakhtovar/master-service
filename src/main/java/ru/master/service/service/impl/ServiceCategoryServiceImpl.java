@@ -50,6 +50,13 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     }
 
     @Override
+    public List<ServiceCategoryDto> getAllWithSubService() {
+        return serviceCategoryRepo.findAll().stream()
+                .map(serviceCategoryMapper::toDtoWithSubService)
+                .toList();
+    }
+
+    @Override
     public void create(ServiceCategoryReqDto dto) throws IOException {
 
         if (serviceCategoryRepo.existsByName(dto.getName())) {

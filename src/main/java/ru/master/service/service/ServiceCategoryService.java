@@ -10,4 +10,6 @@ public interface ServiceCategoryService {
     List<ServiceCategoryDto> getAll(String name);
 
     void create(ServiceCategoryReqDto dto) throws Exception;
+
+    List<ServiceCategoryDto> getAllWithSubService();
 }

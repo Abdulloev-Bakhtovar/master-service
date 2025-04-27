@@ -35,7 +35,6 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
         return ServiceCategoryDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .subServiceCategoryDtos(subServiceMapper.toDtoList(entity.getSubServices()))
                 .build();
     }
 
@@ -55,5 +54,16 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
         return masterSubServices.stream()
                 .map(this::toDto)
                 .toList();
+    }
+
+    @Override
+    public ServiceCategoryDto toDtoWithSubService(ServiceCategory entity) {
+        if (entity == null) return null;
+
+        return ServiceCategoryDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .subServiceCategoryDtos(subServiceMapper.toDtoList(entity.getSubServices()))
+                .build();
     }
 }
