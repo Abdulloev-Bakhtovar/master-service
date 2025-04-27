@@ -4,6 +4,7 @@ import ru.master.service.model.dto.ServiceCategoryDto;
 import ru.master.service.model.dto.request.ServiceCategoryReqDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ServiceCategoryService {
 
@@ -12,4 +13,6 @@ public interface ServiceCategoryService {
     void create(ServiceCategoryReqDto dto) throws Exception;
 
     List<ServiceCategoryDto> getAllWithSubService();
+
+    ServiceCategoryDto getById(UUID id);
 }

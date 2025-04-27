@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static ru.master.service.util.ErrorFormatterUtil.format;
@@ -54,6 +55,16 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
         return serviceCategoryRepo.findAll().stream()
                 .map(serviceCategoryMapper::toDtoWithSubService)
                 .toList();
+    }
+
+    @Override
+    public ServiceCategoryDto getById(UUID id) {
+        var serviceCategory = serviceCategoryRepo.findById(id)
+                .orElseThrow(() -> new AppException(
+                format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SERVICE_CATEGORY.get()),
+                HttpStatus.CONFLICT
+        ));
+        return serviceCategoryMapper.toDtoWithSubService(serviceCategory);
     }
 
     @Override

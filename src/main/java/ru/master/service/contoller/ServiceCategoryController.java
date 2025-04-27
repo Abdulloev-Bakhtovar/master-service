@@ -32,6 +32,11 @@ public class ServiceCategoryController {
         return serviceCategoryService.getAllWithSubService();
     }
 
+    @GetMapping("/{id}")
+    public ServiceCategoryDto getById(@PathVariable UUID id) {
+        return serviceCategoryService.getById(id);
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@ModelAttribute ServiceCategoryReqDto dto) throws Exception {
