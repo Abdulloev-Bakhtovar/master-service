@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constants.ServiceRequestStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceRequestMapper;
 import ru.master.service.model.dto.IdDto;
@@ -12,6 +13,8 @@ import ru.master.service.model.dto.ServiceRequestDto;
 import ru.master.service.repository.*;
 import ru.master.service.service.ServiceRequestService;
 import ru.master.service.util.AuthUtils;
+
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -25,6 +28,11 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     private final SubServiceCategoryRepo subServiceCategoryRepo;
     private final ServiceRequestMapper serviceRequestMapper;
     private final AuthUtils authUtils;
+
+    @Override
+    public ServiceRequestDto getById(UUID id) {
+        return null;
+    }
 
     @Override
     public IdDto create(ServiceRequestDto dto) {
@@ -65,7 +73,13 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             );
         }
 
-        var serviceRequest = serviceRequestMapper.toEntity(dto, city, clientProfile, serviceCategory, subServiceCategory);
+        var serviceRequest = serviceRequestMapper.toEntity(
+                dto,
+                city,
+                clientProfile,
+                serviceCategory,
+                subServiceCategory,
+                ServiceRequestStatus.SEARCH_MASTER);
 
         serviceRequestRepo.save(serviceRequest);
 

@@ -1,6 +1,7 @@
 package ru.master.service.mapper.impl;
 
 import org.springframework.stereotype.Component;
+import ru.master.service.constants.ServiceRequestStatus;
 import ru.master.service.mapper.ServiceRequestMapper;
 import ru.master.service.model.*;
 import ru.master.service.model.dto.ServiceRequestDto;
@@ -13,7 +14,8 @@ public class ServiceRequestMapperImpl implements ServiceRequestMapper {
                                    City city,
                                    ClientProfile clientProfile,
                                    ServiceCategory serviceCategory,
-                                   SubServiceCategory subServiceCategory
+                                   SubServiceCategory subServiceCategory,
+                                   ServiceRequestStatus serviceRequestStatus
     ) {
         if (dto == null) return null;
 
@@ -28,6 +30,7 @@ public class ServiceRequestMapperImpl implements ServiceRequestMapper {
                 .agreeToTerms(dto.isAgreeToTerms())
                 .price(dto.getPrice())
                 .serviceType(dto.getServiceType())
+                .serviceRequestStatus(serviceRequestStatus)
                 .city(city)
                 .clientProfile(clientProfile)
                 .serviceCategory(serviceCategory)

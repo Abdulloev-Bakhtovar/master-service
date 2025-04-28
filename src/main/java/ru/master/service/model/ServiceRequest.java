@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import ru.master.service.constants.ServiceRequestStatus;
 import ru.master.service.constants.ServiceType;
 
 import java.math.BigDecimal;
@@ -31,6 +32,9 @@ public class ServiceRequest extends TimestampedEntity {
 
     @Enumerated(EnumType.STRING)
     ServiceType serviceType;
+
+    @Enumerated(EnumType.STRING)
+    ServiceRequestStatus serviceRequestStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
