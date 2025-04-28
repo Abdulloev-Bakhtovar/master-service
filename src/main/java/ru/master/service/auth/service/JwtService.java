@@ -16,8 +16,6 @@ public interface JwtService {
 
     String extractTokenType(String jwt);
 
-    VerificationStatus extractVerificationStatus(String jwt);
-
     Role extractRole(String jwt);
 
     Instant extractExpiration(String token);

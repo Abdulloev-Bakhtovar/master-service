@@ -52,11 +52,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public VerificationStatus extractVerificationStatus(String jwt) {
-        return extractClaim(jwt, claims -> claims.get("verificationStatus", VerificationStatus.class));
-    }
-
-    @Override
     public Role extractRole(String jwt) {
         String roleStr = extractClaim(jwt, claims -> claims.get("role", String.class));
         try {
@@ -105,8 +100,7 @@ public class JwtServiceImpl implements JwtService {
         TokenClaims claims = new TokenClaims(
                 user.getPhoneNumber(),
                 user.getRole(),
-                TOKEN_TYPE_ACCESS,
-                user.getVerificationStatus()
+                TOKEN_TYPE_ACCESS
         );
         return generateToken(user, accessTokenExpiration, claims.toMap());
     }
@@ -116,8 +110,7 @@ public class JwtServiceImpl implements JwtService {
         TokenClaims claims = new TokenClaims(
                 user.getPhoneNumber(),
                 null,
-                TOKEN_TYPE_REFRESH,
-                user.getVerificationStatus()
+                TOKEN_TYPE_REFRESH
         );
         return generateToken(user, refreshTokenExpiration, claims.toMap());
     }
