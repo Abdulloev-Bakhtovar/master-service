@@ -51,4 +51,8 @@ public class ServiceRequest extends TimestampedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subservice_category_id")
     SubServiceCategory subServiceCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "master_profile_id")
+    MasterProfile masterProfile;
 }

@@ -23,4 +23,5 @@ public class MasterProfile extends BaseProfile {
     Education education;
     String workExperience;
     boolean hasConviction;
+    float rating;
 }

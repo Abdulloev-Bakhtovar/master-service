@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.constants.EntityName;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.constants.ServiceRequestStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceRequestMapper;
 import ru.master.service.model.dto.IdDto;
 import ru.master.service.model.dto.ServiceRequestDto;
+import ru.master.service.model.dto.request.ServiceRequestInfoDto;
 import ru.master.service.repository.*;
 import ru.master.service.service.ServiceRequestService;
 import ru.master.service.util.AuthUtils;
@@ -30,8 +32,15 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     private final AuthUtils authUtils;
 
     @Override
-    public ServiceRequestDto getById(UUID id) {
-        return null;
+    @Transactional(readOnly = true)
+    public ServiceRequestInfoDto getById(UUID id) {
+        var entity = serviceRequestRepo.findById(id)
+                .orElseThrow(() -> new AppException(
+                        String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SERVICE_REQUEST.get()),
+                        HttpStatus.NOT_FOUND
+                ));
+
+        return serviceRequestMapper.requestInfoDto(entity);
     }
 
     @Override

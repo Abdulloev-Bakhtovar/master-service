@@ -21,6 +21,7 @@ public class MasterProfileDto extends BaseProfileDto {
     String email;
     String workExperience;
     boolean hasConviction;
+    float rating;
     MaritalStatus maritalStatus;
     Education education;
     List<ServiceCategoryDto> serviceCategoryDtos;

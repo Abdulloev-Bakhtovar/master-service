@@ -21,6 +21,7 @@ public class MasterProfileCreateDto {
     String firstName;
     String lastName;
     String email;
+    float rating;
     String workExperience;
     boolean hasConviction;
     MaritalStatus maritalStatus;

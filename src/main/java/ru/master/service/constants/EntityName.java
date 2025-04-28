@@ -10,7 +10,8 @@ public enum EntityName {
     CITY("City"),
     DOCUMENT("Document"),
     SERVICE_CATEGORY("Service category"),
-    SUB_SERVICE_CATEGORY("Sub service category");
+    SUB_SERVICE_CATEGORY("Sub service category"),
+    SERVICE_REQUEST("Service request"),;
 
     private final String displayName;
 
