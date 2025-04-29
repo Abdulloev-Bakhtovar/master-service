@@ -6,8 +6,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.constants.DocumentType;
-import ru.master.service.model.dto.ServiceCategoryDto;
-import ru.master.service.model.dto.request.ServiceCategoryReqDto;
+import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.request.CreateServiceCategoryDto;
+import ru.master.service.model.dto.request.ListServiceCategoryDto;
 import ru.master.service.service.FileStorageService;
 import ru.master.service.service.ServiceCategoryService;
 
@@ -23,13 +24,8 @@ public class ServiceCategoryController {
     private final FileStorageService fileStorageService;
 
     @GetMapping
-    public List<ServiceCategoryDto> getAll(@RequestParam(required = false) String name) {
+    public List<ListServiceCategoryDto> getAll(@RequestParam(required = false) String name) {
         return serviceCategoryService.getAll(name);
-    }
-
-    @GetMapping("/with-sub-service")
-    public List<ServiceCategoryDto> getAllWithSubService() {
-        return serviceCategoryService.getAllWithSubService();
     }
 
     @GetMapping("/{id}")
@@ -39,7 +35,7 @@ public class ServiceCategoryController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@ModelAttribute ServiceCategoryReqDto dto) throws Exception {
+    public void create(@ModelAttribute CreateServiceCategoryDto dto) throws Exception {
         serviceCategoryService.create(dto);
     }
 

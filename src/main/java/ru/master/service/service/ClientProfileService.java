@@ -1,8 +1,8 @@
 package ru.master.service.service;
 
-import ru.master.service.model.dto.ClientProfileDto;
+import ru.master.service.model.dto.request.CreateClientProfileDto;
 
 public interface ClientProfileService {
 
-    void create(ClientProfileDto dto);
+    void create(CreateClientProfileDto reqDto);
 }

@@ -10,7 +10,7 @@ import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterSubServiceMapper;
 import ru.master.service.model.MasterProfile;
 import ru.master.service.model.MasterSubService;
-import ru.master.service.model.dto.ServiceCategoryDto;
+import ru.master.service.model.dto.responce.ServiceCategoryDto;
 import ru.master.service.model.dto.SubServiceCategoryDto;
 import ru.master.service.repository.MasterSubServiceRepo;
 import ru.master.service.repository.ServiceCategoryRepo;

@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import ru.master.service.auth.model.dto.TimestampedDto;
 import ru.master.service.auth.model.dto.UserDto;
+import ru.master.service.model.dto.inner.MasterProfileForCreateDto;
 
 import java.util.UUID;
 
@@ -19,5 +20,5 @@ public class MasterRequestDto extends TimestampedDto {
     String rejectionReason;
     UUID reviewedByAdminId;
     UserDto userDto;
-    MasterProfileDto masterProfileDto;
+    MasterProfileForCreateDto masterProfileForCreateDto;
 }

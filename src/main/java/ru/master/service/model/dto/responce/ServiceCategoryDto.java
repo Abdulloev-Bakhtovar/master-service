@@ -1,8 +1,10 @@
-package ru.master.service.model.dto;
+package ru.master.service.model.dto.responce;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import ru.master.service.model.dto.BaseCategoryDto;
+import ru.master.service.model.dto.SubServiceCategoryDto;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package ru.master.service.service;
 
 import ru.master.service.model.dto.NewsDto;
-import ru.master.service.model.dto.request.NewsCreateReqDto;
+import ru.master.service.model.dto.request.CreateNewsDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +11,7 @@ public interface NewsService {
 
     List<NewsDto> getAll();
 
-    void create(NewsCreateReqDto dto) throws IOException;
+    void create(CreateNewsDto dto) throws IOException;
 
     void changeVisibility(UUID id, boolean isVisible);
 

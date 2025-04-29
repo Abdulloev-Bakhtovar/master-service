@@ -5,13 +5,13 @@ import ru.master.service.auth.model.User;
 import ru.master.service.mapper.ClientProfileMapper;
 import ru.master.service.model.City;
 import ru.master.service.model.ClientProfile;
-import ru.master.service.model.dto.ClientProfileDto;
+import ru.master.service.model.dto.request.CreateClientProfileDto;
 
 @Component
 public class ClientProfileMapperImpl implements ClientProfileMapper {
 
     @Override
-    public ClientProfile toEntity(ClientProfileDto dto, User user, City city) {
+    public ClientProfile toClientProfileEntity(CreateClientProfileDto dto, User user, City city) {
         if (dto == null) return null;
 
         return ClientProfile.builder()

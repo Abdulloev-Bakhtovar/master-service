@@ -2,21 +2,22 @@ package ru.master.service.model.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.springframework.web.multipart.MultipartFile;
-import ru.master.service.model.dto.BaseCategoryDto;
 
-import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ServiceCategoryReqDto extends BaseCategoryDto {
+public class CreateNewsDto {
 
-    List<UUID> subServiceCategoryIds;
+    String title;
+    UUID cityId;
+    String content;
+    boolean isVisible;
     MultipartFile photo;
 }

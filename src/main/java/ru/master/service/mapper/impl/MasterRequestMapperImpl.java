@@ -6,7 +6,7 @@ import ru.master.service.auth.model.dto.UserDto;
 import ru.master.service.constants.VerificationStatus;
 import ru.master.service.mapper.MasterRequestMapper;
 import ru.master.service.model.MasterRequest;
-import ru.master.service.model.dto.MasterProfileDto;
+import ru.master.service.model.dto.inner.MasterProfileForCreateDto;
 import ru.master.service.model.dto.MasterRequestDto;
 
 @Component
@@ -40,7 +40,7 @@ public class MasterRequestMapperImpl implements MasterRequestMapper {
     }
 
     @Override
-    public MasterRequestDto toDto(MasterRequest entity, MasterProfileDto masterProfileDto, UserDto userDto) {
+    public MasterRequestDto toDto(MasterRequest entity, MasterProfileForCreateDto masterProfileForCreateDto, UserDto userDto) {
         if (entity == null) return null;
 
         return MasterRequestDto.builder()
@@ -50,7 +50,7 @@ public class MasterRequestMapperImpl implements MasterRequestMapper {
                 .rejectionReason(entity.getRejectionReason())
                 .reviewedByAdminId(entity.getReviewedByAdminId())
                 .userDto(userDto)
-                .masterProfileDto(masterProfileDto)
+                .masterProfileForCreateDto(masterProfileForCreateDto)
                 .build();
     }
 

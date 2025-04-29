@@ -3,30 +3,49 @@ package ru.master.service.contoller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.IdDto;
-import ru.master.service.model.dto.ClientOrderDto;
-import ru.master.service.model.dto.request.ClientOrderInfoDto;
+import ru.master.service.model.dto.request.CancelOrderDto;
+import ru.master.service.model.dto.request.CompleteOrderDto;
+import ru.master.service.model.dto.request.CreateClientOrderDto;
+import ru.master.service.model.dto.responce.ListClientOrderDto;
+import ru.master.service.model.dto.responce.OrderInfoDto;
 import ru.master.service.service.ClientOrderService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/client-orders")
+@RequestMapping("/orders")
 @RequiredArgsConstructor
 public class ClientOrderController {
 
     private final ClientOrderService clientOrderService;
 
+    @GetMapping("/client-orders")
+    public List<ListClientOrderDto> getClientOrders() {
+        return clientOrderService.getClientOrders();
+    }
+
+    @PatchMapping("/cancel")
+    public void cancelOrderForClient(@RequestBody CancelOrderDto reqDto) {
+        clientOrderService.cancelOrderForClient(reqDto);
+    }
+
+    @PatchMapping("/complete")
+    public void completeOrderForClient(@RequestBody CompleteOrderDto reqDto) {
+        clientOrderService.completeOrderForClient(reqDto);
+    }
+
     @GetMapping("/{id}")
-    public ClientOrderInfoDto findById(@PathVariable UUID id) {
+    public OrderInfoDto getById(@PathVariable UUID id) {
         return clientOrderService.getById(id);
     }
 
     @PostMapping
-    public IdDto create(@RequestBody ClientOrderDto dto) {
-        return clientOrderService.create(dto);
+    public IdDto create(@RequestBody CreateClientOrderDto reqDto) {
+        return clientOrderService.create(reqDto);
     }
 
-    @PatchMapping("/orders/{orderId}/accept")
+    @PatchMapping("/{orderId}/accept")
     public void acceptOrder(@PathVariable UUID orderId) {
         clientOrderService.acceptOrder(orderId);
     }

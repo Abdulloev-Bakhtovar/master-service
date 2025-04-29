@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.model.dto.*;
+import ru.master.service.model.dto.request.CreateMasterProfileDto;
 import ru.master.service.service.MasterProfileService;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class MasterProfileController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createMasterProfile(@ModelAttribute MasterProfileCreateDto dto) throws IOException {
-        masterProfileService.create(dto);
+    public void createMasterProfile(@ModelAttribute CreateMasterProfileDto reqDto) throws IOException {
+        masterProfileService.create(reqDto);
     }
 }

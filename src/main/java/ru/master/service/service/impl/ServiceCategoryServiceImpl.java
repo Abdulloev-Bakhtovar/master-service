@@ -10,8 +10,9 @@ import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.model.ServiceCategory;
-import ru.master.service.model.dto.ServiceCategoryDto;
-import ru.master.service.model.dto.request.ServiceCategoryReqDto;
+import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.request.CreateServiceCategoryDto;
+import ru.master.service.model.dto.request.ListServiceCategoryDto;
 import ru.master.service.repository.ServiceCategoryRepo;
 import ru.master.service.repository.SubServiceCategoryRepo;
 import ru.master.service.service.FileStorageService;
@@ -37,7 +38,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     private final FileStorageService fileStorageService;
 
     @Override
-    public List<ServiceCategoryDto> getAll(String name) {
+    public List<ListServiceCategoryDto> getAll(String name) {
         List<ServiceCategory> categories;
         if (name == null || name.isBlank()) {
             categories = serviceCategoryRepo.findAll();
@@ -46,14 +47,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
         }
 
         return categories.stream()
-                .map(serviceCategoryMapper::toDto)
-                .toList();
-    }
-
-    @Override
-    public List<ServiceCategoryDto> getAllWithSubService() {
-        return serviceCategoryRepo.findAll().stream()
-                .map(serviceCategoryMapper::toDtoWithSubService)
+                .map(serviceCategoryMapper::toListServiceCategoryDto)
                 .toList();
     }
 
@@ -68,7 +62,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     }
 
     @Override
-    public void create(ServiceCategoryReqDto dto) throws IOException {
+    public void create(CreateServiceCategoryDto dto) throws IOException {
 
         if (serviceCategoryRepo.existsByName(dto.getName())) {
             throw new AppException(

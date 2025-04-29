@@ -40,7 +40,7 @@ spring:
       enabled: true
 
 logging:
-  config: classpath:logging/logback-master.xml
+  config: classpath:logging/logback-dev.xml
 
 application:
   sms-verification:
@@ -51,7 +51,7 @@ application:
   security:
     jwt:
       access-token:
-        expiration: 120 #minute
+        expiration: 1200 #minute
       refresh-token:
         expiration: 14400 #minute -> 10 day
       keys:

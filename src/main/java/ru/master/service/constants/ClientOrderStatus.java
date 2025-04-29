@@ -9,8 +9,8 @@ public enum ClientOrderStatus implements DisplayableEnum {
 
     SEARCH_MASTER("Поиск мастера"),
     IN_PROGRESS("Взята в работу"),
-    COMPLETED("Выполнен"),
-    CANCELLED("Отменён");
+    COMPLETED("Завершить заказ"),
+    CANCELLED("Отменить заказ");
 
     private final String displayName;
 }

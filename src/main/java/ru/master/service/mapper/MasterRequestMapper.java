@@ -4,7 +4,7 @@ import ru.master.service.auth.model.User;
 import ru.master.service.auth.model.dto.UserDto;
 import ru.master.service.constants.VerificationStatus;
 import ru.master.service.model.MasterRequest;
-import ru.master.service.model.dto.MasterProfileDto;
+import ru.master.service.model.dto.inner.MasterProfileForCreateDto;
 import ru.master.service.model.dto.MasterRequestDto;
 
 public interface MasterRequestMapper {
@@ -17,7 +17,7 @@ public interface MasterRequestMapper {
                   MasterRequest existsApplication,
                   String rejectionReason);
 
-    MasterRequestDto toDto(MasterRequest entity, MasterProfileDto masterProfileDto, UserDto userDto);
+    MasterRequestDto toDto(MasterRequest entity, MasterProfileForCreateDto masterProfileForCreateDto, UserDto userDto);
 
     void toEntity(User admin, MasterRequest masterRequest, VerificationStatus rejected, String rejectionReason);
 }

@@ -2,21 +2,28 @@ package ru.master.service.mapper;
 
 import ru.master.service.constants.ClientOrderStatus;
 import ru.master.service.model.*;
-import ru.master.service.model.dto.ClientOrderDto;
-import ru.master.service.model.dto.request.ClientOrderInfoDto;
+import ru.master.service.model.dto.request.CancelOrderDto;
+import ru.master.service.model.dto.request.CompleteOrderDto;
+import ru.master.service.model.dto.request.CreateClientOrderDto;
+import ru.master.service.model.dto.responce.ListClientOrderDto;
+import ru.master.service.model.dto.responce.OrderInfoDto;
 
 public interface ClientOrderMapper {
 
-    ClientOrder toEntity(ClientOrderDto dto,
+    ClientOrder toEntity(CreateClientOrderDto dto,
                          City city,
                          ClientProfile clientProfile,
                          ServiceCategory serviceCategory,
                          SubServiceCategory subServiceCategory,
                          ClientOrderStatus clientOrderStatus);
 
-    ClientOrderDto toDto(ClientOrder entity);
-
-    ClientOrderInfoDto orderInfoDto(ClientOrder entity);
-
     void mapWithMaster(ClientOrder clientOrder, MasterProfile master);
+
+    OrderInfoDto toOrderInfoDto(ClientOrder entity);
+
+    ListClientOrderDto toListClientOrderDto(ClientOrder clientOrder);
+
+    void toCancelOrderForClient(CancelOrderDto reqDto, ClientOrder order);
+
+    void toCompleteOrderForClient(CompleteOrderDto reqDto, ClientOrder order);
 }

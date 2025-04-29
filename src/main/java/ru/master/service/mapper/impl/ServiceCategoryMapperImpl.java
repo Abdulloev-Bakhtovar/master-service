@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.mapper.SubServiceCategoryMapper;
+import ru.master.service.model.ClientOrder;
 import ru.master.service.model.MasterSubService;
 import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.SubServiceCategory;
-import ru.master.service.model.dto.ServiceCategoryDto;
-import ru.master.service.model.dto.request.ServiceCategoryReqDto;
+import ru.master.service.model.dto.inner.ServiceCategoryForOrderDto;
+import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.request.CreateServiceCategoryDto;
+import ru.master.service.model.dto.request.ListServiceCategoryDto;
 
 import java.util.List;
 
@@ -19,7 +22,7 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
     private final SubServiceCategoryMapper subServiceMapper;
 
     @Override
-    public ServiceCategory toEntity(ServiceCategoryReqDto dto, List<SubServiceCategory> subServices) {
+    public ServiceCategory toEntity(CreateServiceCategoryDto dto, List<SubServiceCategory> subServices) {
         if (dto == null) return null;
 
         return ServiceCategory.builder()
@@ -64,6 +67,27 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .subServiceCategoryDtos(subServiceMapper.toDtoList(entity.getSubServices()))
+                .build();
+    }
+
+    @Override
+    public ListServiceCategoryDto toListServiceCategoryDto(ServiceCategory serviceCategory) {
+        if (serviceCategory == null) return null;
+
+        return ListServiceCategoryDto.builder()
+                .id(serviceCategory.getId())
+                .name(serviceCategory.getName())
+                .build();
+    }
+
+    @Override
+    public ServiceCategoryForOrderDto toServiceCategoryForOrderDto(ClientOrder entity) {
+        if (entity == null) return null;
+
+        return ServiceCategoryForOrderDto.builder()
+                .id(entity.getServiceCategory().getId())
+                .name(entity.getServiceCategory().getName())
+                .subServiceCategoryDto(subServiceMapper.toDto(entity.getSubServiceCategory()))
                 .build();
     }
 }

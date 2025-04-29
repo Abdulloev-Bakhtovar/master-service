@@ -1,18 +1,26 @@
 package ru.master.service.service;
 
 import ru.master.service.model.dto.IdDto;
-import ru.master.service.model.dto.ClientOrderDto;
-import ru.master.service.model.dto.request.ClientOrderInfoDto;
+import ru.master.service.model.dto.request.CancelOrderDto;
+import ru.master.service.model.dto.request.CompleteOrderDto;
+import ru.master.service.model.dto.request.CreateClientOrderDto;
+import ru.master.service.model.dto.responce.ListClientOrderDto;
+import ru.master.service.model.dto.responce.OrderInfoDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ClientOrderService {
 
+    OrderInfoDto getById(UUID id);
 
-
-    ClientOrderInfoDto getById(UUID id);
-
-    IdDto create(ClientOrderDto dto);
+    IdDto create(CreateClientOrderDto dto);
 
     void acceptOrder(UUID orderId);
+
+    List<ListClientOrderDto> getClientOrders();
+
+    void cancelOrderForClient(CancelOrderDto reqDto);
+
+    void completeOrderForClient(CompleteOrderDto reqDto);
 }

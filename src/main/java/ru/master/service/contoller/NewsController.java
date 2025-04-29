@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.constants.DocumentType;
 import ru.master.service.model.dto.NewsDto;
-import ru.master.service.model.dto.request.NewsCreateReqDto;
+import ru.master.service.model.dto.request.CreateNewsDto;
 import ru.master.service.service.FileStorageService;
 import ru.master.service.service.NewsService;
 
@@ -30,7 +30,7 @@ public class NewsController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@ModelAttribute NewsCreateReqDto dto) throws IOException {
+    public void create(@ModelAttribute CreateNewsDto dto) throws IOException {
         newsService.create(dto);
     }
 

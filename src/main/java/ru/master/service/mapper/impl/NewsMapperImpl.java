@@ -7,7 +7,7 @@ import ru.master.service.mapper.NewsMapper;
 import ru.master.service.model.City;
 import ru.master.service.model.News;
 import ru.master.service.model.dto.NewsDto;
-import ru.master.service.model.dto.request.NewsCreateReqDto;
+import ru.master.service.model.dto.request.CreateNewsDto;
 
 @Component
 @RequiredArgsConstructor
@@ -16,7 +16,7 @@ public class NewsMapperImpl implements NewsMapper {
     private final CityMapper cityMapper;
 
     @Override
-    public News toEntity(NewsCreateReqDto dto, City city) {
+    public News toEntity(CreateNewsDto dto, City city) {
         if (dto == null) return null;
 
         return News.builder()

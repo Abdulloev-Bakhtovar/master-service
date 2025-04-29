@@ -11,7 +11,7 @@ import ru.master.service.constants.Role;
 import ru.master.service.constants.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ClientProfileMapper;
-import ru.master.service.model.dto.ClientProfileDto;
+import ru.master.service.model.dto.request.CreateClientProfileDto;
 import ru.master.service.repository.ClientProfileRepo;
 import ru.master.service.service.CityService;
 import ru.master.service.service.ClientProfileService;
@@ -32,7 +32,7 @@ public class ClientProfileServiceImpl implements ClientProfileService {
     private final AuthService authService;
 
     @Override
-    public void create(ClientProfileDto dto) {
+    public void create(CreateClientProfileDto reqDto) {
 
         var user = authUtils.getAuthenticatedUser();
 
@@ -56,14 +56,14 @@ public class ClientProfileServiceImpl implements ClientProfileService {
             );
         }
 
-        var city = cityService.getById(dto.getCityDto().getId());
+        var city = cityService.getById(reqDto.getCityDto().getId());
 
-        userAgreementService.create(dto.getUserAgreementDto(), user);
+        userAgreementService.create(reqDto.getUserAgreementDto(), user);
 
-        var clientProfile = clientProfileMapper.toEntity(dto, user, city);
+        var clientProfileEntity = clientProfileMapper.toClientProfileEntity(reqDto, user, city);
 
         authService.updateVerificationStatus(user, VerificationStatus.APPROVED);
 
-        clientProfileRepo.save(clientProfile);
+        clientProfileRepo.save(clientProfileEntity);
     }
 }

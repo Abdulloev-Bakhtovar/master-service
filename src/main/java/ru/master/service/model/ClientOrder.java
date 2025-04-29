@@ -29,6 +29,9 @@ public class ClientOrder extends TimestampedEntity {
     boolean urgent;
     boolean agreeToTerms;
     BigDecimal price;
+    String clientFeedback;
+    Float clientRating;
+    String rejectionReason;
 
     @Enumerated(EnumType.STRING)
     ServiceType serviceType;

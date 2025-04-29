@@ -12,14 +12,19 @@ import ru.master.service.constants.Role;
 import ru.master.service.constants.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterProfileMapper;
-import ru.master.service.model.dto.MasterProfileCreateDto;
-import ru.master.service.model.dto.MasterProfileDto;
+import ru.master.service.model.ClientOrder;
+import ru.master.service.model.MasterProfile;
+import ru.master.service.model.dto.request.CreateMasterProfileDto;
+import ru.master.service.model.dto.inner.MasterProfileForCreateDto;
+import ru.master.service.repository.ClientOrderRepo;
 import ru.master.service.repository.MasterProfileRepo;
 import ru.master.service.service.*;
 import ru.master.service.util.AuthUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,12 +41,13 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final MasterSubServiceService masterSubServiceService;
     private final AuthService authService;
     private final MasterRequestService masterRequestService;
+    private final ClientOrderRepo clientOrderRepo;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void create(MasterProfileCreateDto createDto) throws IOException {
+    public void create(CreateMasterProfileDto reqDto) throws IOException {
 
-        var dto = masterProfileMapper.toDto(createDto);
+        var masterProfileDto = masterProfileMapper.toMasterProfileDto(reqDto);
 
         var user = authUtils.getAuthenticatedUser();
         var userId = user.getId();
@@ -66,20 +72,50 @@ public class MasterProfileServiceImpl implements MasterProfileService {
             );
         }
 
-        userAgreementService.create(dto.getUserAgreementDto(), user);
+        userAgreementService.create(masterProfileDto.getUserAgreementDto(), user);
         
-        var city = cityService.getById(dto.getCityDto().getId());
-        var masterProfile = masterProfileMapper.toEntity(dto, user, city);
+        var city = cityService.getById(masterProfileDto.getCityDto().getId());
+        var masterProfile = masterProfileMapper.toEntity(masterProfileDto, user, city);
 
-        addDocFile(dto, userId);
+        addDocFile(masterProfileDto, userId);
 
         masterProfile = masterProfileRepo.save(masterProfile);
-        masterSubServiceService.create(dto.getServiceCategoryDtos(), masterProfile);
+        masterSubServiceService.create(masterProfileDto.getServiceCategoryDtos(), masterProfile);
         authService.updateVerificationStatus(user, VerificationStatus.UNDER_REVIEW);
         masterRequestService.create(user);
     }
 
-    private void addDocFile(MasterProfileDto dto, UUID userId) throws IOException {
+    @Override
+    public void updateMasterAverageRating(MasterProfile master, float newRating) {
+
+        if (newRating < 1 || newRating > 5) {
+            throw new AppException(
+                    "Rating must be between 1 and 5",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        // Получаем все завершенные заказы мастера с оценками
+        List<ClientOrder> completedOrders = clientOrderRepo.findByMasterProfileAndClientRatingIsNotNull(master);
+
+        // Добавляем новую оценку к списку
+        List<Float> allRatings = completedOrders.stream()
+                .map(ClientOrder::getClientRating)
+                .collect(Collectors.toList());
+        allRatings.add(newRating);
+
+        // Вычисляем новый средний рейтинг
+        double average = allRatings.stream()
+                .mapToDouble(Float::doubleValue)
+                .average()
+                .orElse(0.0);
+
+        // Обновляем профиль мастера
+        master.setAverageRating((float) average);
+        masterProfileRepo.save(master);
+    }
+
+    private void addDocFile(MasterProfileForCreateDto dto, UUID userId) throws IOException {
         docPhotoStorageService.storeFile(dto.getProfilePhoto(), DocumentType.PROFILE, userId);
         docPhotoStorageService.storeFile(dto.getPassportMainPhoto(), DocumentType.PASSPORT_MAIN, userId);
         docPhotoStorageService.storeFile(dto.getPassportRegistrationPhoto(), DocumentType.PASSPORT_REGISTRATION, userId);

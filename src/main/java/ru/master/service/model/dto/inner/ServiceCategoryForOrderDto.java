@@ -1,0 +1,18 @@
+package ru.master.service.model.dto.inner;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+import ru.master.service.model.dto.BaseCategoryDto;
+import ru.master.service.model.dto.SubServiceCategoryDto;
+
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ServiceCategoryForOrderDto extends BaseCategoryDto {
+
+    SubServiceCategoryDto subServiceCategoryDto;
+}

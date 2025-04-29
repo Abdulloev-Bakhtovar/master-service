@@ -1,9 +1,6 @@
-package ru.master.service.model.dto;
+package ru.master.service.model.dto.inner;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import ru.master.service.auth.model.dto.BaseDto;
@@ -12,11 +9,12 @@ import ru.master.service.auth.model.dto.BaseDto;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MasterInfoDto extends BaseDto {
+public class MasterInfoForOrderDto extends BaseDto {
 
     String firstName;
     String lastName;
     String phoneNumber;
-    float rating;
+    float averageRating;
 }

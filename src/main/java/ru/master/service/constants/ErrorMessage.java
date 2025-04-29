@@ -70,4 +70,9 @@ public class ErrorMessage {
     // Token validation
     public static final String TOKEN_VERIFICATION_FAILED = "Token verification failed";
     public static final String EXPIRED_TOKEN = "Session expired. Please reauthenticate";
+    public static final String CLIENT_PROFILE_NOT_FOUND = "Client profile not found";
+    public static final String MASTER_PROFILE_NOT_FOUND = "Master profile not found";
+    public static final String SERVICE_CATEGORY_NOT_FOUND = "Service category not found";
+    public static final String SUB_SERVICE_CATEGORY_NOT_FOUND = "Sub service category not found";
+    public static final String ORDER_ACCESS_DENIED = "Access denied: order does not belong to the current user";
 }

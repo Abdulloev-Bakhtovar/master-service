@@ -9,7 +9,7 @@ import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.NewsMapper;
 import ru.master.service.model.dto.NewsDto;
-import ru.master.service.model.dto.request.NewsCreateReqDto;
+import ru.master.service.model.dto.request.CreateNewsDto;
 import ru.master.service.repository.CityRepo;
 import ru.master.service.repository.NewsRepo;
 import ru.master.service.service.FileStorageService;
@@ -37,7 +37,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void create(NewsCreateReqDto dto) throws IOException {
+    public void create(CreateNewsDto dto) throws IOException {
 
         var city = cityRepo.findById(dto.getCityId())
                 .orElseThrow(() -> new AppException(
