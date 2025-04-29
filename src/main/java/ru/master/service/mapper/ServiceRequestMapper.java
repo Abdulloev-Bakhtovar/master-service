@@ -17,4 +17,6 @@ public interface ServiceRequestMapper {
     ServiceRequestDto toDto(ServiceRequest entity);
 
     ServiceRequestInfoDto requestInfoDto(ServiceRequest entity);
+
+    void mapWithMaster(ServiceRequest serviceRequest, MasterProfile master);
 }

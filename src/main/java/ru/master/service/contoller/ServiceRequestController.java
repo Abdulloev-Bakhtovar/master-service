@@ -25,4 +25,9 @@ public class ServiceRequestController {
     public IdDto create(@RequestBody ServiceRequestDto dto) {
         return serviceRequestService.create(dto);
     }
+
+    @PatchMapping("/orders/{orderId}/accept")
+    public void acceptOrder(@PathVariable UUID orderId) {
+        serviceRequestService.acceptOrder(orderId);
+    }
 }

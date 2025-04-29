@@ -101,4 +101,10 @@ public class ServiceRequestMapperImpl implements ServiceRequestMapper {
 
         return request;
     }
+
+    @Override
+    public void mapWithMaster(ServiceRequest serviceRequest, MasterProfile master) {
+        serviceRequest.setMasterProfile(master);
+        serviceRequest.setServiceRequestStatus(ServiceRequestStatus.IN_PROGRESS);
+    }
 }

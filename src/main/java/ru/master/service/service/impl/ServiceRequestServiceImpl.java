@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.constants.EntityName;
 import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constants.Role;
 import ru.master.service.constants.ServiceRequestStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceRequestMapper;
@@ -30,6 +31,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     private final SubServiceCategoryRepo subServiceCategoryRepo;
     private final ServiceRequestMapper serviceRequestMapper;
     private final AuthUtils authUtils;
+    private final MasterProfileRepo masterProfileRepo;
 
     @Override
     @Transactional(readOnly = true)
@@ -95,6 +97,30 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         return IdDto.builder()
                 .id(serviceRequest.getId())
                 .build();
+    }
+
+    @Override
+    public void acceptOrder(UUID orderId) {
+        var user = authUtils.getAuthenticatedUser();
+        if (user.getRole() != Role.MASTER) {
+            throw new AppException(
+                    ErrorMessage.INVALID_ROLE_FOR_OPERATION,
+                    HttpStatus.FORBIDDEN
+            );
+        }
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.MASTER_PROFILE.get()),
+                        HttpStatus.NOT_FOUND
+                ));
+        var serviceRequest = serviceRequestRepo.findById(orderId)
+                .orElseThrow(() -> new AppException(
+                        String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SERVICE_REQUEST.get()),
+                        HttpStatus.NOT_FOUND
+                ));
+
+        serviceRequestMapper.mapWithMaster(serviceRequest, master);
+        serviceRequestRepo.save(serviceRequest);
     }
 }
 

@@ -11,4 +11,6 @@ public interface ServiceRequestService {
     ServiceRequestInfoDto getById(UUID id);
 
     IdDto create(ServiceRequestDto dto);
+
+    void acceptOrder(UUID orderId);
 }
