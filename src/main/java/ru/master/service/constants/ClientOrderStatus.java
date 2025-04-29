@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ClientOrderStatus {
+public enum ClientOrderStatus implements DisplayableEnum {
 
     SEARCH_MASTER("Поиск мастера"),
     IN_PROGRESS("Взята в работу"),

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ServiceType {
+public enum ServiceType implements DisplayableEnum {
 
     REPAIR("Ремонт"),
     INSTALLATION("Установка");

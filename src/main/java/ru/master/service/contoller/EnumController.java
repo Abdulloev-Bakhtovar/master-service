@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.master.service.constants.Education;
-import ru.master.service.constants.MaritalStatus;
-import ru.master.service.constants.Role;
+import ru.master.service.constants.*;
 import ru.master.service.model.dto.EnumDto;
 import ru.master.service.service.EnumService;
 
@@ -34,5 +32,15 @@ public class EnumController {
     @GetMapping("/role")
     public List<EnumDto> getRoles() {
         return enumService.getAllValues(Role.class);
+    }
+
+    @GetMapping("/service-type")
+    public List<EnumDto> getServiceType() {
+        return enumService.getAllValues(ServiceType.class);
+    }
+
+    @GetMapping("/client-order-status")
+    public List<EnumDto> getClientOrderStatus() {
+        return enumService.getAllValues(ClientOrderStatus.class);
     }
 }
