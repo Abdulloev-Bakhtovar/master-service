@@ -16,12 +16,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MasterProfileCreateDto {
+public class CreateMasterProfileDto {
 
     String firstName;
     String lastName;
     String email;
-    float rating;
     String workExperience;
     boolean hasConviction;
     MaritalStatus maritalStatus;
@@ -30,8 +29,8 @@ public class MasterProfileCreateDto {
     boolean personalDataConsent;
     boolean notificationsAllowed;
     boolean locationAccessAllowed;
-    Boolean serviceTermsAccepted;
-    Boolean serviceRulesAccepted;
+    boolean serviceTermsAccepted;
+    boolean serviceRulesAccepted;
     List<UUID> serviceCategoryIds;
     List<UUID> subServiceCategoryIds;
     MultipartFile profilePhoto;
