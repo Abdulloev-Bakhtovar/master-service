@@ -12,7 +12,7 @@ import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ClientOrderMapper;
 import ru.master.service.model.dto.IdDto;
 import ru.master.service.model.dto.ClientOrderDto;
-import ru.master.service.model.dto.request.ServiceRequestInfoDto;
+import ru.master.service.model.dto.request.ClientOrderInfoDto;
 import ru.master.service.repository.*;
 import ru.master.service.service.ClientOrderService;
 import ru.master.service.util.AuthUtils;
@@ -35,7 +35,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public ServiceRequestInfoDto getById(UUID id) {
+    public ClientOrderInfoDto getById(UUID id) {
         var entity = clientOrderRepo.findById(id)
                 .orElseThrow(() -> new AppException(
                         String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.CLIENT_ORDER.get()),

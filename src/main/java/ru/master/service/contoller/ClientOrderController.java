@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.IdDto;
 import ru.master.service.model.dto.ClientOrderDto;
-import ru.master.service.model.dto.request.ServiceRequestInfoDto;
+import ru.master.service.model.dto.request.ClientOrderInfoDto;
 import ru.master.service.service.ClientOrderService;
 
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class ClientOrderController {
     private final ClientOrderService clientOrderService;
 
     @GetMapping("/{id}")
-    public ServiceRequestInfoDto findById(@PathVariable UUID id) {
+    public ClientOrderInfoDto findById(@PathVariable UUID id) {
         return clientOrderService.getById(id);
     }
 

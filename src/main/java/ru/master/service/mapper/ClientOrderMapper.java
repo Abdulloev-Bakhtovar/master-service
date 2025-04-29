@@ -3,7 +3,7 @@ package ru.master.service.mapper;
 import ru.master.service.constants.ClientOrderStatus;
 import ru.master.service.model.*;
 import ru.master.service.model.dto.ClientOrderDto;
-import ru.master.service.model.dto.request.ServiceRequestInfoDto;
+import ru.master.service.model.dto.request.ClientOrderInfoDto;
 
 public interface ClientOrderMapper {
 
@@ -16,7 +16,7 @@ public interface ClientOrderMapper {
 
     ClientOrderDto toDto(ClientOrder entity);
 
-    ServiceRequestInfoDto orderInfoDto(ClientOrder entity);
+    ClientOrderInfoDto orderInfoDto(ClientOrder entity);
 
     void mapWithMaster(ClientOrder clientOrder, MasterProfile master);
 }

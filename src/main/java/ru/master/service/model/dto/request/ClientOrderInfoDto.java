@@ -18,7 +18,7 @@ import java.time.Instant;
 @SuperBuilder
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ServiceRequestInfoDto extends BaseDto {
+public class ClientOrderInfoDto extends BaseDto {
 
     ServiceCategoryDto serviceCategory;
     EnumDto serviceRequestStatus;

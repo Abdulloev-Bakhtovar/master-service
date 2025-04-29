@@ -9,7 +9,7 @@ import ru.master.service.model.*;
 import ru.master.service.model.dto.EnumDto;
 import ru.master.service.model.dto.MasterInfoDto;
 import ru.master.service.model.dto.ClientOrderDto;
-import ru.master.service.model.dto.request.ServiceRequestInfoDto;
+import ru.master.service.model.dto.request.ClientOrderInfoDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class ClientOrderMapperImpl implements ClientOrderMapper {
     }
 
     @Override
-    public ServiceRequestInfoDto orderInfoDto(ClientOrder entity) {
+    public ClientOrderInfoDto orderInfoDto(ClientOrder entity) {
         if (entity == null) return null;
 
         EnumDto serviceRequestStatus = EnumDto.builder()
@@ -70,7 +70,7 @@ public class ClientOrderMapperImpl implements ClientOrderMapper {
                 .build();
 
 
-        var request = ServiceRequestInfoDto.builder()
+        var request = ClientOrderInfoDto.builder()
                 .id(entity.getId())
                 .address(entity.getAddress())
                 .phoneNumber(entity.getPhoneNumber())
