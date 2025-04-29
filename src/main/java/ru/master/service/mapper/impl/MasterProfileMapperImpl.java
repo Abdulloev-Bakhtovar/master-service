@@ -11,7 +11,7 @@ import ru.master.service.model.*;
 import ru.master.service.model.dto.*;
 import ru.master.service.model.dto.inner.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileDto;
-import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryDto;
 
 import java.util.List;
 import java.util.UUID;

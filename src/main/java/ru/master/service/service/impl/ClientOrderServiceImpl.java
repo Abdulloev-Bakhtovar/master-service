@@ -1,7 +1,6 @@
 package ru.master.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,12 +11,12 @@ import ru.master.service.constants.ClientOrderStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ClientOrderMapper;
 import ru.master.service.model.ClientOrder;
-import ru.master.service.model.dto.IdDto;
+import ru.master.service.model.dto.response.IdDto;
 import ru.master.service.model.dto.request.CancelOrderDto;
 import ru.master.service.model.dto.request.CompleteOrderDto;
 import ru.master.service.model.dto.request.CreateClientOrderDto;
-import ru.master.service.model.dto.responce.ListClientOrderDto;
-import ru.master.service.model.dto.responce.OrderInfoDto;
+import ru.master.service.model.dto.response.ListClientOrderDto;
+import ru.master.service.model.dto.response.OrderInfoDto;
 import ru.master.service.repository.*;
 import ru.master.service.service.ClientOrderService;
 import ru.master.service.service.MasterProfileService;

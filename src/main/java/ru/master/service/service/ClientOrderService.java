@@ -1,11 +1,11 @@
 package ru.master.service.service;
 
-import ru.master.service.model.dto.IdDto;
+import ru.master.service.model.dto.response.IdDto;
 import ru.master.service.model.dto.request.CancelOrderDto;
 import ru.master.service.model.dto.request.CompleteOrderDto;
 import ru.master.service.model.dto.request.CreateClientOrderDto;
-import ru.master.service.model.dto.responce.ListClientOrderDto;
-import ru.master.service.model.dto.responce.OrderInfoDto;
+import ru.master.service.model.dto.response.ListClientOrderDto;
+import ru.master.service.model.dto.response.OrderInfoDto;
 
 import java.util.List;
 import java.util.UUID;

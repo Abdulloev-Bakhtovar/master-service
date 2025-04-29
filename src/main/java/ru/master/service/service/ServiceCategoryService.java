@@ -1,6 +1,6 @@
 package ru.master.service.service;
 
-import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
 import ru.master.service.model.dto.request.ListServiceCategoryDto;
 

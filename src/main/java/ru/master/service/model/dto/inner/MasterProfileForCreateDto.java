@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.constants.Education;
 import ru.master.service.constants.MaritalStatus;
 import ru.master.service.model.dto.BaseProfileDto;
-import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryDto;
 
 import java.util.List;
 

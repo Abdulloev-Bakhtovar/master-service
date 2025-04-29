@@ -2,12 +2,12 @@ package ru.master.service.contoller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.model.dto.IdDto;
+import ru.master.service.model.dto.response.IdDto;
 import ru.master.service.model.dto.request.CancelOrderDto;
 import ru.master.service.model.dto.request.CompleteOrderDto;
 import ru.master.service.model.dto.request.CreateClientOrderDto;
-import ru.master.service.model.dto.responce.ListClientOrderDto;
-import ru.master.service.model.dto.responce.OrderInfoDto;
+import ru.master.service.model.dto.response.ListClientOrderDto;
+import ru.master.service.model.dto.response.OrderInfoDto;
 import ru.master.service.service.ClientOrderService;
 
 import java.util.List;

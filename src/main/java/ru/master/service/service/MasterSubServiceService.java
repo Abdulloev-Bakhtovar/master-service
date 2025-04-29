@@ -1,7 +1,7 @@
 package ru.master.service.service;
 
 import ru.master.service.model.MasterProfile;
-import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryDto;
 
 import java.util.List;
 

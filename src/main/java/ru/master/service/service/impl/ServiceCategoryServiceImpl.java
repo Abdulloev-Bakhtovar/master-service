@@ -10,7 +10,7 @@ import ru.master.service.constants.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.model.ServiceCategory;
-import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
 import ru.master.service.model.dto.request.ListServiceCategoryDto;
 import ru.master.service.repository.ServiceCategoryRepo;

@@ -11,8 +11,8 @@ import ru.master.service.model.dto.inner.MasterInfoForOrderDto;
 import ru.master.service.model.dto.request.CancelOrderDto;
 import ru.master.service.model.dto.request.CompleteOrderDto;
 import ru.master.service.model.dto.request.CreateClientOrderDto;
-import ru.master.service.model.dto.responce.ListClientOrderDto;
-import ru.master.service.model.dto.responce.OrderInfoDto;
+import ru.master.service.model.dto.response.ListClientOrderDto;
+import ru.master.service.model.dto.response.OrderInfoDto;
 
 @Component
 @RequiredArgsConstructor

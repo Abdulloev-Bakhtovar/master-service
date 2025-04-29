@@ -9,7 +9,7 @@ import ru.master.service.model.MasterSubService;
 import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.SubServiceCategory;
 import ru.master.service.model.dto.inner.ServiceCategoryForOrderDto;
-import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
 import ru.master.service.model.dto.request.ListServiceCategoryDto;
 

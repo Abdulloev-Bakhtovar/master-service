@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.constants.DocumentType;
-import ru.master.service.model.dto.responce.ServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
 import ru.master.service.model.dto.request.ListServiceCategoryDto;
 import ru.master.service.service.FileStorageService;

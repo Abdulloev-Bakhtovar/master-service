@@ -1,4 +1,4 @@
-package ru.master.service.model.dto.responce;
+package ru.master.service.model.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
