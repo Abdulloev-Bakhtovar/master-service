@@ -86,6 +86,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
                                 HttpStatus.NOT_FOUND
                         ))
                 )
+                .distinct()
                 .collect(Collectors.toList());
 
         var serviceCategory = serviceCategoryMapper.toEntity(dto, subServices);
