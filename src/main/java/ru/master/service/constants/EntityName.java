@@ -11,7 +11,7 @@ public enum EntityName {
     DOCUMENT("Document"),
     SERVICE_CATEGORY("Service category"),
     SUB_SERVICE_CATEGORY("Sub service category"),
-    SERVICE_REQUEST("Service request"),;
+    CLIENT_ORDER("Client order"),;
 
     private final String displayName;
 

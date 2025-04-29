@@ -3,31 +3,31 @@ package ru.master.service.contoller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.IdDto;
-import ru.master.service.model.dto.ServiceRequestDto;
+import ru.master.service.model.dto.ClientOrderDto;
 import ru.master.service.model.dto.request.ServiceRequestInfoDto;
-import ru.master.service.service.ServiceRequestService;
+import ru.master.service.service.ClientOrderService;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/service-requests")
+@RequestMapping("/client-orders")
 @RequiredArgsConstructor
-public class ServiceRequestController {
+public class ClientOrderController {
 
-    private final ServiceRequestService serviceRequestService;
+    private final ClientOrderService clientOrderService;
 
     @GetMapping("/{id}")
     public ServiceRequestInfoDto findById(@PathVariable UUID id) {
-        return serviceRequestService.getById(id);
+        return clientOrderService.getById(id);
     }
 
     @PostMapping
-    public IdDto create(@RequestBody ServiceRequestDto dto) {
-        return serviceRequestService.create(dto);
+    public IdDto create(@RequestBody ClientOrderDto dto) {
+        return clientOrderService.create(dto);
     }
 
     @PatchMapping("/orders/{orderId}/accept")
     public void acceptOrder(@PathVariable UUID orderId) {
-        serviceRequestService.acceptOrder(orderId);
+        clientOrderService.acceptOrder(orderId);
     }
 }

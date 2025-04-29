@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.constants.EntityName;
 import ru.master.service.constants.ErrorMessage;
 import ru.master.service.constants.Role;
-import ru.master.service.constants.ServiceRequestStatus;
+import ru.master.service.constants.ClientOrderStatus;
 import ru.master.service.exception.AppException;
-import ru.master.service.mapper.ServiceRequestMapper;
+import ru.master.service.mapper.ClientOrderMapper;
 import ru.master.service.model.dto.IdDto;
-import ru.master.service.model.dto.ServiceRequestDto;
+import ru.master.service.model.dto.ClientOrderDto;
 import ru.master.service.model.dto.request.ServiceRequestInfoDto;
 import ru.master.service.repository.*;
-import ru.master.service.service.ServiceRequestService;
+import ru.master.service.service.ClientOrderService;
 import ru.master.service.util.AuthUtils;
 
 import java.util.UUID;
@@ -22,31 +22,31 @@ import java.util.UUID;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ServiceRequestServiceImpl implements ServiceRequestService {
+public class ClientOrderServiceImpl implements ClientOrderService {
 
-    private final ServiceRequestRepo serviceRequestRepo;
+    private final ClientOrderRepo clientOrderRepo;
     private final CityRepo cityRepo;
     private final ClientProfileRepo clientProfileRepo;
     private final ServiceCategoryRepo serviceCategoryRepo;
     private final SubServiceCategoryRepo subServiceCategoryRepo;
-    private final ServiceRequestMapper serviceRequestMapper;
+    private final ClientOrderMapper clientOrderMapper;
     private final AuthUtils authUtils;
     private final MasterProfileRepo masterProfileRepo;
 
     @Override
     @Transactional(readOnly = true)
     public ServiceRequestInfoDto getById(UUID id) {
-        var entity = serviceRequestRepo.findById(id)
+        var entity = clientOrderRepo.findById(id)
                 .orElseThrow(() -> new AppException(
-                        String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SERVICE_REQUEST.get()),
+                        String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.CLIENT_ORDER.get()),
                         HttpStatus.NOT_FOUND
                 ));
 
-        return serviceRequestMapper.requestInfoDto(entity);
+        return clientOrderMapper.orderInfoDto(entity);
     }
 
     @Override
-    public IdDto create(ServiceRequestDto dto) {
+    public IdDto create(ClientOrderDto dto) {
 
         var user = authUtils.getAuthenticatedUser();
 
@@ -84,15 +84,15 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             );
         }
 
-        var serviceRequest = serviceRequestMapper.toEntity(
+        var serviceRequest = clientOrderMapper.toEntity(
                 dto,
                 city,
                 clientProfile,
                 serviceCategory,
                 subServiceCategory,
-                ServiceRequestStatus.SEARCH_MASTER);
+                ClientOrderStatus.SEARCH_MASTER);
 
-        serviceRequestRepo.save(serviceRequest);
+        clientOrderRepo.save(serviceRequest);
 
         return IdDto.builder()
                 .id(serviceRequest.getId())
@@ -113,14 +113,14 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
                         String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.MASTER_PROFILE.get()),
                         HttpStatus.NOT_FOUND
                 ));
-        var serviceRequest = serviceRequestRepo.findById(orderId)
+        var serviceRequest = clientOrderRepo.findById(orderId)
                 .orElseThrow(() -> new AppException(
-                        String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SERVICE_REQUEST.get()),
+                        String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.CLIENT_ORDER.get()),
                         HttpStatus.NOT_FOUND
                 ));
 
-        serviceRequestMapper.mapWithMaster(serviceRequest, master);
-        serviceRequestRepo.save(serviceRequest);
+        clientOrderMapper.mapWithMaster(serviceRequest, master);
+        clientOrderRepo.save(serviceRequest);
     }
 }
 

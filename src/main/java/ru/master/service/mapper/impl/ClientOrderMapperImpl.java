@@ -2,14 +2,13 @@ package ru.master.service.mapper.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.master.service.constants.ServiceRequestStatus;
+import ru.master.service.constants.ClientOrderStatus;
 import ru.master.service.mapper.ServiceCategoryMapper;
-import ru.master.service.mapper.ServiceRequestMapper;
+import ru.master.service.mapper.ClientOrderMapper;
 import ru.master.service.model.*;
 import ru.master.service.model.dto.EnumDto;
 import ru.master.service.model.dto.MasterInfoDto;
-import ru.master.service.model.dto.ServiceRequestDto;
-import ru.master.service.model.dto.SubServiceCategoryDto;
+import ru.master.service.model.dto.ClientOrderDto;
 import ru.master.service.model.dto.request.ServiceRequestInfoDto;
 
 import java.util.ArrayList;
@@ -17,22 +16,22 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class ServiceRequestMapperImpl implements ServiceRequestMapper {
+public class ClientOrderMapperImpl implements ClientOrderMapper {
 
     private final ServiceCategoryMapper serviceCategoryMapper;
     private final SubServiceCategoryMapperImpl subServiceCategoryMapperImpl;
 
     @Override
-    public ServiceRequest toEntity(ServiceRequestDto dto,
-                                   City city,
-                                   ClientProfile clientProfile,
-                                   ServiceCategory serviceCategory,
-                                   SubServiceCategory subServiceCategory,
-                                   ServiceRequestStatus serviceRequestStatus
+    public ClientOrder toEntity(ClientOrderDto dto,
+                                City city,
+                                ClientProfile clientProfile,
+                                ServiceCategory serviceCategory,
+                                SubServiceCategory subServiceCategory,
+                                ClientOrderStatus clientOrderStatus
     ) {
         if (dto == null) return null;
 
-        return ServiceRequest.builder()
+        return ClientOrder.builder()
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .address(dto.getAddress())
@@ -43,7 +42,7 @@ public class ServiceRequestMapperImpl implements ServiceRequestMapper {
                 .agreeToTerms(dto.isAgreeToTerms())
                 .price(dto.getPrice())
                 .serviceType(dto.getServiceType())
-                .serviceRequestStatus(serviceRequestStatus)
+                .clientOrderStatus(clientOrderStatus)
                 .city(city)
                 .clientProfile(clientProfile)
                 .serviceCategory(serviceCategory)
@@ -52,17 +51,17 @@ public class ServiceRequestMapperImpl implements ServiceRequestMapper {
     }
 
     @Override
-    public ServiceRequestDto toDto(ServiceRequest entity) {
+    public ClientOrderDto toDto(ClientOrder entity) {
         return null;
     }
 
     @Override
-    public ServiceRequestInfoDto requestInfoDto(ServiceRequest entity) {
+    public ServiceRequestInfoDto orderInfoDto(ClientOrder entity) {
         if (entity == null) return null;
 
         EnumDto serviceRequestStatus = EnumDto.builder()
-                .name(entity.getServiceRequestStatus().name())
-                .displayName(entity.getServiceRequestStatus().getDisplayName())
+                .name(entity.getClientOrderStatus().name())
+                .displayName(entity.getClientOrderStatus().getDisplayName())
                 .build();
 
         EnumDto serviceType = EnumDto.builder()
@@ -103,8 +102,8 @@ public class ServiceRequestMapperImpl implements ServiceRequestMapper {
     }
 
     @Override
-    public void mapWithMaster(ServiceRequest serviceRequest, MasterProfile master) {
-        serviceRequest.setMasterProfile(master);
-        serviceRequest.setServiceRequestStatus(ServiceRequestStatus.IN_PROGRESS);
+    public void mapWithMaster(ClientOrder clientOrder, MasterProfile master) {
+        clientOrder.setMasterProfile(master);
+        clientOrder.setClientOrderStatus(ClientOrderStatus.IN_PROGRESS);
     }
 }

@@ -7,8 +7,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import ru.master.service.auth.model.dto.BaseDto;
-import ru.master.service.constants.ServiceRequestStatus;
-import ru.master.service.constants.ServiceType;
 import ru.master.service.model.dto.EnumDto;
 import ru.master.service.model.dto.MasterInfoDto;
 import ru.master.service.model.dto.ServiceCategoryDto;

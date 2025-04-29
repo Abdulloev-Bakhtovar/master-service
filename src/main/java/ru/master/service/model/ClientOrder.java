@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.master.service.constants.ServiceRequestStatus;
+import ru.master.service.constants.ClientOrderStatus;
 import ru.master.service.constants.ServiceType;
 
 import java.math.BigDecimal;
@@ -16,9 +16,9 @@ import java.time.Instant;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "service_requests")
+@Table(name = "client_orders")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ServiceRequest extends TimestampedEntity {
+public class ClientOrder extends TimestampedEntity {
 
     String firstName;
     String lastName;
@@ -34,7 +34,7 @@ public class ServiceRequest extends TimestampedEntity {
     ServiceType serviceType;
 
     @Enumerated(EnumType.STRING)
-    ServiceRequestStatus serviceRequestStatus;
+    ClientOrderStatus clientOrderStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")

@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import ru.master.service.auth.model.dto.TimestampedDto;
-import ru.master.service.constants.ServiceRequestStatus;
+import ru.master.service.constants.ClientOrderStatus;
 import ru.master.service.constants.ServiceType;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ServiceRequestDto extends TimestampedDto {
+public class ClientOrderDto extends TimestampedDto {
 
     String firstName;
     String lastName;
@@ -31,5 +31,5 @@ public class ServiceRequestDto extends TimestampedDto {
     ClientProfileDto clientProfileDto;
     ServiceCategoryDto serviceCategoryDto;
     BigDecimal price;
-    ServiceRequestStatus serviceRequestStatus;
+    ClientOrderStatus clientOrderStatus;
 }
