@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.model.User;
-import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.UserAgreementMapper;
 import ru.master.service.model.dto.UserAgreementDto;
@@ -18,10 +18,10 @@ import ru.master.service.service.UserAgreementService;
 public class UserAgreementServiceImpl implements UserAgreementService {
 
     private final UserAgreementRepo userAgrRepo;
-    private final UserAgreementMapper userAgrMapper;
+    private final UserAgreementMapper userAgreementMapper;
 
     @Override
-    public void create(UserAgreementDto dto, User user) {
+    public void create(UserAgreementDto reqDto, User user) {
 
         if (userAgrRepo.existsByUserId(user.getId())) {
             throw new AppException(
@@ -30,7 +30,7 @@ public class UserAgreementServiceImpl implements UserAgreementService {
             );
         }
 
-        var userAgr = userAgrMapper.toDto(dto, user);
+        var userAgr = userAgreementMapper.toDto(reqDto, user);
         userAgrRepo.save(userAgr);
     }
 }

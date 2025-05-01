@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.constants.DocumentType;
-import ru.master.service.model.dto.NewsDto;
+import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.request.CreateNewsDto;
+import ru.master.service.model.dto.response.NewsDto;
 import ru.master.service.service.FileStorageService;
 import ru.master.service.service.NewsService;
 

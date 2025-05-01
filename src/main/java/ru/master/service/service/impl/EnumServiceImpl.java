@@ -1,8 +1,8 @@
 package ru.master.service.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.master.service.constants.DisplayableEnum;
-import ru.master.service.model.dto.EnumDto;
+import ru.master.service.auth.model.dto.response.EnumDto;
+import ru.master.service.constant.DisplayableEnum;
 import ru.master.service.service.EnumService;
 
 import java.util.Arrays;

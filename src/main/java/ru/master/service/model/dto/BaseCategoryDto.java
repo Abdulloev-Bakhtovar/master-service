@@ -3,7 +3,7 @@ package ru.master.service.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.master.service.auth.model.dto.BaseDto;
+import ru.master.service.auth.model.dto.TimestampedDto;
 
 @Getter
 @Setter
@@ -11,7 +11,7 @@ import ru.master.service.auth.model.dto.BaseDto;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BaseCategoryDto extends BaseDto {
+public class BaseCategoryDto extends TimestampedDto {
 
     String name;
 }

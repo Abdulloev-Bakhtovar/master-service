@@ -3,7 +3,8 @@ package ru.master.service.contoller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.model.dto.SubServiceCategoryDto;
+import ru.master.service.model.dto.request.CreateSubServiceCategoryDto;
+import ru.master.service.model.dto.response.AllSubServiceCategoryDto;
 import ru.master.service.service.SubServiceCategoryService;
 
 import java.util.List;
@@ -16,13 +17,14 @@ public class SubServiceCategoryController {
     private final SubServiceCategoryService subServiceCategoryService;
 
     @GetMapping
-    public List<SubServiceCategoryDto> getAll() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<AllSubServiceCategoryDto> getAll() {
         return subServiceCategoryService.getAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody SubServiceCategoryDto dto) {
-        subServiceCategoryService.create(dto);
+    public void create(@RequestBody CreateSubServiceCategoryDto reqDto) {
+        subServiceCategoryService.create(reqDto);
     }
 }

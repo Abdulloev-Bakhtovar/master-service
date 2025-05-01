@@ -2,12 +2,11 @@ package ru.master.service.model.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.master.service.constants.ServiceType;
-import ru.master.service.model.dto.CityDto;
-import ru.master.service.model.dto.inner.ServiceCategoryForOrderDto;
+import ru.master.service.constant.ServiceType;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,15 +17,16 @@ import java.time.Instant;
 public class CreateClientOrderDto {
 
     ServiceType serviceType;
-    ServiceCategoryForOrderDto serviceCategoryDto;
+    UUID serviceCategoryId;
+    UUID subServiceCategoryId;
     String firstName;
     String lastName;
+    UUID cityId;
     String address;
     String phoneNumber;
     String comment;
-    BigDecimal price;
     Instant preferredDateTime;
     boolean urgent;
     boolean agreeToTerms;
-    CityDto cityDto;
+    BigDecimal price;
 }

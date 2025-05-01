@@ -1,42 +1,41 @@
 package ru.master.service.auth.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.auth.model.dto.TokenDto;
-import ru.master.service.auth.model.dto.UserDto;
-import ru.master.service.auth.service.AuthService;
+import ru.master.service.auth.model.dto.request.RefreshTokenDto;
+import ru.master.service.auth.model.dto.request.RegisterAndLoginDto;
+import ru.master.service.auth.model.dto.response.TokenDto;
+import ru.master.service.auth.service.UserService;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final UserService userService;
 
     @PostMapping("/register-or-login")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerOrLogin(@RequestBody UserDto userDto) {
-        authService.registerOrLogin(userDto);
+    public void registerOrLogin(@RequestBody RegisterAndLoginDto registerAndLoginDto) {
+        userService.registerOrLogin(registerAndLoginDto);
     }
 
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     @ResponseStatus(HttpStatus.OK)
-    public TokenDto refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        return authService.refreshToken(request, response);
+    public TokenDto refreshToken(@RequestBody RefreshTokenDto refreshTokenDto) {
+        return userService.refreshToken(refreshTokenDto);
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        authService.logout(request, response);
+    public void logout(@RequestBody TokenDto tokenDto) {
+        userService.logout(tokenDto);
     }
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAccount(HttpServletRequest request, HttpServletResponse response) {
-        authService.delete(request, response);
+    public void deleteAccount(@RequestBody TokenDto tokenDto) {
+        userService.delete(tokenDto);
     }
 }

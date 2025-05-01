@@ -2,12 +2,12 @@ package ru.master.service.mapper.impl;
 
 import org.springframework.stereotype.Component;
 import ru.master.service.auth.model.User;
-import ru.master.service.auth.model.dto.UserDto;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.constant.VerificationStatus;
 import ru.master.service.mapper.MasterRequestMapper;
 import ru.master.service.model.MasterRequest;
-import ru.master.service.model.dto.inner.MasterProfileForCreateDto;
-import ru.master.service.model.dto.MasterRequestDto;
+import ru.master.service.model.dto.MasterProfileForMasterRequestDto;
+import ru.master.service.model.dto.UserForMasterRequestDto;
+import ru.master.service.model.dto.response.MasterRequestDto;
 
 @Component
 public class MasterRequestMapperImpl implements MasterRequestMapper {
@@ -24,23 +24,9 @@ public class MasterRequestMapperImpl implements MasterRequestMapper {
     }
 
     @Override
-    public void toEntity(User admin,
-                         User user,
-                         VerificationStatus verificationStatus,
-                         MasterRequest existsApplication,
-                         String rejectionReason) {
-
-        user.setVerificationStatus(verificationStatus);
-        existsApplication.setUser(user);
-        existsApplication.setReviewedByAdminId(admin.getId());
-
-        if (rejectionReason != null && !rejectionReason.isEmpty()) {
-            existsApplication.setRejectionReason(rejectionReason);
-        }
-    }
-
-    @Override
-    public MasterRequestDto toDto(MasterRequest entity, MasterProfileForCreateDto masterProfileForCreateDto, UserDto userDto) {
+    public MasterRequestDto toMasterRequestDto(MasterRequest entity,
+                                               MasterProfileForMasterRequestDto masterProfileDto,
+                                               UserForMasterRequestDto userDto) {
         if (entity == null) return null;
 
         return MasterRequestDto.builder()
@@ -50,17 +36,21 @@ public class MasterRequestMapperImpl implements MasterRequestMapper {
                 .rejectionReason(entity.getRejectionReason())
                 .reviewedByAdminId(entity.getReviewedByAdminId())
                 .userDto(userDto)
-                .masterProfileForCreateDto(masterProfileForCreateDto)
+                .masterProfileDto(masterProfileDto)
                 .build();
     }
 
     @Override
-    public void toEntity(User admin, MasterRequest masterRequest, VerificationStatus rejected, String rejectionReason) {
-        masterRequest.getUser().setVerificationStatus(rejected);
-        masterRequest.setReviewedByAdminId(admin.getId());
+    public void toEntityWithAdmin(User admin,
+                                  MasterRequest entity,
+                                  VerificationStatus verificationStatus,
+                                  String rejectionReason
+    ) {
+        entity.getUser().setVerificationStatus(verificationStatus);
+        entity.setReviewedByAdminId(admin.getId());
 
-        if (rejectionReason != null && !rejectionReason.isEmpty()) {
-            masterRequest.setRejectionReason(rejectionReason);
+        if (rejectionReason != null) {
+            entity.setRejectionReason(rejectionReason);
         }
     }
 }

@@ -2,17 +2,17 @@ package ru.master.service.model.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.springframework.web.multipart.MultipartFile;
-import ru.master.service.constants.Education;
-import ru.master.service.constants.MaritalStatus;
+import ru.master.service.constant.Education;
+import ru.master.service.constant.MaritalStatus;
 
 import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
-@ToString
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

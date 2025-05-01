@@ -1,7 +1,7 @@
 package ru.master.service.mapper;
 
-import ru.master.service.model.City;
 import ru.master.service.model.dto.CityDto;
+import ru.master.service.model.City;
 
 public interface CityMapper {
 

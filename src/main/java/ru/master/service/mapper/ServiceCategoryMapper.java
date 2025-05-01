@@ -1,27 +1,26 @@
 package ru.master.service.mapper;
 
+
 import ru.master.service.model.ClientOrder;
 import ru.master.service.model.MasterSubService;
 import ru.master.service.model.ServiceCategory;
-import ru.master.service.model.SubServiceCategory;
-import ru.master.service.model.dto.inner.ServiceCategoryForOrderDto;
-import ru.master.service.model.dto.response.ServiceCategoryDto;
+import ru.master.service.model.dto.ServiceCategoryForClientOrderDto;
+import ru.master.service.model.dto.ServiceCategoryForMasterProfileDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
-import ru.master.service.model.dto.request.ListServiceCategoryDto;
+import ru.master.service.model.dto.response.AllServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryWithSubServiceDto;
 
 import java.util.List;
 
 public interface ServiceCategoryMapper {
 
-    ServiceCategory toEntity(CreateServiceCategoryDto dto, List<SubServiceCategory> subServices);
+    AllServiceCategoryDto toAllServiceCategoryDto(ServiceCategory serviceCategory);
 
-    ServiceCategoryDto toDto(ServiceCategory entity);
+    ServiceCategoryWithSubServiceDto toDtoWithSubService(ServiceCategory serviceCategory);
 
-    List<ServiceCategoryDto> toDtoList(List<MasterSubService> masterSubServices);
+    ServiceCategory toEntity(CreateServiceCategoryDto reqDto);
 
-    ServiceCategoryDto toDtoWithSubService(ServiceCategory entity);
+    ServiceCategoryForClientOrderDto toOrderInfoForClientDto(ClientOrder serviceCategory);
 
-    ListServiceCategoryDto toListServiceCategoryDto(ServiceCategory serviceCategory);
-
-    ServiceCategoryForOrderDto toServiceCategoryForOrderDto(ClientOrder clientOrder);
+    List<ServiceCategoryForMasterProfileDto> toDtoList(List<MasterSubService> masterSubServices);
 }

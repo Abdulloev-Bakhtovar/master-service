@@ -1,9 +1,9 @@
 package ru.master.service.mapper.impl;
 
 import org.springframework.stereotype.Component;
+import ru.master.service.model.dto.CityDto;
 import ru.master.service.mapper.CityMapper;
 import ru.master.service.model.City;
-import ru.master.service.model.dto.CityDto;
 
 @Component
 public class CityMapperImpl implements CityMapper {

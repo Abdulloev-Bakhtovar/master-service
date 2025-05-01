@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.master.service.constants.*;
-import ru.master.service.model.dto.EnumDto;
+import ru.master.service.auth.model.dto.response.EnumDto;
+import ru.master.service.constant.*;
 import ru.master.service.service.EnumService;
 
 import java.util.List;

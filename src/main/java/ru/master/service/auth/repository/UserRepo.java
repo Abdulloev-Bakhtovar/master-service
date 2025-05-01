@@ -2,7 +2,7 @@ package ru.master.service.auth.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.master.service.auth.model.User;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.constant.VerificationStatus;
 
 import java.util.List;
 import java.util.Optional;

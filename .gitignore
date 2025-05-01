@@ -31,7 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-/.env
-/src/main/resources/static/security/
-/logs/
-/src/main/resources/static/photos/

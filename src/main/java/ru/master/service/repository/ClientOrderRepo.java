@@ -1,8 +1,8 @@
 package ru.master.service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import ru.master.service.constant.MasterOrderStatus;
 import ru.master.service.model.ClientOrder;
-import ru.master.service.model.MasterProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,5 +15,11 @@ public interface ClientOrderRepo extends JpaRepository<ClientOrder, UUID> {
 
     Optional<ArrayList<ClientOrder>> findAllByMasterProfileId(UUID id);
 
-    List<ClientOrder> findByMasterProfileAndClientRatingIsNotNull(MasterProfile master);
+    Optional<ClientOrder> findByIdAndClientProfileId(UUID id, UUID clientProfileId);
+
+    Optional<ClientOrder> findByIdAndMasterProfileId(UUID orderId, UUID id);
+
+    Optional<List<ClientOrder>> findAllByCityId(UUID id);
+
+    Optional<List<ClientOrder>> findAllByMasterProfileIdAndMasterOrderStatus(UUID id, MasterOrderStatus status);
 }

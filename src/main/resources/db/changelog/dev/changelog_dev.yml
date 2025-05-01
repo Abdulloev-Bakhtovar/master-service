@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - preConditions:
+      - onFail: WARN
+      - dbms:
+          type: postgresql
+  - include:
+      file: db/changelog/dev/2025/0_dev_init.xml

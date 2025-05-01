@@ -4,10 +4,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.auth.model.dto.TokenDto;
+import ru.master.service.auth.model.dto.request.AccountVerifyDto;
+import ru.master.service.auth.model.dto.request.PhoneNumberDto;
+import ru.master.service.auth.model.dto.response.TokenDto;
 import ru.master.service.auth.service.VerificationService;
-import ru.master.service.auth.model.dto.PhoneNumberDto;
-import ru.master.service.auth.model.dto.VerificationCodeDto;
 
 import java.util.Map;
 
@@ -20,11 +20,12 @@ public class VerificationController {
 
     @PostMapping("/verify")
     @ResponseStatus(HttpStatus.OK)
-    public TokenDto verifyCode(@RequestBody VerificationCodeDto dto, HttpServletResponse response) {
-        return verificationService.verifyCode(dto, response);
+    public TokenDto verifyCode(@RequestBody AccountVerifyDto accountVerifyDto, HttpServletResponse response) {
+        return verificationService.verifyCode(accountVerifyDto, response);
     }
 
     @PostMapping("/resend-code")
+    @ResponseStatus(HttpStatus.OK)
     public void resendVerificationCode(@RequestBody PhoneNumberDto dto) {
         verificationService.resendCode(dto);
     }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface MasterProfileRepo extends JpaRepository<MasterProfile, UUID> {
 
-    boolean existsByUserId(UUID id);
+   Optional<MasterProfile> findByUserId(UUID userId);
 
-    Optional<MasterProfile> findByUserId(UUID id);
+   boolean existsByUserId(UUID userId);
 }

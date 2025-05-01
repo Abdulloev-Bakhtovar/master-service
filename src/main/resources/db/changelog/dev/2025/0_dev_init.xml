@@ -1,0 +1,86 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="author" id="300420251520">
+        <sqlFile path="1_add_users.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="300420251521">
+        <sqlFile path="2_add_cities.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="300420251522">
+        <sqlFile path="3_add_client_profiles.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="300420251740">
+        <sqlFile path="4_add_user_agreements.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="300420251746">
+        <sqlFile path="5_add_service_categories.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="300420251742">
+        <sqlFile path="6_add_subservice_categories.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="300420251255">
+        <sqlFile path="7_add_master_profiles.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="300420251256">
+        <sqlFile path="8_add_client_orders.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="010420251257">
+        <sqlFile path="9_add_master_feedbacks.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="010420251546">
+        <sqlFile path="10_add_master_requests.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="010420251547">
+        <sqlFile path="11_add_master_subservices.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="010420251741">
+        <sqlFile path="12_add_news.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+
+    <!-- FILL -->
+    <changeSet author="author" id="30042025124">
+        <sqlFile path="fill_cities.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="300420251749">
+        <sqlFile path="fill_service_and_subservice.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="010420251742">
+        <sqlFile path="fill_news.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+
+</databaseChangeLog>

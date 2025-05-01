@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constant.ErrorMessage;
+import ru.master.service.model.dto.CityDto;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.CityMapper;
 import ru.master.service.model.City;
-import ru.master.service.model.dto.CityDto;
 import ru.master.service.repository.CityRepo;
 import ru.master.service.service.CityService;
 
@@ -42,16 +42,16 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public void create(CityDto dto) {
+    public void create(CityDto reqDto) {
 
-        if (cityRepo.existsByName(dto.getName())) {
+        if (cityRepo.existsByName(reqDto.getName())) {
             throw new AppException(
                     ErrorMessage.CITY_ALREADY_EXISTS,
                     HttpStatus.CONFLICT
             );
         }
 
-        var city = cityMapper.toEntity(dto);
+        var city = cityMapper.toEntity(reqDto);
         cityRepo.save(city);
     }
 

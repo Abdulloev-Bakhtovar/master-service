@@ -3,8 +3,9 @@ package ru.master.service.contoller;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.model.dto.NewMasterRequestDto;
-import ru.master.service.model.dto.MasterRequestDto;
+import ru.master.service.model.dto.request.MasterRequestRejectDto;
+import ru.master.service.model.dto.response.MasterRequestDto;
+import ru.master.service.model.dto.response.NewMasterRequestDto;
 import ru.master.service.service.MasterRequestService;
 
 import java.util.List;
@@ -28,13 +29,14 @@ public class MasterRequestController {
         return masterRequestService.getById(id);
     }
 
-    @PatchMapping("/approve")
-    public void approve(@RequestBody MasterRequestDto masterRequestDto) {
-        masterRequestService.approve(masterRequestDto);
+    @PatchMapping("/approve/{id}")
+    public void approve(@PathVariable UUID id) {
+        masterRequestService.approve(id);
     }
 
     @PatchMapping("/reject")
-    public void reject(@RequestBody MasterRequestDto masterRequestDto) {
-        masterRequestService.reject(masterRequestDto);
+    public void reject(@RequestBody MasterRequestRejectDto rejectDto) {
+        masterRequestService.reject(rejectDto);
     }
+
 }

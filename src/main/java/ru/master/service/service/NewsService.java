@@ -1,6 +1,6 @@
 package ru.master.service.service;
 
-import ru.master.service.model.dto.NewsDto;
+import ru.master.service.model.dto.response.NewsDto;
 import ru.master.service.model.dto.request.CreateNewsDto;
 
 import java.io.IOException;

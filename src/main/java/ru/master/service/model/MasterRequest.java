@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import ru.master.service.auth.model.TimestampedEntity;
 import ru.master.service.auth.model.User;
 
 import java.util.UUID;
@@ -21,6 +22,7 @@ public class MasterRequest extends TimestampedEntity {
     String rejectionReason;
     UUID reviewedByAdminId;
 
+    // it`s a master
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     User user;

@@ -1,12 +1,13 @@
 package ru.master.service.mapper;
 
-import ru.master.service.constants.ClientOrderStatus;
+import ru.master.service.constant.ClientOrderStatus;
 import ru.master.service.model.*;
 import ru.master.service.model.dto.request.CancelOrderDto;
 import ru.master.service.model.dto.request.CompleteOrderDto;
 import ru.master.service.model.dto.request.CreateClientOrderDto;
-import ru.master.service.model.dto.response.ListClientOrderDto;
-import ru.master.service.model.dto.response.OrderInfoDto;
+import ru.master.service.model.dto.response.*;
+
+import java.util.List;
 
 public interface ClientOrderMapper {
 
@@ -17,13 +18,19 @@ public interface ClientOrderMapper {
                          SubServiceCategory subServiceCategory,
                          ClientOrderStatus clientOrderStatus);
 
-    void mapWithMaster(ClientOrder clientOrder, MasterProfile master);
+    OrderInfoForClientDto toOrderInfoForClientDto(ClientOrder order, MasterFeedback masterFeedback);
 
-    OrderInfoDto toOrderInfoDto(ClientOrder entity);
+    OrderInfoForMasterDto toOrderInfoForMasterDto(ClientOrder order, MasterFeedback masterFeedback);
 
-    ListClientOrderDto toListClientOrderDto(ClientOrder clientOrder);
+    AllClientProfileOrderDto toAllClientProfileOrderDto(ClientOrder clientOrder);
+
+    void mapWithMaster(ClientOrder order, MasterProfile master);
 
     void toCancelOrderForClient(CancelOrderDto reqDto, ClientOrder order);
 
     void toCompleteOrderForClient(CompleteOrderDto reqDto, ClientOrder order);
+
+    List<AvailableOrdersForMasterDto> toAvailableOrdersForMasterDto(List<ClientOrder> orders);
+
+    AllMasterProfileOrderDto toAllMasterProfileOrderDto(ClientOrder clientOrder);
 }

@@ -1,10 +1,10 @@
-//юридические согласия и разрешения users
 package ru.master.service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import ru.master.service.auth.model.TimestampedEntity;
 import ru.master.service.auth.model.User;
 
 @Getter

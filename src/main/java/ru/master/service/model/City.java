@@ -5,6 +5,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import ru.master.service.auth.model.BaseEntity;
 
 @Getter
 @Setter

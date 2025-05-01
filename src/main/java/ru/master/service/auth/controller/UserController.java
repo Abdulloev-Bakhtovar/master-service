@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.master.service.auth.model.dto.response.EnumDto;
 import ru.master.service.auth.service.UserService;
-import ru.master.service.model.dto.EnumDto;
 
 @RestController
 @RequestMapping("/users")

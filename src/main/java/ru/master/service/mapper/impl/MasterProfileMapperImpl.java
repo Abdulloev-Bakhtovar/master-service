@@ -9,9 +9,8 @@ import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.mapper.UserAgreementMapper;
 import ru.master.service.model.*;
 import ru.master.service.model.dto.*;
-import ru.master.service.model.dto.inner.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileDto;
-import ru.master.service.model.dto.response.ServiceCategoryDto;
+import ru.master.service.model.dto.response.NewMasterRequestDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +23,19 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
     private final CityMapper cityMapper;
     private final UserAgreementMapper userAgreementMapper;
     private final ServiceCategoryMapper serviceCategoryMapper;
+
+    @Override
+    public MasterInfoForClientOrderDto toOrderInfoForClientDto(MasterProfile entity) {
+        if (entity == null) return null;
+
+        return MasterInfoForClientOrderDto.builder()
+                .id(entity.getId())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .phoneNumber(entity.getUser().getPhoneNumber())
+                .averageRating(entity.getAverageRating())
+                .build();
+    }
 
     @Override
     public MasterProfile toEntity(MasterProfileForCreateDto dto, User user, City city) {
@@ -43,13 +55,28 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
     }
 
     @Override
-    public MasterProfileForCreateDto toDto(MasterProfile entity,
-                                           List<MasterSubService> masterSubServices,
-                                           UserAgreement userAgreement
-    ) {
+    public NewMasterRequestDto toNewMasterRequestDto(MasterProfile masterProfile, MasterRequest masterRequest) {
+        if (masterProfile == null) return null;
+
+        return NewMasterRequestDto.builder()
+                .id(masterRequest.getId())
+                .firstName(masterProfile.getFirstName())
+                .lastName(masterProfile.getLastName())
+                .createdAt(masterProfile.getCreatedAt())
+                .updatedAt(masterProfile.getUpdatedAt())
+                .phoneNumber(masterProfile.getUser().getPhoneNumber())
+                .workExperience(masterProfile.getWorkExperience())
+                .cityDto(cityMapper.toDto(masterProfile.getCity()))
+                .build();
+    }
+
+    @Override
+    public MasterProfileForMasterRequestDto toMasterRequestDto(MasterProfile entity,
+                                                               List<MasterSubService> masterSubServices,
+                                                               UserAgreement userAgreement) {
         if (entity == null) return null;
 
-        return MasterProfileForCreateDto.builder()
+        return MasterProfileForMasterRequestDto.builder()
                 .id(entity.getId())
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
@@ -67,22 +94,8 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
     }
 
     @Override
-    public NewMasterRequestDto toDto(MasterProfile masterProfile, MasterRequest masterRequest) {
-        if (masterProfile == null) return null;
-
-        return NewMasterRequestDto.builder()
-                .id(masterRequest.getId())
-                .firstName(masterProfile.getFirstName())
-                .lastName(masterProfile.getLastName())
-                .phoneNumber(masterProfile.getUser().getPhoneNumber())
-                .workExperience(masterProfile.getWorkExperience())
-                .cityDto(cityMapper.toDto(masterProfile.getCity()))
-                .build();
-    }
-
-    @Override
-    public MasterProfileForCreateDto toMasterProfileDto(CreateMasterProfileDto dto) {
-        return buildMasterProfileDto(dto);
+    public MasterProfileForCreateDto toCreateProfileDto(CreateMasterProfileDto reqDto) {
+        return buildMasterProfileDto(reqDto);
     }
 
     private MasterProfileForCreateDto buildMasterProfileDto(CreateMasterProfileDto dto) {
@@ -97,11 +110,6 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
                 .cityDto(buildCityDto(dto.getCityId()))
                 .userAgreementDto(buildUserAgreementDto(dto))
                 .serviceCategoryDtos(buildServiceCategoryDtos(dto))
-                .profilePhoto(dto.getProfilePhoto())
-                .passportMainPhoto(dto.getPassportMainPhoto())
-                .passportRegistrationPhoto(dto.getPassportRegistrationPhoto())
-                .snilsPhoto(dto.getSnilsPhoto())
-                .innPhoto(dto.getInnPhoto())
                 .build();
     }
 
@@ -119,20 +127,22 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
                 .build();
     }
 
-    private List<ServiceCategoryDto> buildServiceCategoryDtos(CreateMasterProfileDto dto) {
-        List<SubServiceCategoryDto> subServiceCategories = dto.getSubServiceCategoryIds().stream()
+    private List<ServiceCategoryForMasterProfileDto> buildServiceCategoryDtos(CreateMasterProfileDto dto) {
+        List<SubServiceForServiceDto> subServiceCategories = dto.getSubServiceCategoryIds().stream()
                 .map(this::buildSubServiceCategoryDto)
                 .collect(Collectors.toList());
 
         return dto.getServiceCategoryIds().stream()
-                .map(id -> ServiceCategoryDto.builder()
+                .map(id -> ServiceCategoryForMasterProfileDto.builder()
                         .id(id)
                         .subServiceCategoryDtos(subServiceCategories)
                         .build())
                 .collect(Collectors.toList());
     }
 
-    private SubServiceCategoryDto buildSubServiceCategoryDto(UUID id) {
-        return SubServiceCategoryDto.builder().id(id).build();
+    private SubServiceForServiceDto buildSubServiceCategoryDto(UUID id) {
+        return SubServiceForServiceDto.builder()
+                .id(id)
+                .build();
     }
 }

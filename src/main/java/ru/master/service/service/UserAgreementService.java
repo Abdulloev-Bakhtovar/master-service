@@ -5,5 +5,5 @@ import ru.master.service.model.dto.UserAgreementDto;
 
 public interface UserAgreementService {
 
-    void create(UserAgreementDto dto, User user);
+    void create(UserAgreementDto reqDto, User user);
 }

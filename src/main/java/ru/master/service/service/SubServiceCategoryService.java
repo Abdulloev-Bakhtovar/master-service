@@ -1,12 +1,14 @@
 package ru.master.service.service;
 
-import ru.master.service.model.dto.SubServiceCategoryDto;
+
+import ru.master.service.model.dto.request.CreateSubServiceCategoryDto;
+import ru.master.service.model.dto.response.AllSubServiceCategoryDto;
 
 import java.util.List;
 
 public interface SubServiceCategoryService {
 
-    List<SubServiceCategoryDto> getAll();
+    List<AllSubServiceCategoryDto> getAll();
 
-    void create(SubServiceCategoryDto dto);
+    void create(CreateSubServiceCategoryDto reqDto);
 }

@@ -5,8 +5,8 @@ import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.master.service.constants.Education;
-import ru.master.service.constants.MaritalStatus;
+import ru.master.service.constant.Education;
+import ru.master.service.constant.MaritalStatus;
 
 @Getter
 @Setter

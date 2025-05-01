@@ -1,7 +1,7 @@
 package ru.master.service.util;
 
 import org.springframework.http.HttpStatus;
-import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
 
 import java.security.SecureRandom;

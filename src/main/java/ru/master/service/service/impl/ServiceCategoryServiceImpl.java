@@ -4,28 +4,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.constants.DocumentType;
-import ru.master.service.constants.EntityName;
-import ru.master.service.constants.ErrorMessage;
+import org.springframework.util.StringUtils;
+import ru.master.service.constant.DocumentType;
+import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.model.ServiceCategory;
-import ru.master.service.model.dto.response.ServiceCategoryDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
-import ru.master.service.model.dto.request.ListServiceCategoryDto;
+import ru.master.service.model.dto.response.AllServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryWithSubServiceDto;
 import ru.master.service.repository.ServiceCategoryRepo;
 import ru.master.service.repository.SubServiceCategoryRepo;
 import ru.master.service.service.FileStorageService;
 import ru.master.service.service.ServiceCategoryService;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static ru.master.service.util.ErrorFormatterUtil.format;
 
 @Service
 @Transactional
@@ -38,54 +34,50 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     private final FileStorageService fileStorageService;
 
     @Override
-    public List<ListServiceCategoryDto> getAll(String name) {
-        List<ServiceCategory> categories;
-        if (name == null || name.isBlank()) {
-            categories = serviceCategoryRepo.findAll();
-        } else {
-            categories = serviceCategoryRepo.findByNameContainingIgnoreCase(name);
-        }
+    @Transactional(readOnly = true)
+    public List<AllServiceCategoryDto> getAll(String name) {
+
+        List<ServiceCategory> categories = StringUtils.hasText(name)
+                ? serviceCategoryRepo.findByNameContainingIgnoreCase(name)
+                : serviceCategoryRepo.findAll();
 
         return categories.stream()
-                .map(serviceCategoryMapper::toListServiceCategoryDto)
+                .map(serviceCategoryMapper::toAllServiceCategoryDto)
+                .filter(Objects::nonNull)
                 .toList();
     }
 
     @Override
-    public ServiceCategoryDto getById(UUID id) {
+    public List<ServiceCategoryWithSubServiceDto> getAllWithSubService() {
+        return serviceCategoryRepo.findAll().stream()
+                .map(serviceCategoryMapper::toDtoWithSubService)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ServiceCategoryWithSubServiceDto getById(UUID id) {
         var serviceCategory = serviceCategoryRepo.findById(id)
                 .orElseThrow(() -> new AppException(
-                format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SERVICE_CATEGORY.get()),
-                HttpStatus.CONFLICT
-        ));
+                        ErrorMessage.SERVICE_CATEGORY_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
         return serviceCategoryMapper.toDtoWithSubService(serviceCategory);
     }
 
     @Override
-    public void create(CreateServiceCategoryDto dto) throws IOException {
+    public void create(CreateServiceCategoryDto reqDto) throws IOException {
 
-        if (serviceCategoryRepo.existsByName(dto.getName())) {
+        if (serviceCategoryRepo.existsByName(reqDto.getName())) {
             throw new AppException(
-                    format(ErrorMessage.ENTITY_ALREADY_EXISTS, EntityName.SERVICE_CATEGORY.get()),
+                    ErrorMessage.SERVICE_CATEGORY_ALREADY_EXISTS,
                     HttpStatus.CONFLICT
             );
         }
 
-        var subServices = Optional.ofNullable(dto.getSubServiceCategoryIds())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(id -> subServiceCategoryRepo.findById(id)
-                        .orElseThrow(() -> new AppException(
-                                String.format(ErrorMessage.ENTITY_NOT_FOUND, EntityName.SUB_SERVICE_CATEGORY.get()),
-                                HttpStatus.NOT_FOUND
-                        ))
-                )
-                .distinct()
-                .collect(Collectors.toList());
+        var serviceCategory = serviceCategoryMapper.toEntity(reqDto);
 
-        var serviceCategory = serviceCategoryMapper.toEntity(dto, subServices);
+        fileStorageService.storeFile(reqDto.getPhoto(), DocumentType.SERVICE_CATEGORY_PHOTO, serviceCategory.getId());
         serviceCategoryRepo.save(serviceCategory);
-
-        fileStorageService.storeFile(dto.getPhoto(), DocumentType.SERVICE_CATEGORY_PHOTO, serviceCategory.getId());
     }
 }

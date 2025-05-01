@@ -2,24 +2,29 @@ package ru.master.service.mapper.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.master.service.constants.ClientOrderStatus;
-import ru.master.service.mapper.EnumMapper;
-import ru.master.service.mapper.ServiceCategoryMapper;
-import ru.master.service.mapper.ClientOrderMapper;
+import ru.master.service.constant.ClientOrderStatus;
+import ru.master.service.constant.MasterOrderStatus;
+import ru.master.service.mapper.*;
 import ru.master.service.model.*;
-import ru.master.service.model.dto.inner.MasterInfoForOrderDto;
+import ru.master.service.model.dto.ClientInfoForMasterDto;
+import ru.master.service.model.dto.ServiceCategoryForAvailableOrdersDto;
+import ru.master.service.model.dto.SubServiceForAvailableOrdersDto;
 import ru.master.service.model.dto.request.CancelOrderDto;
 import ru.master.service.model.dto.request.CompleteOrderDto;
 import ru.master.service.model.dto.request.CreateClientOrderDto;
-import ru.master.service.model.dto.response.ListClientOrderDto;
-import ru.master.service.model.dto.response.OrderInfoDto;
+import ru.master.service.model.dto.response.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class ClientOrderMapperImpl implements ClientOrderMapper {
 
-    private final ServiceCategoryMapper serviceCategoryMapper;
     private final EnumMapper enumMapper;
+    private final MasterFeedbackMapper masterFeedbackMapper;
+    private final MasterProfileMapper masterProfileMapper;
+    private final ServiceCategoryMapper serviceCategoryMapper;
 
     @Override
     public ClientOrder toEntity(CreateClientOrderDto dto,
@@ -27,7 +32,7 @@ public class ClientOrderMapperImpl implements ClientOrderMapper {
                                 ClientProfile clientProfile,
                                 ServiceCategory serviceCategory,
                                 SubServiceCategory subServiceCategory,
-                                ClientOrderStatus clientOrderStatus
+                                ClientOrderStatus orderStatus
     ) {
         if (dto == null) return null;
 
@@ -42,7 +47,7 @@ public class ClientOrderMapperImpl implements ClientOrderMapper {
                 .agreeToTerms(dto.isAgreeToTerms())
                 .price(dto.getPrice())
                 .serviceType(dto.getServiceType())
-                .clientOrderStatus(clientOrderStatus)
+                .clientOrderStatus(orderStatus)
                 .city(city)
                 .clientProfile(clientProfile)
                 .serviceCategory(serviceCategory)
@@ -51,11 +56,10 @@ public class ClientOrderMapperImpl implements ClientOrderMapper {
     }
 
     @Override
-    public OrderInfoDto toOrderInfoDto(ClientOrder entity) {
+    public OrderInfoForClientDto toOrderInfoForClientDto(ClientOrder entity, MasterFeedback masterFeedback) {
         if (entity == null) return null;
 
-
-        var request = OrderInfoDto.builder()
+        var request = OrderInfoForClientDto.builder()
                 .id(entity.getId())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
@@ -64,58 +68,141 @@ public class ClientOrderMapperImpl implements ClientOrderMapper {
                 .comment(entity.getComment())
                 .preferredDateTime(entity.getPreferredDateTime())
                 .urgent(entity.isUrgent())
-                .clientRating(entity.getClientRating())
-                .clientFeedback(entity.getClientFeedback())
                 .serviceType(enumMapper.toDto(entity.getServiceType()))
                 .clientOrderStatus(enumMapper.toDto(entity.getClientOrderStatus()))
-                .serviceCategoryDto(serviceCategoryMapper.toServiceCategoryForOrderDto(entity))
+                .masterOrderStatus(enumMapper.toDto(entity.getMasterOrderStatus()))
+                .serviceCategoryDto(serviceCategoryMapper.toOrderInfoForClientDto(entity))
                 .build();
 
+        if (masterFeedback != null) {
+            request.setMasterFeedbackDto(masterFeedbackMapper.toOrderInfoForClientDto(masterFeedback));
+        }
         if (entity.getMasterProfile() != null) {
-            var masterInfoDto = MasterInfoForOrderDto.builder()
-                    .id(entity.getMasterProfile().getId())
-                    .firstName(entity.getMasterProfile().getFirstName())
-                    .lastName(entity.getMasterProfile().getLastName())
-                    .phoneNumber(entity.getMasterProfile().getUser().getPhoneNumber())
-                    .averageRating(entity.getMasterProfile().getAverageRating())
-                    .build();
-
-            request.setMasterDto(masterInfoDto);
+            request.setMasterDto(masterProfileMapper.toOrderInfoForClientDto(entity.getMasterProfile()));
         }
 
         return request;
     }
 
     @Override
-    public ListClientOrderDto toListClientOrderDto(ClientOrder clientOrder) {
+    public OrderInfoForMasterDto toOrderInfoForMasterDto(ClientOrder entity, MasterFeedback masterFeedback) {
+        if (entity == null) return null;
+
+        ClientInfoForMasterDto client = ClientInfoForMasterDto.builder()
+                .id(entity.getClientProfile().getId())
+                .fistName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .build();
+
+        var request = OrderInfoForMasterDto.builder()
+                .id(entity.getId())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .address(entity.getAddress())
+                .phoneNumber(entity.getPhoneNumber())
+                .comment(entity.getComment())
+                .preferredDateTime(entity.getPreferredDateTime())
+                .urgent(entity.isUrgent())
+                .clientInfoDto(client)
+                .serviceType(enumMapper.toDto(entity.getServiceType()))
+                .clientOrderStatus(enumMapper.toDto(entity.getClientOrderStatus()))
+                .masterOrderStatus(enumMapper.toDto(entity.getMasterOrderStatus()))
+                .serviceCategoryDto(serviceCategoryMapper.toOrderInfoForClientDto(entity))
+                .build();
+
+        if (masterFeedback != null) {
+            request.setMasterFeedbackDto(masterFeedbackMapper.toOrderInfoForClientDto(masterFeedback));
+        }
+
+        return request;
+    }
+
+    @Override
+    public AllClientProfileOrderDto toAllClientProfileOrderDto(ClientOrder clientOrder) {
         if (clientOrder == null) return null;
 
-        return ListClientOrderDto.builder()
+        return AllClientProfileOrderDto.builder()
                 .id(clientOrder.getId())
                 .createdAt(clientOrder.getCreatedAt())
                 .updatedAt(clientOrder.getUpdatedAt())
                 .serviceType(enumMapper.toDto(clientOrder.getServiceType()))
                 .clientOrderStatus(enumMapper.toDto(clientOrder.getClientOrderStatus()))
-                .serviceCategoryDto(serviceCategoryMapper.toServiceCategoryForOrderDto(clientOrder))
+                .clientOrderStatus(enumMapper.toDto(clientOrder.getClientOrderStatus()))
+                .masterOrderStatus(enumMapper.toDto(clientOrder.getMasterOrderStatus()))
+                .serviceCategoryDto(serviceCategoryMapper.toOrderInfoForClientDto(clientOrder))
                 .build();
+    }
+
+    @Override
+    public void mapWithMaster(ClientOrder order, MasterProfile master) {
+        order.setMasterProfile(master);
+        order.setClientOrderStatus(ClientOrderStatus.TAKEN_IN_WORK);
+        order.setMasterOrderStatus(MasterOrderStatus.TAKEN_IN_WORK);
     }
 
     @Override
     public void toCancelOrderForClient(CancelOrderDto reqDto, ClientOrder order) {
         order.setClientOrderStatus(ClientOrderStatus.CANCELLED);
+        order.setMasterOrderStatus(MasterOrderStatus.CANCELLED);
         order.setRejectionReason(reqDto.getRejectionReason());
     }
 
     @Override
     public void toCompleteOrderForClient(CompleteOrderDto reqDto, ClientOrder order) {
         order.setClientOrderStatus(ClientOrderStatus.COMPLETED);
-        order.setClientRating(reqDto.getClientRating());
-        order.setClientFeedback(reqDto.getClientFeedback());
     }
 
     @Override
-    public void mapWithMaster(ClientOrder clientOrder, MasterProfile master) {
-        clientOrder.setMasterProfile(master);
-        clientOrder.setClientOrderStatus(ClientOrderStatus.IN_PROGRESS);
+    public List<AvailableOrdersForMasterDto> toAvailableOrdersForMasterDto(List<ClientOrder> orders) {
+        if (orders == null) return new ArrayList<>();
+
+        return orders.stream()
+                .map(this::toAvailableOrdersForMasterDto)
+                .toList();
+    }
+
+    @Override
+    public AllMasterProfileOrderDto toAllMasterProfileOrderDto(ClientOrder clientOrder) {
+        if (clientOrder == null) return null;
+
+        return AllMasterProfileOrderDto.builder()
+                .id(clientOrder.getId())
+                .createdAt(clientOrder.getCreatedAt())
+                .updatedAt(clientOrder.getUpdatedAt())
+                .address(clientOrder.getAddress())
+                .serviceType(enumMapper.toDto(clientOrder.getServiceType()))
+                .clientOrderStatus(enumMapper.toDto(clientOrder.getClientOrderStatus()))
+                .masterOrderStatus(enumMapper.toDto(clientOrder.getMasterOrderStatus()))
+                .serviceCategoryDto(serviceCategoryMapper.toOrderInfoForClientDto(clientOrder))
+                .build();
+    }
+
+    private AvailableOrdersForMasterDto toAvailableOrdersForMasterDto(ClientOrder order) {
+        if (order == null) return null;
+
+        SubServiceForAvailableOrdersDto sub = SubServiceForAvailableOrdersDto.builder()
+                .id(order.getSubServiceCategory().getId())
+                .createdAt(order.getSubServiceCategory().getCreatedAt())
+                .updatedAt(order.getSubServiceCategory().getUpdatedAt())
+                .name(order.getSubServiceCategory().getName())
+                .build();
+
+        ServiceCategoryForAvailableOrdersDto sc = ServiceCategoryForAvailableOrdersDto.builder()
+                .id(order.getServiceCategory().getId())
+                .createdAt(order.getServiceCategory().getCreatedAt())
+                .updatedAt(order.getServiceCategory().getUpdatedAt())
+                .name(order.getServiceCategory().getName())
+                .subServiceCategory(sub)
+                .build();
+
+        return AvailableOrdersForMasterDto.builder()
+                .id(order.getId())
+                .createdAt(order.getCreatedAt())
+                .updatedAt(order.getUpdatedAt())
+                .serviceType(enumMapper.toDto(order.getServiceType()))
+                .clientOrderStatus(enumMapper.toDto(order.getClientOrderStatus()))
+                .masterOrderStatus(enumMapper.toDto(order.getMasterOrderStatus()))
+                .serviceCategoryDto(sc)
+                .build();
     }
 }

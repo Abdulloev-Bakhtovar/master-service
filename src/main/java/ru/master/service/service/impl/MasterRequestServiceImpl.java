@@ -7,19 +7,21 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.mapper.UserMapper;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.repository.UserRepo;
-import ru.master.service.constants.ErrorMessage;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterProfileMapper;
 import ru.master.service.mapper.MasterRequestMapper;
-import ru.master.service.model.dto.MasterRequestDto;
-import ru.master.service.model.dto.NewMasterRequestDto;
+import ru.master.service.model.MasterRequest;
+import ru.master.service.model.dto.request.MasterRequestRejectDto;
+import ru.master.service.model.dto.response.MasterRequestDto;
+import ru.master.service.model.dto.response.NewMasterRequestDto;
 import ru.master.service.repository.MasterProfileRepo;
 import ru.master.service.repository.MasterRequestRepo;
 import ru.master.service.repository.MasterSubServiceRepo;
 import ru.master.service.repository.UserAgreementRepo;
 import ru.master.service.service.MasterRequestService;
-import ru.master.service.util.AuthUtils;
+import ru.master.service.util.AuthUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class MasterRequestServiceImpl implements MasterRequestService {
 
     private final MasterRequestRepo masterRequestRepo;
     private final MasterRequestMapper masterRequestMapper;
-    private final AuthUtils authUtils;
+    private final AuthUtil authUtil;
     private final UserRepo userRepo;
     private final MasterProfileRepo masterProfileRepo;
     private final MasterSubServiceRepo masterSubServiceRepo;
@@ -42,7 +44,6 @@ public class MasterRequestServiceImpl implements MasterRequestService {
 
     @Override
     public List<NewMasterRequestDto> getAll() {
-
         List<NewMasterRequestDto> dtos = new ArrayList<>();
         var users = userRepo.findByVerificationStatus(VerificationStatus.UNDER_REVIEW);
 
@@ -54,15 +55,15 @@ public class MasterRequestServiceImpl implements MasterRequestService {
                     ));
             var masterProfile = masterProfileRepo.findByUserId(exsistUser.getId())
                     .orElseThrow(() -> new AppException(
-                            "Master profile " + ErrorMessage.ENTITY_NOT_FOUND,
+                            ErrorMessage.MASTER_PROFILE_NOT_FOUND,
                             HttpStatus.NOT_FOUND
                     ));
             var masterRequest = masterRequestRepo.findByUserId(user.getId())
                     .orElseThrow(() -> new AppException(
-                            "Master request " + ErrorMessage.ENTITY_NOT_FOUND,
+                            ErrorMessage.MASTER_REQUEST_NOT_FOUND,
                             HttpStatus.NOT_FOUND
                     ));
-            NewMasterRequestDto masterProfileDto = masterProfileMapper.toDto(masterProfile, masterRequest);
+            var masterProfileDto = masterProfileMapper.toNewMasterRequestDto(masterProfile, masterRequest);
             dtos.add(masterProfileDto);
         }
 
@@ -74,14 +75,14 @@ public class MasterRequestServiceImpl implements MasterRequestService {
 
         var masterRequest = masterRequestRepo.findById(id)
                 .orElseThrow(() -> new AppException(
-                        "Master request " + ErrorMessage.ENTITY_NOT_FOUND,
+                        ErrorMessage.MASTER_REQUEST_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 
         var user = masterRequest.getUser();
         var masterProfile = masterProfileRepo.findByUserId(user.getId())
                 .orElseThrow(() -> new AppException(
-                        "Master profile " + ErrorMessage.ENTITY_NOT_FOUND,
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 
@@ -89,9 +90,9 @@ public class MasterRequestServiceImpl implements MasterRequestService {
         var userDto = userMapper.toDto(user);
         var masterSubServices = masterSubServiceRepo.findAllByMasterProfileId(masterProfile.getId());
 
-        var masterProfileDto = masterProfileMapper.toDto(masterProfile, masterSubServices, userAgreement);
+        var masterProfileDto = masterProfileMapper.toMasterRequestDto(masterProfile, masterSubServices, userAgreement);
 
-        return masterRequestMapper.toDto(masterRequest, masterProfileDto, userDto);
+        return masterRequestMapper.toMasterRequestDto(masterRequest, masterProfileDto, userDto);
     }
 
     @Override
@@ -99,29 +100,32 @@ public class MasterRequestServiceImpl implements MasterRequestService {
 
         if (masterRequestRepo.existsByUserId(user.getId())) {
             throw new AppException(
-                    "Application " + ErrorMessage.ENTITY_ALREADY_EXISTS,
+                    ErrorMessage.MASTER_REQUEST_NOT_FOUND,
                     HttpStatus.CONFLICT);
         }
 
-        var application = masterRequestMapper.toEntity(user, VerificationStatus.UNDER_REVIEW);
-        userRepo.save(user);
-        masterRequestRepo.save(application);
+        var request = masterRequestMapper.toEntity(user, VerificationStatus.UNDER_REVIEW);
+        //userRepo.save(user);
+        masterRequestRepo.save(request);
     }
 
     @Override
-    public void approve(MasterRequestDto dto) {
-
-        processMasterRequest(dto, VerificationStatus.APPROVED);
+    public void reject(MasterRequestRejectDto rejectDto) {
+        var masterRequest = getMasterRequest(rejectDto.getId(),
+                VerificationStatus.REJECTED,
+                rejectDto.getRejectionReason()
+        );
+        masterRequestRepo.save(masterRequest);
     }
 
     @Override
-    public void reject(MasterRequestDto dto) {
-
-        processMasterRequest(dto, VerificationStatus.REJECTED);
+    public void approve(UUID id) {
+        var masterRequest = getMasterRequest(id, VerificationStatus.APPROVED, null);
+        masterRequestRepo.save(masterRequest);
     }
 
-    private void processMasterRequest(MasterRequestDto dto, VerificationStatus rejected) {
-        var admin = authUtils.getAuthenticatedUser();
+    private MasterRequest getMasterRequest(UUID rejectDto, VerificationStatus rejected, String rejectionReason) {
+        var admin = authUtil.getAuthenticatedUser();
 
         admin = userRepo.findById(admin.getId())
                 .orElseThrow(() -> new AppException(
@@ -129,13 +133,18 @@ public class MasterRequestServiceImpl implements MasterRequestService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        var masterRequest = masterRequestRepo.findById(dto.getId())
+        var masterRequest = masterRequestRepo.findById(rejectDto)
                 .orElseThrow(() -> new AppException(
-                        "Master request " + ErrorMessage.ENTITY_NOT_FOUND,
+                        ErrorMessage.MASTER_REQUEST_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 
-        masterRequestMapper.toEntity(admin, masterRequest, rejected, dto.getRejectionReason());
-        masterRequestRepo.save(masterRequest);
+        masterRequestMapper.toEntityWithAdmin(
+                admin,
+                masterRequest,
+                rejected,
+                rejectionReason
+        );
+        return masterRequest;
     }
 }

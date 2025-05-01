@@ -1,11 +1,12 @@
 package ru.master.service.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,11 +19,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceCategory extends BaseCategory {
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "service_subcategory_relations",
-            joinColumns = @JoinColumn(name = "service_id"),
-            inverseJoinColumns = @JoinColumn(name = "subservice_id")
-    )
-    List<SubServiceCategory> subServices = new ArrayList<>();
+    @OneToMany(mappedBy = "serviceCategory")
+    private List<SubServiceCategory> subServices;
 }

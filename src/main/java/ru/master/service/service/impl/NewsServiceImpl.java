@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.constants.DocumentType;
-import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constant.DocumentType;
+import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.NewsMapper;
-import ru.master.service.model.dto.NewsDto;
 import ru.master.service.model.dto.request.CreateNewsDto;
+import ru.master.service.model.dto.response.NewsDto;
 import ru.master.service.repository.CityRepo;
 import ru.master.service.repository.NewsRepo;
 import ru.master.service.service.FileStorageService;
@@ -41,7 +41,7 @@ public class NewsServiceImpl implements NewsService {
 
         var city = cityRepo.findById(dto.getCityId())
                 .orElseThrow(() -> new AppException(
-                        "City " + ErrorMessage.ENTITY_NOT_FOUND,
+                        ErrorMessage.CITY_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 
@@ -55,7 +55,7 @@ public class NewsServiceImpl implements NewsService {
     public void changeVisibility(UUID id, boolean isVisible) {
         var news = newsRepo.findById(id)
                 .orElseThrow(() -> new AppException(
-                        "News " + ErrorMessage.ENTITY_NOT_FOUND,
+                        ErrorMessage.NEWS_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 

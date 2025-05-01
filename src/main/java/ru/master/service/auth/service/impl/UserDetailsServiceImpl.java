@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.repository.UserRepo;
-import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
 
 @Service

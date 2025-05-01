@@ -2,8 +2,7 @@ package ru.master.service.auth.service;
 
 import org.springframework.security.core.GrantedAuthority;
 import ru.master.service.auth.model.User;
-import ru.master.service.constants.Role;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.constant.Role;
 
 import java.time.Instant;
 import java.util.Collection;

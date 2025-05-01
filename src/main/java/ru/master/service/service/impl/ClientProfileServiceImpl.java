@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.repository.UserRepo;
-import ru.master.service.auth.service.AuthService;
-import ru.master.service.constants.ErrorMessage;
-import ru.master.service.constants.Role;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.auth.service.UserService;
+import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.Role;
+import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ClientProfileMapper;
 import ru.master.service.model.dto.request.CreateClientProfileDto;
@@ -16,7 +16,7 @@ import ru.master.service.repository.ClientProfileRepo;
 import ru.master.service.service.CityService;
 import ru.master.service.service.ClientProfileService;
 import ru.master.service.service.UserAgreementService;
-import ru.master.service.util.AuthUtils;
+import ru.master.service.util.AuthUtil;
 
 @Service
 @Transactional
@@ -25,18 +25,18 @@ public class ClientProfileServiceImpl implements ClientProfileService {
 
     private final ClientProfileRepo clientProfileRepo;
     private final ClientProfileMapper clientProfileMapper;
-    private final AuthUtils authUtils;
+    private final AuthUtil authUtil;
     private final UserRepo userRepo;
     private final UserAgreementService userAgreementService;
     private final CityService cityService;
-    private final AuthService authService;
+    private final UserService userService;
 
     @Override
     public void create(CreateClientProfileDto reqDto) {
 
-        var user = authUtils.getAuthenticatedUser();
+        var user = authUtil.getAuthenticatedUser();
 
-        if (user.getRole() == Role.MASTER || user.getRole() ==  Role.ADMIN) {
+        if (user.getRole() != Role.CLIENT) {
             throw new AppException(
                     ErrorMessage.INVALID_ROLE_FOR_OPERATION,
                     HttpStatus.FORBIDDEN
@@ -56,13 +56,13 @@ public class ClientProfileServiceImpl implements ClientProfileService {
             );
         }
 
-        var city = cityService.getById(reqDto.getCityDto().getId());
+        var city = cityService.getById(reqDto.getCityId());
 
         userAgreementService.create(reqDto.getUserAgreementDto(), user);
 
         var clientProfileEntity = clientProfileMapper.toClientProfileEntity(reqDto, user, city);
 
-        authService.updateVerificationStatus(user, VerificationStatus.APPROVED);
+        userService.updateVerificationStatus(user, VerificationStatus.APPROVED);
 
         clientProfileRepo.save(clientProfileEntity);
     }

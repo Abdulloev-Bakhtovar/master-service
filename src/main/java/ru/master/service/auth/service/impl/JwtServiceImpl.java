@@ -8,12 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import ru.master.service.auth.model.TokenClaims;
+import ru.master.service.auth.model.TokenClaim;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.service.JwtService;
-import ru.master.service.constants.ErrorMessage;
-import ru.master.service.constants.Role;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.Role;
 import ru.master.service.exception.AppException;
 import ru.master.service.util.KeyProviderUtil;
 
@@ -97,7 +96,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateAccessToken(User user) {
-        TokenClaims claims = new TokenClaims(
+        TokenClaim claims = new TokenClaim(
                 user.getPhoneNumber(),
                 user.getRole(),
                 TOKEN_TYPE_ACCESS
@@ -107,7 +106,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateRefreshToken(User user) {
-        TokenClaims claims = new TokenClaims(
+        TokenClaim claims = new TokenClaim(
                 user.getPhoneNumber(),
                 null,
                 TOKEN_TYPE_REFRESH

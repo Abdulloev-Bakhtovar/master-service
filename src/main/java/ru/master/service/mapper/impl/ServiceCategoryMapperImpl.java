@@ -7,12 +7,13 @@ import ru.master.service.mapper.SubServiceCategoryMapper;
 import ru.master.service.model.ClientOrder;
 import ru.master.service.model.MasterSubService;
 import ru.master.service.model.ServiceCategory;
-import ru.master.service.model.SubServiceCategory;
-import ru.master.service.model.dto.inner.ServiceCategoryForOrderDto;
-import ru.master.service.model.dto.response.ServiceCategoryDto;
+import ru.master.service.model.dto.ServiceCategoryForClientOrderDto;
+import ru.master.service.model.dto.ServiceCategoryForMasterProfileDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
-import ru.master.service.model.dto.request.ListServiceCategoryDto;
+import ru.master.service.model.dto.response.AllServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryWithSubServiceDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,72 +23,70 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
     private final SubServiceCategoryMapper subServiceMapper;
 
     @Override
-    public ServiceCategory toEntity(CreateServiceCategoryDto dto, List<SubServiceCategory> subServices) {
-        if (dto == null) return null;
-
-        return ServiceCategory.builder()
-                .name(dto.getName())
-                .subServices(subServices)
-                .build();
-    }
-
-    @Override
-    public ServiceCategoryDto toDto(ServiceCategory entity) {
+    public AllServiceCategoryDto toAllServiceCategoryDto(ServiceCategory entity) {
         if (entity == null) return null;
 
-        return ServiceCategoryDto.builder()
+        return AllServiceCategoryDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .build();
-    }
-
-    private ServiceCategoryDto toDto(MasterSubService entity) {
-        if (entity == null) return null;
-
-        return ServiceCategoryDto.builder()
-                .id(entity.getServiceCategory().getId())
-                .name(entity.getServiceCategory().getName())
-                .subServiceCategoryDtos(subServiceMapper.toDtoList(entity.getServiceCategory().getSubServices()))
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .build();
     }
 
     @Override
-    public List<ServiceCategoryDto> toDtoList(List<MasterSubService> masterSubServices) {
-
-        return masterSubServices.stream()
-                .map(this::toDto)
-                .toList();
-    }
-
-    @Override
-    public ServiceCategoryDto toDtoWithSubService(ServiceCategory entity) {
+    public ServiceCategoryWithSubServiceDto toDtoWithSubService(ServiceCategory entity) {
         if (entity == null) return null;
 
-        return ServiceCategoryDto.builder()
+        return ServiceCategoryWithSubServiceDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .subServiceCategoryDtos(subServiceMapper.toDtoList(entity.getSubServices()))
                 .build();
     }
 
     @Override
-    public ListServiceCategoryDto toListServiceCategoryDto(ServiceCategory serviceCategory) {
-        if (serviceCategory == null) return null;
+    public ServiceCategory toEntity(CreateServiceCategoryDto entity) {
+        if (entity == null) return null;
 
-        return ListServiceCategoryDto.builder()
-                .id(serviceCategory.getId())
-                .name(serviceCategory.getName())
+        return ServiceCategory.builder()
+                .name(entity.getName())
                 .build();
     }
 
     @Override
-    public ServiceCategoryForOrderDto toServiceCategoryForOrderDto(ClientOrder entity) {
+    public ServiceCategoryForClientOrderDto toOrderInfoForClientDto(ClientOrder entity) {
         if (entity == null) return null;
 
-        return ServiceCategoryForOrderDto.builder()
+        return ServiceCategoryForClientOrderDto.builder()
                 .id(entity.getServiceCategory().getId())
                 .name(entity.getServiceCategory().getName())
-                .subServiceCategoryDto(subServiceMapper.toDto(entity.getSubServiceCategory()))
+                .createdAt(entity.getServiceCategory().getCreatedAt())
+                .updatedAt(entity.getServiceCategory().getUpdatedAt())
+                .subServiceCategoryDto(subServiceMapper.toOrderInfoForClientDto(entity.getSubServiceCategory()))
+                .build();
+    }
+
+    @Override
+    public List<ServiceCategoryForMasterProfileDto> toDtoList(List<MasterSubService> masterSubServices) {
+        if (masterSubServices == null) return new ArrayList<>(); // TODO
+
+        return masterSubServices.stream()
+                .map(this::toDtoWithSubService)
+                .toList();
+    }
+
+    private ServiceCategoryForMasterProfileDto toDtoWithSubService(MasterSubService entity) {
+        if (entity == null) return null;
+
+        return ServiceCategoryForMasterProfileDto.builder()
+                .id(entity.getServiceCategory().getId())
+                .name(entity.getServiceCategory().getName())
+                .createdAt(entity.getServiceCategory().getCreatedAt())
+                .updatedAt(entity.getServiceCategory().getUpdatedAt())
+                .subServiceCategoryDtos(subServiceMapper.toDtoList(entity.getServiceCategory().getSubServices()))
                 .build();
     }
 }

@@ -1,7 +1,7 @@
 package ru.master.service.service;
 
-import ru.master.service.constants.DisplayableEnum;
-import ru.master.service.model.dto.EnumDto;
+import ru.master.service.auth.model.dto.response.EnumDto;
+import ru.master.service.constant.DisplayableEnum;
 
 import java.util.List;
 

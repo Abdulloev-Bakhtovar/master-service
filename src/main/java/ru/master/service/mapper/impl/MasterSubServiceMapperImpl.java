@@ -6,7 +6,6 @@ import ru.master.service.model.MasterProfile;
 import ru.master.service.model.MasterSubService;
 import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.SubServiceCategory;
-import ru.master.service.model.dto.MasterSubServiceDto;
 
 @Component
 public class MasterSubServiceMapperImpl implements MasterSubServiceMapper {
@@ -22,12 +21,12 @@ public class MasterSubServiceMapperImpl implements MasterSubServiceMapper {
                 .build();
     }
 
-    @Override
-    public MasterSubServiceDto toDto(MasterSubService entity) {
-        if (entity == null) return null;
-
-        return MasterSubServiceDto.builder()
-                .subServiceCategory(entity.getSubServiceCategory())
-                .build();
-    }
+//    @Override
+//    public MasterSubServiceDto toDto(MasterSubService entity) {
+//        if (entity == null) return null;
+//
+//        return MasterSubServiceDto.builder()
+//                .subServiceCategory(entity.getSubServiceCategory())
+//                .build();
+//    }
 }

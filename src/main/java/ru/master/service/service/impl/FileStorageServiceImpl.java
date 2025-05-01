@@ -7,8 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.config.DocFileProperties;
-import ru.master.service.constants.DocumentType;
-import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constant.DocumentType;
+import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.service.FileStorageService;
 
@@ -95,7 +95,10 @@ public class FileStorageServiceImpl implements FileStorageService {
             Path filePath = files
                     .filter(p -> p.getFileName().toString().startsWith(filenamePrefix))
                     .findFirst()
-                    .orElseThrow(() -> new AppException("File not found", HttpStatus.NOT_FOUND));
+                    .orElseThrow(() -> new AppException(
+                            ErrorMessage.FILE_NOT_FOUND,
+                            HttpStatus.NOT_FOUND
+                    ));
 
             String fileName = filePath.getFileName().toString();
             if (fileName.endsWith(".png")) return MediaType.IMAGE_PNG;

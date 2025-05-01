@@ -1,7 +1,7 @@
 package ru.master.service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.constant.VerificationStatus;
 import ru.master.service.model.MasterRequest;
 
 import java.util.List;

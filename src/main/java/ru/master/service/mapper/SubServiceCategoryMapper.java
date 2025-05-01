@@ -1,18 +1,20 @@
 package ru.master.service.mapper;
 
+import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.SubServiceCategory;
-import ru.master.service.model.dto.SubServiceCategoryDto;
+import ru.master.service.model.dto.SubServiceForServiceDto;
+import ru.master.service.model.dto.request.CreateSubServiceCategoryDto;
+import ru.master.service.model.dto.response.AllSubServiceCategoryDto;
 
 import java.util.List;
-import java.util.Set;
 
 public interface SubServiceCategoryMapper {
 
-    SubServiceCategory toEntity(SubServiceCategoryDto dto);
+    SubServiceCategory toEntity(CreateSubServiceCategoryDto reqDto, ServiceCategory serviceCategory);
 
-    SubServiceCategoryDto toDto(SubServiceCategory entity);
+    AllSubServiceCategoryDto toDto(SubServiceCategory subServiceCategory);
 
-    List<SubServiceCategory> toEntityList(Set<SubServiceCategoryDto> dtos);
+    List<SubServiceForServiceDto> toDtoList(List<SubServiceCategory> entities);
 
-    List<SubServiceCategoryDto> toDtoList(List<SubServiceCategory> entities);
+    SubServiceForServiceDto toOrderInfoForClientDto(SubServiceCategory subServiceCategory);
 }

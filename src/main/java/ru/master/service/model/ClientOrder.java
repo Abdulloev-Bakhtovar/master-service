@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.master.service.constants.ClientOrderStatus;
-import ru.master.service.constants.ServiceType;
+import ru.master.service.auth.model.TimestampedEntity;
+import ru.master.service.constant.ClientOrderStatus;
+import ru.master.service.constant.MasterOrderStatus;
+import ru.master.service.constant.ServiceType;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -29,8 +31,6 @@ public class ClientOrder extends TimestampedEntity {
     boolean urgent;
     boolean agreeToTerms;
     BigDecimal price;
-    String clientFeedback;
-    Float clientRating;
     String rejectionReason;
 
     @Enumerated(EnumType.STRING)
@@ -38,6 +38,9 @@ public class ClientOrder extends TimestampedEntity {
 
     @Enumerated(EnumType.STRING)
     ClientOrderStatus clientOrderStatus;
+
+    @Enumerated(EnumType.STRING)
+    MasterOrderStatus masterOrderStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")

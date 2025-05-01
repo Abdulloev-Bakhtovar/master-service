@@ -14,7 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.service.JwtService;
 import ru.master.service.auth.service.TokenBlacklistService;
-import ru.master.service.constants.ErrorMessage;
+import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
 
 import java.io.IOException;

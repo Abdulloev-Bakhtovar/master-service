@@ -6,8 +6,8 @@ import ru.master.service.mapper.CityMapper;
 import ru.master.service.mapper.NewsMapper;
 import ru.master.service.model.City;
 import ru.master.service.model.News;
-import ru.master.service.model.dto.NewsDto;
 import ru.master.service.model.dto.request.CreateNewsDto;
+import ru.master.service.model.dto.response.NewsDto;
 
 @Component
 @RequiredArgsConstructor

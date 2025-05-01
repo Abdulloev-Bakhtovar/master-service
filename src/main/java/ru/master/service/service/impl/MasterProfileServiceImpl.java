@@ -5,51 +5,45 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.repository.UserRepo;
-import ru.master.service.auth.service.AuthService;
-import ru.master.service.constants.DocumentType;
-import ru.master.service.constants.ErrorMessage;
-import ru.master.service.constants.Role;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.auth.service.UserService;
+import ru.master.service.constant.DocumentType;
+import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.Role;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterProfileMapper;
-import ru.master.service.model.ClientOrder;
 import ru.master.service.model.MasterProfile;
 import ru.master.service.model.dto.request.CreateMasterProfileDto;
-import ru.master.service.model.dto.inner.MasterProfileForCreateDto;
 import ru.master.service.repository.ClientOrderRepo;
 import ru.master.service.repository.MasterProfileRepo;
 import ru.master.service.service.*;
-import ru.master.service.util.AuthUtils;
+import ru.master.service.util.AuthUtil;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MasterProfileServiceImpl implements MasterProfileService {
 
-    private final UserRepo userRepo;
-    private final AuthUtils authUtils;
-    private final CityService cityService;
-    private final UserAgreementService userAgreementService;
     private final MasterProfileRepo masterProfileRepo;
-    private final MasterProfileMapper masterProfileMapper;
-    private final FileStorageService docPhotoStorageService;
-    private final MasterSubServiceService masterSubServiceService;
-    private final AuthService authService;
-    private final MasterRequestService masterRequestService;
     private final ClientOrderRepo clientOrderRepo;
+    private final AuthUtil authUtil;
+    private final MasterProfileMapper masterProfileMapper;
+    private final UserRepo userRepo;
+    private final UserAgreementService userAgreementService;
+    private final CityService cityService;
+    private final FileStorageService docPhotoStorageService;
+    private final UserService userService;
+    private final MasterSubServiceService masterSubServiceService;
+    private final MasterRequestService masterRequestService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(CreateMasterProfileDto reqDto) throws IOException {
+        var masterProfileDto = masterProfileMapper.toCreateProfileDto(reqDto);
 
-        var masterProfileDto = masterProfileMapper.toMasterProfileDto(reqDto);
-
-        var user = authUtils.getAuthenticatedUser();
+        var user = authUtil.getAuthenticatedUser();
         var userId = user.getId();
 
         if (user.getRole() == Role.CLIENT || user.getRole() ==  Role.ADMIN) {
@@ -73,16 +67,24 @@ public class MasterProfileServiceImpl implements MasterProfileService {
         }
 
         userAgreementService.create(masterProfileDto.getUserAgreementDto(), user);
-        
+
         var city = cityService.getById(masterProfileDto.getCityDto().getId());
         var masterProfile = masterProfileMapper.toEntity(masterProfileDto, user, city);
 
-        addDocFile(masterProfileDto, userId);
+        addDocFile(reqDto, userId);
 
         masterProfile = masterProfileRepo.save(masterProfile);
         masterSubServiceService.create(masterProfileDto.getServiceCategoryDtos(), masterProfile);
-        authService.updateVerificationStatus(user, VerificationStatus.UNDER_REVIEW);
+        //userService.updateVerificationStatus(user, VerificationStatus.UNDER_REVIEW);
         masterRequestService.create(user);
+    }
+
+    private void addDocFile(CreateMasterProfileDto dto, UUID userId) throws IOException {
+        docPhotoStorageService.storeFile(dto.getProfilePhoto(), DocumentType.PROFILE, userId);
+        docPhotoStorageService.storeFile(dto.getPassportMainPhoto(), DocumentType.PASSPORT_MAIN, userId);
+        docPhotoStorageService.storeFile(dto.getPassportRegistrationPhoto(), DocumentType.PASSPORT_REGISTRATION, userId);
+        docPhotoStorageService.storeFile(dto.getSnilsPhoto(), DocumentType.SNILS, userId);
+        docPhotoStorageService.storeFile(dto.getInnPhoto(), DocumentType.INN, userId);
     }
 
     @Override
@@ -96,7 +98,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
         }
 
         // Получаем все завершенные заказы мастера с оценками
-        List<ClientOrder> completedOrders = clientOrderRepo.findByMasterProfileAndClientRatingIsNotNull(master);
+        /*List<ClientOrder> completedOrders = clientOrderRepo.findByMasterProfileAndClientRatingIsNotNull(master);
 
         // Добавляем новую оценку к списку
         List<Float> allRatings = completedOrders.stream()
@@ -112,14 +114,6 @@ public class MasterProfileServiceImpl implements MasterProfileService {
 
         // Обновляем профиль мастера
         master.setAverageRating((float) average);
-        masterProfileRepo.save(master);
-    }
-
-    private void addDocFile(MasterProfileForCreateDto dto, UUID userId) throws IOException {
-        docPhotoStorageService.storeFile(dto.getProfilePhoto(), DocumentType.PROFILE, userId);
-        docPhotoStorageService.storeFile(dto.getPassportMainPhoto(), DocumentType.PASSPORT_MAIN, userId);
-        docPhotoStorageService.storeFile(dto.getPassportRegistrationPhoto(), DocumentType.PASSPORT_REGISTRATION, userId);
-        docPhotoStorageService.storeFile(dto.getSnilsPhoto(), DocumentType.SNILS, userId);
-        docPhotoStorageService.storeFile(dto.getInnPhoto(), DocumentType.INN, userId);
+        masterProfileRepo.save(master);*/
     }
 }

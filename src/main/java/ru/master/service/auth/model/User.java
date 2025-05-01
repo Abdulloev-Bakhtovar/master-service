@@ -11,11 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.master.service.constants.ErrorMessage;
-import ru.master.service.constants.Role;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.Role;
+import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
-import ru.master.service.model.TimestampedEntity;
 
 import java.util.Collection;
 import java.util.Collections;

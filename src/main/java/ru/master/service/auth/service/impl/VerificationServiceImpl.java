@@ -7,17 +7,17 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.auth.model.dto.request.AccountVerifyDto;
+import ru.master.service.auth.model.dto.request.PhoneNumberDto;
+import ru.master.service.auth.model.dto.response.TokenDto;
 import ru.master.service.auth.mapper.TokenMapper;
 import ru.master.service.auth.model.User;
-import ru.master.service.auth.model.dto.PhoneNumberDto;
-import ru.master.service.auth.model.dto.TokenDto;
-import ru.master.service.auth.model.dto.VerificationCodeDto;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.auth.service.JwtService;
 import ru.master.service.auth.service.SmsService;
 import ru.master.service.auth.service.VerificationService;
-import ru.master.service.constants.ErrorMessage;
-import ru.master.service.constants.VerificationStatus;
+import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.util.CodeGeneratorUtil;
 import ru.master.service.util.CookieUtil;
@@ -68,7 +68,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     @Transactional
-    public TokenDto verifyCode(VerificationCodeDto dto, HttpServletResponse response) {
+    public TokenDto verifyCode(AccountVerifyDto dto, HttpServletResponse response) {
         String key = prefix + dto.getPhoneNumber();
         String storedCode = redisTemplate.opsForValue().get(key);
 
@@ -96,9 +96,8 @@ public class VerificationServiceImpl implements VerificationService {
         var refreshToken = jwtService.generateRefreshToken(user);
 
         redisTemplate.delete(key);
-        cookieUtil.addRefreshTokenToCookie(response, refreshToken);
 
-        return tokenMapper.toDto(accessToken);
+        return tokenMapper.toDto(accessToken, refreshToken);
     }
 
     @Override
