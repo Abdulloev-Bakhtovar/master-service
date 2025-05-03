@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.request.CancelOrderDto;
 import ru.master.service.model.dto.request.CompleteOrderDto;
-import ru.master.service.model.dto.request.CreateClientProfileDto;
+import ru.master.service.model.dto.request.CreateClientProfileReqDto;
 import ru.master.service.model.dto.response.AllClientProfileOrderDto;
 import ru.master.service.model.dto.response.OrderInfoForClientDto;
 import ru.master.service.service.ClientOrderService;
@@ -15,16 +15,16 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/client-profiles")
+@RequestMapping("/clients")
 @RequiredArgsConstructor
 public class ClientProfileController {
 
     private final ClientProfileService clientProfileService;
     private final ClientOrderService clientOrderService;
 
-    @PostMapping
+    @PostMapping("/profiles")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CreateClientProfileDto reqDto) {
+    public void create(@RequestBody CreateClientProfileReqDto reqDto) {
         clientProfileService.create(reqDto);
     }
 

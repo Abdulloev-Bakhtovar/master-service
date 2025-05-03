@@ -7,11 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.auth.service.UserService;
 import ru.master.service.constant.ErrorMessage;
-import ru.master.service.constant.Role;
 import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
-import ru.master.service.mapper.ClientProfileMapper;
-import ru.master.service.model.dto.request.CreateClientProfileDto;
+import ru.master.service.model.ClientProfile;
+import ru.master.service.model.dto.request.CreateClientProfileReqDto;
 import ru.master.service.repository.ClientProfileRepo;
 import ru.master.service.service.CityService;
 import ru.master.service.service.ClientProfileService;
@@ -24,7 +23,6 @@ import ru.master.service.util.AuthUtil;
 public class ClientProfileServiceImpl implements ClientProfileService {
 
     private final ClientProfileRepo clientProfileRepo;
-    private final ClientProfileMapper clientProfileMapper;
     private final AuthUtil authUtil;
     private final UserRepo userRepo;
     private final UserAgreementService userAgreementService;
@@ -32,16 +30,9 @@ public class ClientProfileServiceImpl implements ClientProfileService {
     private final UserService userService;
 
     @Override
-    public void create(CreateClientProfileDto reqDto) {
+    public void create(CreateClientProfileReqDto reqDto) {
 
         var user = authUtil.getAuthenticatedUser();
-
-        if (user.getRole() != Role.CLIENT) {
-            throw new AppException(
-                    ErrorMessage.INVALID_ROLE_FOR_OPERATION,
-                    HttpStatus.FORBIDDEN
-            );
-        }
 
         user = userRepo.findById(user.getId())
                 .orElseThrow(() -> new AppException(
@@ -60,7 +51,13 @@ public class ClientProfileServiceImpl implements ClientProfileService {
 
         userAgreementService.create(reqDto.getUserAgreementDto(), user);
 
-        var clientProfileEntity = clientProfileMapper.toClientProfileEntity(reqDto, user, city);
+        var clientProfileEntity = ClientProfile.builder()
+                .firstName(reqDto.getFirstName())
+                .lastName(reqDto.getLastName())
+                .city(city)
+                .address(reqDto.getAddress())
+                .user(user)
+                .build();
 
         userService.updateVerificationStatus(user, VerificationStatus.APPROVED);
 
