@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.constant.ErrorMessage;
-import ru.master.service.model.dto.CityDto;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.CityMapper;
 import ru.master.service.model.City;
+import ru.master.service.model.dto.CityDto;
 import ru.master.service.repository.CityRepo;
 import ru.master.service.service.CityService;
 

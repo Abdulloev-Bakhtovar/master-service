@@ -28,5 +28,5 @@ public class MasterProfileForCreateDto extends TimestampedDto {
     float averageRating;
     MaritalStatus maritalStatus;
     Education education;
-    List<ServiceCategoryForMasterProfileDto> serviceCategoryDtos;
+    List<MasterSubserviceDto> masterSubserviceDtos;
 }

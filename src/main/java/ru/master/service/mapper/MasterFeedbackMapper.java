@@ -1,12 +1,12 @@
 package ru.master.service.mapper;
 
-import ru.master.service.model.ClientOrder;
 import ru.master.service.model.MasterFeedback;
-import ru.master.service.model.dto.MasterFeedbackForClientOrderDto;
+import ru.master.service.model.Order;
+import ru.master.service.model.dto.MasterFeedbackForCompleteOrderForClientDto;
 
 public interface MasterFeedbackMapper {
 
-    MasterFeedbackForClientOrderDto toOrderInfoForClientDto(MasterFeedback masterFeedback);
+    MasterFeedbackForCompleteOrderForClientDto toOrderInfoForClientDto(MasterFeedback masterFeedback);
 
-    MasterFeedback toEntity(MasterFeedbackForClientOrderDto reqDto, ClientOrder order);
+    MasterFeedback toMasterFeedbackEntity(MasterFeedbackForCompleteOrderForClientDto reqDto, Order order);
 }

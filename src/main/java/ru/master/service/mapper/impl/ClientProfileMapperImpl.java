@@ -10,8 +10,15 @@ import ru.master.service.model.dto.request.CreateClientProfileReqDto;
 @Component
 public class ClientProfileMapperImpl implements ClientProfileMapper {
 
+    /**
+     * Mapper for create client profile
+     * @param dto
+     * @param user
+     * @param city
+     * @return ClientProfile
+     */
     @Override
-    public ClientProfile toClientProfileEntity(CreateClientProfileReqDto dto, User user, City city) {
+    public ClientProfile toEntity(CreateClientProfileReqDto dto, User user, City city) {
         if (dto == null) return null;
 
         return ClientProfile.builder()

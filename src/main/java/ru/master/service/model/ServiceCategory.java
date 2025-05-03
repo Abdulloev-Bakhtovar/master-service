@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -20,5 +21,5 @@ import java.util.List;
 public class ServiceCategory extends BaseCategory {
 
     @OneToMany(mappedBy = "serviceCategory")
-    private List<SubServiceCategory> subServices;
+    List<Subservice> subservices = new ArrayList<>();
 }

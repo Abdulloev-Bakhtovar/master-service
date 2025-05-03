@@ -22,7 +22,7 @@ public class MasterFeedback extends TimestampedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    ClientOrder order;
+    Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "master_id")

@@ -1,0 +1,240 @@
+package ru.master.service.service.impl;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.constant.ClientOrderStatus;
+import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.MasterOrderStatus;
+import ru.master.service.constant.Role;
+import ru.master.service.exception.AppException;
+import ru.master.service.mapper.OrderMapper;
+import ru.master.service.model.Order;
+import ru.master.service.model.dto.request.CancelOrderForClientDto;
+import ru.master.service.model.dto.request.CompleteOrderForClientDto;
+import ru.master.service.model.dto.request.CreateOrderReqDto;
+import ru.master.service.model.dto.response.*;
+import ru.master.service.repository.*;
+import ru.master.service.service.MasterFeedbackService;
+import ru.master.service.service.MasterProfileService;
+import ru.master.service.service.OrderService;
+import ru.master.service.util.AuthUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepo orderRepo;
+    private final ClientProfileRepo clientProfileRepo;
+    private final SubserviceRepo subserviceRepo;
+    private final OrderMapper orderMapper;
+    private final AuthUtil authUtil;
+    private final MasterFeedbackRepo masterFeedbackRepo;
+    private final MasterFeedbackService masterFeedbackService;
+    private final MasterProfileService masterProfileService;
+    private final MasterProfileRepo masterProfileRepo;
+
+    @Override
+    public IdDto create(CreateOrderReqDto reqDto) {
+
+        var user = authUtil.getAuthenticatedUser();
+
+        var clientProfile = clientProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.CLIENT_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        var subServiceCategory = subserviceRepo.findById(reqDto.getSubserviceId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.SUB_SERVICE_CATEGORY_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        var orderEntity = orderMapper.toOrderEntity(
+                reqDto,
+                clientProfile,
+                subServiceCategory,
+                ClientOrderStatus.SEARCHING_FOR_MASTER,
+                MasterOrderStatus.SEARCHING_FOR_MASTER);
+
+        orderRepo.save(orderEntity);
+
+        return IdDto.builder()
+                .id(orderEntity.getId())
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderDetailForClientResDto getByIdForClient(UUID orderId) {
+        var user = authUtil.getAuthenticatedUser();
+
+        var client = clientProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.CLIENT_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var order = orderRepo.findByIdAndClientProfileId(orderId, client.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var masterFeedback = masterFeedbackRepo.findByOrderId(order.getId())
+                .orElse(null);
+
+        return orderMapper.toOrderDetailResForClientDto(order, masterFeedback);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AllClientOrderResDto> getAllClientOrders() {
+        var user = authUtil.getAuthenticatedUser();
+
+        var client = clientProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.CLIENT_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var orders = orderRepo.findAllByClientProfileId(client.getId())
+                .orElse(new ArrayList<>());
+
+        return orders.stream()
+                .map(orderMapper::toAllClientOrderResDto)
+                .toList();
+    }
+
+    @Override
+    public void cancelOrderForClient(UUID orderId, CancelOrderForClientDto reqDto) {
+        var order = getClientOrder(orderId);
+        orderMapper.toCancelOrderForClient(reqDto, order);
+        orderRepo.save(order);
+    }
+
+    @Override
+    public void completeOrderForClient(UUID orderId, CompleteOrderForClientDto reqDto) {
+        var order = getClientOrder(orderId);
+
+        orderMapper.toCompleteOrderForClient(reqDto, order);
+        masterFeedbackService.create(reqDto.getMasterFeedbackDto(), order);
+        masterProfileService.updateMasterAverageRating(
+                order.getMasterProfile(),
+                reqDto.getMasterFeedbackDto().getRating()
+        );
+        orderRepo.save(order);
+    }
+
+    @Override
+    public List<MasterAvailableOrdersResDto> getMasterAvailableOrders() {
+        var user = authUtil.getAuthenticatedUser();
+
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var orders = orderRepo.findAllByCityId(master.getCity().getId())
+                .orElse(new ArrayList<>());
+
+        return orderMapper.toAllAvailableOrderForMasterDto(orders);
+    }
+
+    @Override
+    public List<MasterCompletedOrdersResDto> getMasterCompletedOrders() {
+        var user = authUtil.getAuthenticatedUser();
+
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatus(
+                        master.getId(), MasterOrderStatus.FINISHED
+                )
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        return orders.stream()
+                .map(orderMapper::toMasterCompletedOrdersResDto)
+                .toList();
+    }
+
+    @Override
+    public List<MasterActiveOrdersResDto> getMasterActiveOrders() {
+        var user = authUtil.getAuthenticatedUser();
+        if (user.getRole() != Role.MASTER) {
+            throw new AppException(
+                    ErrorMessage.INVALID_ROLE_FOR_OPERATION,
+                    HttpStatus.FORBIDDEN
+            );
+        }
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatus(
+                        master.getId(), MasterOrderStatus.TAKEN_IN_WORK
+                )
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        return orders.stream()
+                .map(orderMapper::toMasterActiveOrdersResDto)
+                .toList();
+    }
+
+    @Override
+    public OrderDetailForMasterResDto getByIdForMaster(UUID orderId) {
+
+        var order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var masterFeedback = masterFeedbackRepo.findByOrderId(order.getId())
+                .orElse(null);
+
+        return orderMapper.toOrderDetailForMasterResDto(order, masterFeedback);
+    }
+
+    private Order getClientOrder(UUID reqDto) {
+        var user = authUtil.getAuthenticatedUser();
+
+        if (!user.getRole().equals(Role.CLIENT)) {
+            throw new AppException(
+                    ErrorMessage.INVALID_ROLE_FOR_OPERATION,
+                    HttpStatus.FORBIDDEN
+            );
+        }
+        var client = clientProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.CLIENT_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        var order = orderRepo.findById(reqDto)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        if (client.getId() != order.getClientProfile().getId()) {
+            throw new AppException(
+                    ErrorMessage.ORDER_ACCESS_DENIED,
+                    HttpStatus.FORBIDDEN
+            );
+        }
+        return order;
+    }
+}

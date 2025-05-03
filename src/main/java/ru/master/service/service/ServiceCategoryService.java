@@ -1,19 +1,16 @@
 package ru.master.service.service;
 
-import ru.master.service.model.dto.request.CreateServiceCategoryDto;
+import ru.master.service.model.dto.request.CreateServiceCategoryReqDto;
 import ru.master.service.model.dto.response.ServiceCategoryResDto;
-import ru.master.service.model.dto.response.ServiceCategoryWithSubServiceDto;
+import ru.master.service.model.dto.response.ServiceCategoryWithSubserviceResDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface ServiceCategoryService {
 
     List<ServiceCategoryResDto> getAll(String name);
 
-    List<ServiceCategoryWithSubServiceDto> getAllWithSubService();
+    void create(CreateServiceCategoryReqDto reqDto) throws Exception;
 
-    void create(CreateServiceCategoryDto reqDto) throws Exception;
-
-    ServiceCategoryWithSubServiceDto getById(UUID id);
+    List<ServiceCategoryWithSubserviceResDto> getAllWithSubservices();
 }

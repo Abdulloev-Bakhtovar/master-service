@@ -1,7 +1,7 @@
 package ru.master.service.service;
 
-import ru.master.service.model.dto.CityDto;
 import ru.master.service.model.City;
+import ru.master.service.model.dto.CityDto;
 
 import java.util.List;
 import java.util.UUID;

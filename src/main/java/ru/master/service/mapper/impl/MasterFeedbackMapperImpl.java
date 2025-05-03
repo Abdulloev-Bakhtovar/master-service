@@ -1,19 +1,19 @@
 package ru.master.service.mapper.impl;
 
 import org.springframework.stereotype.Component;
+import ru.master.service.model.dto.MasterFeedbackForCompleteOrderForClientDto;
 import ru.master.service.mapper.MasterFeedbackMapper;
-import ru.master.service.model.ClientOrder;
 import ru.master.service.model.MasterFeedback;
-import ru.master.service.model.dto.MasterFeedbackForClientOrderDto;
+import ru.master.service.model.Order;
 
 @Component
 public class MasterFeedbackMapperImpl implements MasterFeedbackMapper {
 
     @Override
-    public MasterFeedbackForClientOrderDto toOrderInfoForClientDto(MasterFeedback entity) {
+    public MasterFeedbackForCompleteOrderForClientDto toOrderInfoForClientDto(MasterFeedback entity) {
         if (entity == null) return null;
 
-        return MasterFeedbackForClientOrderDto.builder()
+        return MasterFeedbackForCompleteOrderForClientDto.builder()
                 .id(entity.getId())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
@@ -23,9 +23,8 @@ public class MasterFeedbackMapperImpl implements MasterFeedbackMapper {
     }
 
     @Override
-    public MasterFeedback toEntity(MasterFeedbackForClientOrderDto reqDto, ClientOrder order) {
+    public MasterFeedback toMasterFeedbackEntity(MasterFeedbackForCompleteOrderForClientDto reqDto, Order order) {
         if (reqDto == null) return null;
-        if (order == null) return null;
 
         return MasterFeedback.builder()
                 .id(reqDto.getId())

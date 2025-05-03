@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.auth.model.dto.response.EnumResDto;
-import ru.master.service.auth.model.dto.request.RefreshTokenReqDto;
-import ru.master.service.auth.model.dto.request.RegisterOrLoginReqDto;
-import ru.master.service.auth.model.dto.response.TokenResDto;
+import ru.master.service.auth.model.dto.response.EnumDto;
+import ru.master.service.auth.model.dto.request.RefreshTokenDto;
+import ru.master.service.auth.model.dto.request.RegisterAndLoginDto;
+import ru.master.service.auth.model.dto.response.TokenDto;
 import ru.master.service.auth.mapper.TokenMapper;
 import ru.master.service.auth.mapper.UserMapper;
 import ru.master.service.auth.model.User;
@@ -39,29 +39,29 @@ public class UserServiceImpl implements UserService {
     private final AuthUtil authUtil;
 
     @Override
-    public void registerOrLogin(RegisterOrLoginReqDto registerOrLoginReqDto) {
+    public void registerOrLogin(RegisterAndLoginDto registerAndLoginDto) {
 
-        if (!userRepo.existsByPhoneNumber(registerOrLoginReqDto.getPhoneNumber())) {
+        if (!userRepo.existsByPhoneNumber(registerAndLoginDto.getPhoneNumber())) {
             
-            if (registerOrLoginReqDto.getRole().equals(Role.ADMIN)) {
+            if (registerAndLoginDto.getRole().equals(Role.ADMIN)) {
                 throw new AppException(
                         ErrorMessage.ASSIGN_ADMIN_ROLE_FORBIDDEN,
                         HttpStatus.FORBIDDEN
                 );
             }
 
-            var user = userMapper.toEntity(registerOrLoginReqDto);
+            var user = userMapper.toEntity(registerAndLoginDto);
             userRepo.save(user);
         }
 
-        String code = verificationService.saveCode(registerOrLoginReqDto.getPhoneNumber());
-        smsService.sendVerificationCode(registerOrLoginReqDto.getPhoneNumber(), code);
+        String code = verificationService.saveCode(registerAndLoginDto.getPhoneNumber());
+        smsService.sendVerificationCode(registerAndLoginDto.getPhoneNumber(), code);
     }
 
     @Override
-    public TokenResDto refreshToken(RefreshTokenReqDto refreshTokenReqDto) {
+    public TokenDto refreshToken(RefreshTokenDto refreshTokenDto) {
 
-        User user = validateRefreshTokenAndGetUser(refreshTokenReqDto);
+        User user = validateRefreshTokenAndGetUser(refreshTokenDto);
 
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);
@@ -70,12 +70,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void logout(TokenResDto tokenResDto) {
-        addToBlacklist(tokenResDto);
+    public void logout(TokenDto tokenDto) {
+        addToBlacklist(tokenDto);
     }
 
     @Override
-    public void delete(TokenResDto tokenResDto) {
+    public void delete(TokenDto tokenDto) {
 
         var user = authUtil.getAuthenticatedUser();
         user = userRepo.findById(user.getId())
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        addToBlacklist(tokenResDto);
+        addToBlacklist(tokenDto);
         userRepo.delete(user);
     }
 
@@ -95,58 +95,58 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public EnumResDto getVerificationStatusByPhoneNumber(String phoneNumber) {
+    public EnumDto getVerificationStatusByPhoneNumber(String phoneNumber) {
         var user = userRepo.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new AppException(
                         ErrorMessage.USER_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 
-        return EnumResDto.builder()
+        return EnumDto.builder()
                 .name(user.getVerificationStatus().name())
                 .displayName(user.getVerificationStatus().getDisplayName())
                 .build();
     }
 
-    private void addToBlacklist(TokenResDto tokenResDto) {
+    private void addToBlacklist(TokenDto tokenDto) {
         // Проверяем и добавляем refresh token
-        Optional.ofNullable(tokenResDto.getRefreshToken())
+        Optional.ofNullable(tokenDto.getRefreshToken())
                 .filter(jwtService::isTokenSignatureValid)
                 .filter(refreshToken -> !jwtService.isTokenExpired(refreshToken))
                 .ifPresent(tokenBlacklistService::addToBlacklist);
 
         // Проверяем и добавляем access token
-        Optional.ofNullable(tokenResDto.getAccessToken())
+        Optional.ofNullable(tokenDto.getAccessToken())
                 .filter(accessToken -> !jwtService.isTokenExpired(accessToken))
                 .ifPresent(tokenBlacklistService::addToBlacklist);
     }
 
 
-    private User validateRefreshTokenAndGetUser(RefreshTokenReqDto refreshTokenReqDto) {
+    private User validateRefreshTokenAndGetUser(RefreshTokenDto refreshTokenDto) {
 
 
-        if (!jwtService.isTokenSignatureValid(refreshTokenReqDto.getToken())) {
+        if (!jwtService.isTokenSignatureValid(refreshTokenDto.getToken())) {
             throw new AppException(
                     ErrorMessage.INVALID_TOKEN_SIGNATURE,
                     HttpStatus.UNAUTHORIZED
             );
         }
 
-        if (!jwtService.isRefreshToken(refreshTokenReqDto.getToken())) {
+        if (!jwtService.isRefreshToken(refreshTokenDto.getToken())) {
             throw new AppException(
                     ErrorMessage.INVALID_TOKEN_TYPE,
                     HttpStatus.FORBIDDEN
             );
         }
 
-        if (jwtService.isTokenExpired(refreshTokenReqDto.getToken())) {
+        if (jwtService.isTokenExpired(refreshTokenDto.getToken())) {
             throw new AppException(
                     ErrorMessage.TOKEN_EXPIRED,
                     HttpStatus.UNAUTHORIZED
             );
         }
 
-        UUID userId = UUID.fromString(jwtService.extractUserId(refreshTokenReqDto.getToken()));
+        UUID userId = UUID.fromString(jwtService.extractUserId(refreshTokenDto.getToken()));
 
         return userRepo.findById(userId)
                 .orElseThrow(() -> new AppException(

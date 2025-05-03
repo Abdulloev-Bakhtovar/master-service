@@ -7,5 +7,5 @@ import ru.master.service.model.dto.request.CreateClientProfileReqDto;
 
 public interface ClientProfileMapper {
 
-    ClientProfile toClientProfileEntity(CreateClientProfileReqDto dto, User user, City city);
+    ClientProfile toEntity(CreateClientProfileReqDto dto, User user, City city);
 }

@@ -5,7 +5,7 @@ INSERT INTO service_categories (id, name, created_at, updated_at) VALUES
     ('33333333-3333-3333-3333-333333333333', 'Электромонтажные работы', now(), now());
 
 -- Вставляем подкатегории с явным указанием родительской категории
-INSERT INTO subservice_categories (id, name, service_category_id, created_at, updated_at) VALUES
+INSERT INTO subservices (id, name, service_category_id, created_at, updated_at) VALUES
     -- Для категории "Ремонт бытовой техники"
     ('44444444-4444-4444-4444-444444444444', 'Ремонт холодильников', '11111111-1111-1111-1111-111111111111', now(), now()),
     ('55555555-5555-5555-5555-555555555555', 'Ремонт стиральных машин', '11111111-1111-1111-1111-111111111111', now(), now()),

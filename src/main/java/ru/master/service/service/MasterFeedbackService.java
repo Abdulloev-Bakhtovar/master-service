@@ -1,9 +1,9 @@
 package ru.master.service.service;
 
-import ru.master.service.model.ClientOrder;
-import ru.master.service.model.dto.MasterFeedbackForClientOrderDto;
+import ru.master.service.model.Order;
+import ru.master.service.model.dto.MasterFeedbackForCompleteOrderForClientDto;
 
 public interface MasterFeedbackService {
 
-    void create(MasterFeedbackForClientOrderDto reqDto, ClientOrder order);
+    void create(MasterFeedbackForCompleteOrderForClientDto reqDto, Order order);
 }

@@ -10,5 +10,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SubServiceForAvailableOrdersDto extends BaseCategoryDto {
+public class SubserviceForAvailableOrdersDto extends BaseCategoryDto{
 }

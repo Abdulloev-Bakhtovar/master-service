@@ -7,9 +7,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.auth.model.dto.request.SmsVerificationReqDto;
-import ru.master.service.auth.model.dto.request.PhoneNumberReqDto;
-import ru.master.service.auth.model.dto.response.TokenResDto;
+import ru.master.service.auth.model.dto.request.AccountVerifyDto;
+import ru.master.service.auth.model.dto.request.PhoneNumberDto;
+import ru.master.service.auth.model.dto.response.TokenDto;
 import ru.master.service.auth.mapper.TokenMapper;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.repository.UserRepo;
@@ -68,7 +68,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     @Transactional
-    public TokenResDto smsVerification(SmsVerificationReqDto dto, HttpServletResponse response) {
+    public TokenDto verifyCode(AccountVerifyDto dto, HttpServletResponse response) {
         String key = prefix + dto.getPhoneNumber();
         String storedCode = redisTemplate.opsForValue().get(key);
 
@@ -101,7 +101,7 @@ public class VerificationServiceImpl implements VerificationService {
     }
 
     @Override
-    public void resendCode(PhoneNumberReqDto dto) {
+    public void resendCode(PhoneNumberDto dto) {
         String code = this.saveCode(dto.getPhoneNumber());
         smsService.sendVerificationCode(dto.getPhoneNumber(), code);
     }

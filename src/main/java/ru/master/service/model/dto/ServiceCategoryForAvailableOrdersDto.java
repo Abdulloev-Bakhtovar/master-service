@@ -1,6 +1,5 @@
 package ru.master.service.model.dto;
 
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
@@ -13,5 +12,5 @@ import lombok.experimental.SuperBuilder;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceCategoryForAvailableOrdersDto extends BaseCategoryDto {
 
-    SubServiceForAvailableOrdersDto subServiceCategory;
+    SubserviceForAvailableOrdersDto subserviceDto;
 }

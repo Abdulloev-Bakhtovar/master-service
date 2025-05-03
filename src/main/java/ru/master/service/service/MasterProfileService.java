@@ -1,11 +1,11 @@
 package ru.master.service.service;
 
 import ru.master.service.model.MasterProfile;
-import ru.master.service.model.dto.request.CreateMasterProfileDto;
+import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 
 public interface MasterProfileService {
 
-    void create(CreateMasterProfileDto reqDto) throws Exception;
+    void create(CreateMasterProfileReqDto reqDto) throws Exception;
 
-    void updateMasterAverageRating(MasterProfile master, float newRating);
+    void updateMasterAverageRating(MasterProfile masterProfile, Float rating);
 }

@@ -7,6 +7,9 @@ import ru.master.service.model.dto.UserAgreementDto;
 
 import java.util.UUID;
 
+/**
+ * Create profile for client
+ */
 @Getter
 @Setter
 @SuperBuilder

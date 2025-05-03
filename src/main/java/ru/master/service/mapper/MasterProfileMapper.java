@@ -1,26 +1,21 @@
 package ru.master.service.mapper;
 
 import ru.master.service.auth.model.User;
-import ru.master.service.model.*;
-import ru.master.service.model.dto.MasterInfoForClientOrderDto;
+import ru.master.service.model.City;
+import ru.master.service.model.MasterProfile;
+import ru.master.service.model.Subservice;
 import ru.master.service.model.dto.MasterProfileForCreateDto;
-import ru.master.service.model.dto.MasterProfileForMasterRequestDto;
-import ru.master.service.model.dto.request.CreateMasterProfileDto;
-import ru.master.service.model.dto.response.NewMasterRequestDto;
+import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 
 import java.util.List;
 
 public interface MasterProfileMapper {
 
-    MasterInfoForClientOrderDto toOrderInfoForClientDto(MasterProfile masterProfile);
+    /** For create master profile */
+    MasterProfileForCreateDto toMasterProfileForCreateDto(CreateMasterProfileReqDto reqDto);
 
-    MasterProfileForCreateDto toCreateProfileDto(CreateMasterProfileDto reqDto);
-
-    MasterProfile toEntity(MasterProfileForCreateDto masterProfileDto, User user, City city);
-
-    NewMasterRequestDto toNewMasterRequestDto(MasterProfile masterProfile, MasterRequest masterRequest);
-
-    MasterProfileForMasterRequestDto toMasterRequestDto(MasterProfile masterProfile,
-                                                        List<MasterSubService> masterSubServices,
-                                                        UserAgreement userAgreement);
+    MasterProfile toMasterProfileEntity(MasterProfileForCreateDto masterProfileDto,
+                                        User user,
+                                        City city,
+                                        List<Subservice> subservices);
 }

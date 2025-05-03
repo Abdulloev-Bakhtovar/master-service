@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.model.User;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
-import ru.master.service.mapper.UserAgreementMapper;
 import ru.master.service.model.dto.UserAgreementDto;
+import ru.master.service.mapper.UserAgreementMapper;
 import ru.master.service.repository.UserAgreementRepo;
 import ru.master.service.service.UserAgreementService;
 

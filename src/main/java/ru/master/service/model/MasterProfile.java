@@ -1,12 +1,14 @@
 package ru.master.service.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import ru.master.service.constant.Education;
 import ru.master.service.constant.MaritalStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,4 +26,12 @@ public class MasterProfile extends BaseProfile {
     String workExperience;
     boolean hasConviction;
     float averageRating;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "master_subservices",
+            joinColumns = @JoinColumn(name = "master_id"),
+            inverseJoinColumns = @JoinColumn(name = "subservice_id")
+    )
+    List<Subservice> subservices = new ArrayList<>();
 }

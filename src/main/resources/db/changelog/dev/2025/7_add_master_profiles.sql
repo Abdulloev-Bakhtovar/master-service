@@ -9,8 +9,8 @@ CREATE TABLE master_profiles
     marital_status  VARCHAR(50),
     education       VARCHAR(100),
     work_experience TEXT,
-    has_conviction  BOOLEAN       DEFAULT FALSE,
-    average_rating  NUMERIC(3, 1) DEFAULT 0.0,
+    has_conviction  BOOLEAN,
+    average_rating  NUMERIC(2, 1),
     created_at      TIMESTAMPTZ,
     updated_at      TIMESTAMPTZ
 );

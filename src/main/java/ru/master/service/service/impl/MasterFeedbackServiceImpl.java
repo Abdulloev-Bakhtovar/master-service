@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.mapper.MasterFeedbackMapper;
-import ru.master.service.model.ClientOrder;
-import ru.master.service.model.dto.MasterFeedbackForClientOrderDto;
+import ru.master.service.model.Order;
+import ru.master.service.model.dto.MasterFeedbackForCompleteOrderForClientDto;
 import ru.master.service.repository.MasterFeedbackRepo;
 import ru.master.service.service.MasterFeedbackService;
 
@@ -18,8 +18,8 @@ public class MasterFeedbackServiceImpl implements MasterFeedbackService {
     private final MasterFeedbackMapper masterFeedbackMapper;
 
     @Override
-    public void create(MasterFeedbackForClientOrderDto reqDto, ClientOrder order) {
-        var masterFeedback = masterFeedbackMapper.toEntity(reqDto, order);
+    public void create(MasterFeedbackForCompleteOrderForClientDto reqDto, Order order) {
+        var masterFeedback = masterFeedbackMapper.toMasterFeedbackEntity(reqDto, order);
         masterFeedbackRepo.save(masterFeedback);
     }
 }
