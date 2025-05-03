@@ -7,14 +7,14 @@ import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.dto.ServiceCategoryForClientOrderDto;
 import ru.master.service.model.dto.ServiceCategoryForMasterProfileDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
-import ru.master.service.model.dto.response.AllServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryResDto;
 import ru.master.service.model.dto.response.ServiceCategoryWithSubServiceDto;
 
 import java.util.List;
 
 public interface ServiceCategoryMapper {
 
-    AllServiceCategoryDto toAllServiceCategoryDto(ServiceCategory serviceCategory);
+    ServiceCategoryResDto toAllServiceCategoryDto(ServiceCategory serviceCategory);
 
     ServiceCategoryWithSubServiceDto toDtoWithSubService(ServiceCategory serviceCategory);
 

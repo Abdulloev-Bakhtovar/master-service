@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
-import ru.master.service.model.dto.response.AllServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryResDto;
 import ru.master.service.model.dto.response.ServiceCategoryWithSubServiceDto;
 import ru.master.service.service.FileStorageService;
 import ru.master.service.service.ServiceCategoryService;
@@ -25,7 +25,7 @@ public class ServiceCategoryController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<AllServiceCategoryDto> getAll(@RequestParam(required = false) String name) {
+    public List<ServiceCategoryResDto> getAll(@RequestParam(required = false) String name) {
         return serviceCategoryService.getAll(name);
     }
 

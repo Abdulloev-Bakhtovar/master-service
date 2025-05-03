@@ -10,7 +10,7 @@ import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.dto.ServiceCategoryForClientOrderDto;
 import ru.master.service.model.dto.ServiceCategoryForMasterProfileDto;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
-import ru.master.service.model.dto.response.AllServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryResDto;
 import ru.master.service.model.dto.response.ServiceCategoryWithSubServiceDto;
 
 import java.util.ArrayList;
@@ -23,10 +23,10 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
     private final SubServiceCategoryMapper subServiceMapper;
 
     @Override
-    public AllServiceCategoryDto toAllServiceCategoryDto(ServiceCategory entity) {
+    public ServiceCategoryResDto toAllServiceCategoryDto(ServiceCategory entity) {
         if (entity == null) return null;
 
-        return AllServiceCategoryDto.builder()
+        return ServiceCategoryResDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .createdAt(entity.getCreatedAt())

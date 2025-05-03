@@ -11,7 +11,7 @@ import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.dto.request.CreateServiceCategoryDto;
-import ru.master.service.model.dto.response.AllServiceCategoryDto;
+import ru.master.service.model.dto.response.ServiceCategoryResDto;
 import ru.master.service.model.dto.response.ServiceCategoryWithSubServiceDto;
 import ru.master.service.repository.ServiceCategoryRepo;
 import ru.master.service.repository.SubServiceCategoryRepo;
@@ -35,7 +35,7 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AllServiceCategoryDto> getAll(String name) {
+    public List<ServiceCategoryResDto> getAll(String name) {
 
         List<ServiceCategory> categories = StringUtils.hasText(name)
                 ? serviceCategoryRepo.findByNameContainingIgnoreCase(name)
