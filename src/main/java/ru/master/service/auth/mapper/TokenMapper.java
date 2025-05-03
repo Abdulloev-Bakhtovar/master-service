@@ -1,8 +1,8 @@
 package ru.master.service.auth.mapper;
 
-import ru.master.service.auth.model.dto.response.TokenDto;
+import ru.master.service.auth.model.dto.response.TokenResDto;
 
 public interface TokenMapper {
 
-    TokenDto toDto(String accessToken, String refreshToken);
+    TokenResDto toDto(String accessToken, String refreshToken);
 }

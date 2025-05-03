@@ -1,17 +1,17 @@
 package ru.master.service.auth.model.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountVerifyDto {
+public class RefreshTokenReqDto {
 
-    String phoneNumber;
-    String code;
+    @JsonProperty("refreshToken")
+    String token;
 }

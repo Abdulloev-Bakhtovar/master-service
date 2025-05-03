@@ -1,7 +1,7 @@
 package ru.master.service.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.master.service.auth.model.dto.response.EnumDto;
+import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.constant.DisplayableEnum;
 import ru.master.service.service.EnumService;
 
@@ -12,9 +12,9 @@ import java.util.List;
 public class EnumServiceImpl implements EnumService {
 
     @Override
-    public <E extends Enum<E> & DisplayableEnum> List<EnumDto> getAllValues(Class<E> enumClass) {
+    public <E extends Enum<E> & DisplayableEnum> List<EnumResDto> getAllValues(Class<E> enumClass) {
         return Arrays.stream(enumClass.getEnumConstants())
-                .map(e -> EnumDto.builder()
+                .map(e -> EnumResDto.builder()
                         .name(e.name())
                         .displayName(e.getDisplayName())
                         .build())

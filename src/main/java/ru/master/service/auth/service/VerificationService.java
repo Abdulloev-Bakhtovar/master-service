@@ -1,9 +1,9 @@
 package ru.master.service.auth.service;
 
 import jakarta.servlet.http.HttpServletResponse;
-import ru.master.service.auth.model.dto.request.AccountVerifyDto;
-import ru.master.service.auth.model.dto.request.PhoneNumberDto;
-import ru.master.service.auth.model.dto.response.TokenDto;
+import ru.master.service.auth.model.dto.request.SmsVerificationReqDto;
+import ru.master.service.auth.model.dto.request.PhoneNumberReqDto;
+import ru.master.service.auth.model.dto.response.TokenResDto;
 
 import java.util.Map;
 
@@ -11,9 +11,9 @@ public interface VerificationService {
 
     String saveCode(String phoneNumber);
 
-    TokenDto verifyCode(AccountVerifyDto dto, HttpServletResponse response);
+    TokenResDto smsVerification(SmsVerificationReqDto dto, HttpServletResponse response);
 
-    void resendCode(PhoneNumberDto dto);
+    void resendCode(PhoneNumberReqDto dto);
 
     Map<String, String> getAllCodes(); //TODO для тестирование, нужно потом удалить
 }

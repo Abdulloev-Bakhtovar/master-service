@@ -3,6 +3,7 @@ package ru.master.service.auth.model.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import ru.master.service.constant.Role;
 
 @Getter
 @Setter
@@ -10,7 +11,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PhoneNumberDto {
+public class RegisterOrLoginReqDto {
 
     String phoneNumber;
+    Role role;
 }

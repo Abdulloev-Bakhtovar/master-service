@@ -1,23 +1,23 @@
 package ru.master.service.auth.service;
 
-import ru.master.service.auth.model.dto.response.EnumDto;
-import ru.master.service.auth.model.dto.request.RefreshTokenDto;
-import ru.master.service.auth.model.dto.request.RegisterAndLoginDto;
-import ru.master.service.auth.model.dto.response.TokenDto;
+import ru.master.service.auth.model.dto.response.EnumResDto;
+import ru.master.service.auth.model.dto.request.RefreshTokenReqDto;
+import ru.master.service.auth.model.dto.request.RegisterOrLoginReqDto;
+import ru.master.service.auth.model.dto.response.TokenResDto;
 import ru.master.service.auth.model.User;
 import ru.master.service.constant.VerificationStatus;
 
 public interface UserService {
 
-    void registerOrLogin(RegisterAndLoginDto registerAndLoginDto);
+    void registerOrLogin(RegisterOrLoginReqDto registerOrLoginReqDto);
 
-    TokenDto refreshToken(RefreshTokenDto refreshTokenDto);
+    TokenResDto refreshToken(RefreshTokenReqDto refreshTokenReqDto);
 
-    void logout(TokenDto tokenDto);
+    void logout(TokenResDto tokenResDto);
 
-    void delete(TokenDto tokenDto);
+    void delete(TokenResDto tokenResDto);
 
     void updateVerificationStatus(User user, VerificationStatus verificationStatus);
 
-    EnumDto getVerificationStatusByPhoneNumber(String phoneNumber);
+    EnumResDto getVerificationStatusByPhoneNumber(String phoneNumber);
 }

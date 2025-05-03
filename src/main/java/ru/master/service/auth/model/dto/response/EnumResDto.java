@@ -4,13 +4,13 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Getter
-@Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TokenDto {
+public class EnumResDto {
 
-    String accessToken;
-    String refreshToken;
+    String name;
+    String displayName;
 }
