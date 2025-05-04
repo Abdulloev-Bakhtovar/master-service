@@ -3,8 +3,9 @@ package ru.master.service.controller;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.model.dto.MasterRequestDto;
-import ru.master.service.model.dto.NewMasterRequestDto;
+import ru.master.service.model.dto.request.RejectMasterRequestReqDto;
+import ru.master.service.model.dto.response.MasterRequestResDto;
+import ru.master.service.model.dto.response.NewMasterRequestResDto;
 import ru.master.service.service.MasterRequestService;
 
 import java.util.List;
@@ -19,22 +20,23 @@ public class MasterRequestController {
     private final MasterRequestService masterRequestService;
 
     @GetMapping
-    public List<NewMasterRequestDto> getAll() {
+    public List<NewMasterRequestResDto> getAll() {
         return masterRequestService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public MasterRequestDto getById(@PathVariable UUID id) {
-        return masterRequestService.getById(id);
+    @GetMapping("/{requestId}")
+    public MasterRequestResDto getById(@PathVariable UUID requestId) {
+        return masterRequestService.getById(requestId);
     }
 
-    @PatchMapping("/approve")
-    public void approve(@RequestBody MasterRequestDto masterRequestDto) {
-        masterRequestService.approve(masterRequestDto);
+    @PatchMapping("/{requestId}/approve")
+    public void approve(@PathVariable UUID requestId) {
+        masterRequestService.approve(requestId);
     }
 
-    @PatchMapping("/reject")
-    public void reject(@RequestBody MasterRequestDto masterRequestDto) {
-        masterRequestService.reject(masterRequestDto);
+    @PatchMapping("/{requestId}/reject")
+    public void reject(@PathVariable UUID requestId,
+                       @RequestBody RejectMasterRequestReqDto reqDto) {
+        masterRequestService.reject(requestId, reqDto);
     }
 }

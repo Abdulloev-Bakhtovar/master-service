@@ -22,7 +22,7 @@ public class MasterRequest extends TimestampedEntity {
     String rejectionReason;
     UUID reviewedByAdminId;
 
-    // it`s a master
+    /** it`s a master */
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     User user;
