@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.auth.service.UserService;
 import ru.master.service.constant.DocumentType;
@@ -106,7 +107,6 @@ public class MasterProfileServiceImpl implements MasterProfileService {
 
         // Обновляем профиль мастера
         master.setAverageRating((float) average);
-        masterProfileRepo.save(master);
     }
 
     @Override
@@ -121,6 +121,22 @@ public class MasterProfileServiceImpl implements MasterProfileService {
 
         master.setMasterStatus(reqDto.getMasterStatus());
         masterProfileRepo.save(master);
+    }
+
+    @Override
+    public EnumResDto getMasterStatus() {
+        var user = authUtil.getAuthenticatedUser();
+
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        return EnumResDto.builder()
+                .name(master.getMasterStatus().name())
+                .displayName(master.getMasterStatus().getDisplayName())
+                .build();
     }
 
 

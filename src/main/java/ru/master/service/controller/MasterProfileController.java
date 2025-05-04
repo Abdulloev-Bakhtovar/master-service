@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.request.PostponeReqForMasterDto;
@@ -80,9 +81,14 @@ public class MasterProfileController {
         orderService.postponeOrderForMaster(orderId, reqDto);
     }
 
-    @PostMapping("/status")
+    @PostMapping("/change-status")
     public void updateMasterStatus(@RequestBody MasterStatusUpdateDto reqDto) {
         masterProfileService.updateMasterStatus(reqDto);
+    }
+
+    @GetMapping("/status")
+    public EnumResDto getMasterStatus() {
+        return masterProfileService.getMasterStatus();
     }
 
 }

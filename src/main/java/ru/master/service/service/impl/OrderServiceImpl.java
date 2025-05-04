@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.constant.ClientOrderStatus;
-import ru.master.service.constant.ErrorMessage;
-import ru.master.service.constant.MasterOrderStatus;
-import ru.master.service.constant.Role;
+import ru.master.service.constant.*;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.OrderMapper;
 import ru.master.service.model.Order;
@@ -24,6 +21,7 @@ import ru.master.service.service.OrderService;
 import ru.master.service.util.AuthUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,6 +115,7 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrderForClient(UUID orderId, CancelOrderForClientDto reqDto) {
         var order = getClientOrder(orderId);
         orderMapper.toCancelOrderForClient(reqDto, order);
+        order.getMasterProfile().setMasterStatus(MasterStatus.WAITING_FOR_ORDERS);
         orderRepo.save(order);
     }
 
@@ -126,6 +125,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderMapper.toCompleteOrderForClient(reqDto, order);
         masterFeedbackService.create(reqDto.getMasterFeedbackDto(), order);
+
         masterProfileService.updateMasterAverageRating(
                 order.getMasterProfile(),
                 reqDto.getMasterFeedbackDto().getRating()
@@ -142,8 +142,19 @@ public class OrderServiceImpl implements OrderService {
                         ErrorMessage.MASTER_PROFILE_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
-        var orders = orderRepo.findAllByCityId(master.getCity().getId())
-                .orElse(new ArrayList<>());
+
+        List<Order> orders =  switch (master.getMasterStatus()) {
+            case WAITING_FOR_ORDERS ->
+                    orderRepo.findAllByCityIdAndMasterOrderStatus(
+                                    master.getCity().getId(),
+                                    MasterOrderStatus.SEARCHING_FOR_MASTER
+                            )
+                            .orElse(new ArrayList<>());
+            case ON_ORDER ->
+                    orderRepo.findCurrentOrderByMasterProfileId(master.getId());
+            case OFFLINE ->
+                    Collections.emptyList();
+        };
 
         return orderMapper.toAllAvailableOrderForMasterDto(orders);
     }
@@ -158,7 +169,7 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND
                 ));
         var orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatus(
-                        master.getId(), MasterOrderStatus.FINISHED
+                        master.getId(), MasterOrderStatus.COMPLETED
                 )
                 .orElseThrow(() -> new AppException(
                         ErrorMessage.ORDER_NOT_FOUND,
@@ -221,7 +232,6 @@ public class OrderServiceImpl implements OrderService {
                 ));
 
         order.setMasterOrderStatus(MasterOrderStatus.ARRIVED_AT_CLIENT);
-
         orderRepo.save(order);
     }
 
@@ -249,6 +259,7 @@ public class OrderServiceImpl implements OrderService {
         order.setMasterProfile(master);
         order.setClientOrderStatus(ClientOrderStatus.TAKEN_IN_WORK);
         order.setMasterOrderStatus(MasterOrderStatus.TAKEN_IN_WORK);
+        master.setMasterStatus(MasterStatus.ON_ORDER);
 
         orderRepo.save(order);
     }
@@ -257,6 +268,14 @@ public class OrderServiceImpl implements OrderService {
     public void availabilityOrderForMaster() {
         // TODO при нажатия на кнопку готов принимать заказы тут изменяется
         // TODO                                     его статус на (ЖДУ ЗАЯВОК)
+        var user = authUtil.getAuthenticatedUser();
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        master.setMasterStatus(MasterStatus.WAITING_FOR_ORDERS);
+        masterProfileRepo.save(master);
     }
 
     @Override

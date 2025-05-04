@@ -21,5 +21,9 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
 
     Optional<List<Order>> findAllByCityId(UUID id);
 
+    Optional<List<Order>> findAllByCityIdAndMasterOrderStatus(UUID city_id, MasterOrderStatus masterOrderStatus);
+
     Optional<List<Order>> findAllByMasterProfileIdAndMasterOrderStatus(UUID id, MasterOrderStatus status);
+
+    List<Order> findCurrentOrderByMasterProfileId(UUID id);
 }

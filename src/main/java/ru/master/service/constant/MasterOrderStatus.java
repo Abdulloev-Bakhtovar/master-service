@@ -13,7 +13,7 @@ public enum MasterOrderStatus implements DisplayableEnum {
     READY_FOR_REQUESTS("Готова принимать заявки"),
     DEFERRED_REPAIR("Отложенный ремонт"),
     CANCELLED("Отменит заказ"),
-    FINISHED("Выполнен");
+    COMPLETED("Выполнен");
 
     private final String displayName;
 }

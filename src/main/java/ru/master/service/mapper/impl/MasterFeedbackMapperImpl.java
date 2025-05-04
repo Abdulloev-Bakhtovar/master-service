@@ -27,7 +27,6 @@ public class MasterFeedbackMapperImpl implements MasterFeedbackMapper {
         if (reqDto == null) return null;
 
         return MasterFeedback.builder()
-                .id(reqDto.getId())
                 .review(reqDto.getReview())
                 .rating(reqDto.getRating())
                 .master(order.getMasterProfile())

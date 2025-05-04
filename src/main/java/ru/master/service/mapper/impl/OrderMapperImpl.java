@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.constant.ClientOrderStatus;
 import ru.master.service.constant.MasterOrderStatus;
+import ru.master.service.constant.MasterStatus;
 import ru.master.service.mapper.OrderMapper;
 import ru.master.service.model.ClientProfile;
 import ru.master.service.model.MasterFeedback;
@@ -169,6 +170,9 @@ public class OrderMapperImpl implements OrderMapper {
     @Override
     public void toCompleteOrderForClient(CompleteOrderForClientDto reqDto, Order order) {
         order.setClientOrderStatus(ClientOrderStatus.COMPLETED);
+        order.setMasterOrderStatus(MasterOrderStatus.COMPLETED);
+
+        order.getMasterProfile().setMasterStatus(MasterStatus.WAITING_FOR_ORDERS);
     }
 
     @Override
