@@ -15,6 +15,7 @@ import ru.master.service.model.MasterProfile;
 import ru.master.service.model.Subservice;
 import ru.master.service.model.dto.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
+import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.repository.MasterFeedbackRepo;
 import ru.master.service.repository.MasterProfileRepo;
 import ru.master.service.repository.OrderRepo;
@@ -105,6 +106,20 @@ public class MasterProfileServiceImpl implements MasterProfileService {
 
         // Обновляем профиль мастера
         master.setAverageRating((float) average);
+        masterProfileRepo.save(master);
+    }
+
+    @Override
+    public void updateMasterStatus(MasterStatusUpdateDto reqDto) {
+        var user = authUtil.getAuthenticatedUser();
+
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        master.setMasterStatus(reqDto.getMasterStatus());
         masterProfileRepo.save(master);
     }
 

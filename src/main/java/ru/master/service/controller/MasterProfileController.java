@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
+import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.request.PostponeReqForMasterDto;
 import ru.master.service.model.dto.response.MasterActiveOrdersResDto;
 import ru.master.service.model.dto.response.MasterAvailableOrdersResDto;
@@ -77,6 +78,11 @@ public class MasterProfileController {
     public void postponeOrderForMaster(@PathVariable UUID orderId,
                                        @RequestBody PostponeReqForMasterDto reqDto) {
         orderService.postponeOrderForMaster(orderId, reqDto);
+    }
+
+    @PostMapping("/status")
+    public void updateMasterStatus(@RequestBody MasterStatusUpdateDto reqDto) {
+        masterProfileService.updateMasterStatus(reqDto);
     }
 
 }

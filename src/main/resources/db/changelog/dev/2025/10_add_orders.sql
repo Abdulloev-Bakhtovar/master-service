@@ -1,4 +1,4 @@
-CREATE TABLE client_orders (
+CREATE TABLE orders (
     id UUID PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
@@ -21,9 +21,9 @@ CREATE TABLE client_orders (
     updated_at TIMESTAMPTZ NOT NULL
 );
 
-CREATE INDEX idx_client_orders_client ON client_orders(client_profile_id);
-CREATE INDEX idx_client_orders_master ON client_orders(master_profile_id);
-CREATE INDEX idx_client_orders_client_status ON client_orders(client_order_status);
-CREATE INDEX idx_client_orders_master_status ON client_orders(master_order_status);
-CREATE INDEX idx_client_orders_service_type ON client_orders(service_type);
-CREATE INDEX idx_client_orders_created ON client_orders(created_at);
+CREATE INDEX idx_orders_client ON orders(client_profile_id);
+CREATE INDEX idx_orders_master ON orders(master_profile_id);
+CREATE INDEX idx_orders_client_status ON orders(client_order_status);
+CREATE INDEX idx_orders_master_status ON orders(master_order_status);
+CREATE INDEX idx_orders_service_type ON orders(service_type);
+CREATE INDEX idx_orders_created ON orders(created_at);

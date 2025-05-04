@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import ru.master.service.constant.Education;
 import ru.master.service.constant.MaritalStatus;
+import ru.master.service.constant.MasterStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,18 @@ import java.util.List;
 public class MasterProfile extends BaseProfile {
 
     String email;
-    MaritalStatus maritalStatus;
-    Education education;
     String workExperience;
     boolean hasConviction;
     float averageRating;
+
+    @Enumerated(EnumType.STRING)
+    Education education;
+
+    @Enumerated(EnumType.STRING)
+    MaritalStatus maritalStatus;
+
+    @Enumerated(EnumType.STRING)
+    MasterStatus masterStatus;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

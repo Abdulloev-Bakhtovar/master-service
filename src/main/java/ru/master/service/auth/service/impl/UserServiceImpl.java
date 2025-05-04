@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.auth.model.dto.response.EnumDto;
-import ru.master.service.auth.model.dto.request.RefreshTokenDto;
-import ru.master.service.auth.model.dto.request.RegisterAndLoginDto;
-import ru.master.service.auth.model.dto.response.TokenDto;
 import ru.master.service.auth.mapper.TokenMapper;
 import ru.master.service.auth.mapper.UserMapper;
 import ru.master.service.auth.model.User;
+import ru.master.service.auth.model.dto.request.RefreshTokenDto;
+import ru.master.service.auth.model.dto.request.RegisterAndLoginDto;
+import ru.master.service.auth.model.dto.response.EnumResDto;
+import ru.master.service.auth.model.dto.response.TokenDto;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.auth.service.*;
 import ru.master.service.constant.ErrorMessage;
@@ -95,14 +95,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public EnumDto getVerificationStatusByPhoneNumber(String phoneNumber) {
+    public EnumResDto getVerificationStatusByPhoneNumber(String phoneNumber) {
         var user = userRepo.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new AppException(
                         ErrorMessage.USER_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
 
-        return EnumDto.builder()
+        return EnumResDto.builder()
                 .name(user.getVerificationStatus().name())
                 .displayName(user.getVerificationStatus().getDisplayName())
                 .build();

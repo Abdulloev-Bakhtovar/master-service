@@ -2,6 +2,7 @@ package ru.master.service.mapper.impl;
 
 import org.springframework.stereotype.Component;
 import ru.master.service.auth.model.User;
+import ru.master.service.constant.MasterStatus;
 import ru.master.service.mapper.MasterProfileMapper;
 import ru.master.service.model.City;
 import ru.master.service.model.MasterProfile;
@@ -71,6 +72,7 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
                 .maritalStatus(dto.getMaritalStatus())
                 .education(dto.getEducation())
                 .subservices(subservices)
+                .masterStatus(MasterStatus.OFFLINE)
                 .city(city)
                 .user(user)
                 .build();

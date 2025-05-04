@@ -8,6 +8,7 @@ CREATE TABLE master_profiles
     email           VARCHAR(255) UNIQUE NOT NULL,
     marital_status  VARCHAR(50),
     education       VARCHAR(100),
+    master_status   VARCHAR(50),
     work_experience TEXT,
     has_conviction  BOOLEAN,
     average_rating  NUMERIC(2, 1),

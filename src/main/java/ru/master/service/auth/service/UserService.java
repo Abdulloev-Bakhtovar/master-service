@@ -1,10 +1,10 @@
 package ru.master.service.auth.service;
 
-import ru.master.service.auth.model.dto.response.EnumDto;
+import ru.master.service.auth.model.User;
 import ru.master.service.auth.model.dto.request.RefreshTokenDto;
 import ru.master.service.auth.model.dto.request.RegisterAndLoginDto;
+import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.auth.model.dto.response.TokenDto;
-import ru.master.service.auth.model.User;
 import ru.master.service.constant.VerificationStatus;
 
 public interface UserService {
@@ -19,5 +19,5 @@ public interface UserService {
 
     void updateVerificationStatus(User user, VerificationStatus verificationStatus);
 
-    EnumDto getVerificationStatusByPhoneNumber(String phoneNumber);
+    EnumResDto getVerificationStatusByPhoneNumber(String phoneNumber);
 }

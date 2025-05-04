@@ -2,6 +2,7 @@ package ru.master.service.mapper.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.constant.ClientOrderStatus;
 import ru.master.service.constant.MasterOrderStatus;
 import ru.master.service.mapper.OrderMapper;
