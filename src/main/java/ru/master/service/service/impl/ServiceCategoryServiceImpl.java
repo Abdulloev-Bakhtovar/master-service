@@ -2,6 +2,7 @@ package ru.master.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -11,6 +12,8 @@ import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ServiceCategoryMapper;
 import ru.master.service.model.ServiceCategory;
 import ru.master.service.model.dto.request.CreateServiceCategoryReqDto;
+import ru.master.service.model.dto.request.IdReqDto;
+import ru.master.service.model.dto.response.ImageResDto;
 import ru.master.service.model.dto.response.ServiceCategoryResDto;
 import ru.master.service.model.dto.response.ServiceCategoryWithSubserviceResDto;
 import ru.master.service.repository.ServiceCategoryRepo;
@@ -48,6 +51,17 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     public List<ServiceCategoryWithSubserviceResDto> getAllWithSubservices() {
         return serviceCategoryRepo.findAll().stream()
                 .map(serviceCategoryMapper::ServiceCategoryWithSubserviceResDto)
+                .toList();
+    }
+
+    @Override
+    public List<ImageResDto> getImages(IdReqDto idReqDto) {
+        return idReqDto.getIds().stream()
+                .map(id -> {
+                    byte[] data = fileStorageService.loadFile(DocumentType.SERVICE_CATEGORY_PHOTO, id);
+                    MediaType mediaType = fileStorageService.getMediaType(DocumentType.SERVICE_CATEGORY_PHOTO, id);
+                    return new ImageResDto(id, mediaType.toString(), data);
+                })
                 .toList();
     }
 

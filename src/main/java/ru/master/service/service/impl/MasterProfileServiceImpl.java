@@ -16,6 +16,7 @@ import ru.master.service.model.Subservice;
 import ru.master.service.model.dto.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
+import ru.master.service.model.dto.response.ImageResDto;
 import ru.master.service.repository.MasterFeedbackRepo;
 import ru.master.service.repository.MasterProfileRepo;
 import ru.master.service.repository.OrderRepo;
@@ -24,6 +25,8 @@ import ru.master.service.service.*;
 import ru.master.service.util.AuthUtil;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -123,7 +126,6 @@ public class MasterProfileServiceImpl implements MasterProfileService {
                 .displayName(master.getMasterStatus().getDisplayName())
                 .build();
     }
-
 
     private void addDocFile(CreateMasterProfileReqDto dto, UUID userId) throws IOException {
         docPhotoStorageService.storeFile(dto.getProfilePhoto(), DocumentType.PROFILE, userId);

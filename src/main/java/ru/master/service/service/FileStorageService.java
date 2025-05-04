@@ -3,8 +3,10 @@ package ru.master.service.service;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.constant.DocumentType;
+import ru.master.service.model.dto.response.ImageResDto;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 public interface FileStorageService {
@@ -15,4 +17,9 @@ public interface FileStorageService {
 
     MediaType getMediaType(DocumentType docType, UUID entityId);
 
+    List<ImageResDto> getMasterDocuments();
+
+    ImageResDto getMasterProfileImage();
+
+    ImageResDto getNewsImage(UUID id);
 }

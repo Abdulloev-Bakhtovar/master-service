@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.request.CreateServiceCategoryReqDto;
 import ru.master.service.model.dto.request.IdReqDto;
 import ru.master.service.model.dto.response.ImageResDto;
@@ -44,14 +43,7 @@ public class ServiceCategoryController {
 
     @PostMapping("/images")
     public ResponseEntity<List<ImageResDto>> getImages(@RequestBody IdReqDto idReqDto) {
-        List<ImageResDto> images = idReqDto.getIds().stream()
-                .map(id -> {
-                    byte[] data = fileStorageService.loadFile(DocumentType.SERVICE_CATEGORY_PHOTO, id);
-                    MediaType mediaType = fileStorageService.getMediaType(DocumentType.SERVICE_CATEGORY_PHOTO, id);
-                    return new ImageResDto(id, mediaType.toString(), data);
-                })
-                .toList();
-
+        List<ImageResDto> images = serviceCategoryService.getImages(idReqDto);
         return ResponseEntity.ok(images);
     }
 

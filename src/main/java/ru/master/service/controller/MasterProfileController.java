@@ -3,12 +3,15 @@ package ru.master.service.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.auth.model.dto.response.EnumResDto;
+import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.request.PostponeReqForMasterDto;
 import ru.master.service.model.dto.response.*;
+import ru.master.service.service.FileStorageService;
 import ru.master.service.service.MasterProfileService;
 import ru.master.service.service.MasterStatisticsService;
 import ru.master.service.service.OrderService;
@@ -24,6 +27,7 @@ public class MasterProfileController {
     private final MasterProfileService masterProfileService;
     private final OrderService orderService;
     private final MasterStatisticsService masterStatisticsService;
+    private final FileStorageService fileStorageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -95,4 +99,18 @@ public class MasterProfileController {
     public MasterStatisticsResDto getMasterStatistics() {
         return masterStatisticsService.getStatisticsForMaster();
     }
+
+    @GetMapping("/documents")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ImageResDto>> getMasterDocuments() {
+        List<ImageResDto> docs = fileStorageService.getMasterDocuments();
+        return ResponseEntity.ok(docs);
+    }
+
+    @GetMapping("/photo-profile")
+    public ResponseEntity<ImageResDto> getMasterPhotoProfile() {
+        ImageResDto profileImage = fileStorageService.getMasterProfileImage();
+        return ResponseEntity.ok(profileImage);
+    }
+
 }
