@@ -11,9 +11,11 @@ import ru.master.service.constant.Role;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.OrderMapper;
 import ru.master.service.model.Order;
+import ru.master.service.model.OrderPostponement;
 import ru.master.service.model.dto.request.CancelOrderForClientDto;
 import ru.master.service.model.dto.request.CompleteOrderForClientDto;
 import ru.master.service.model.dto.request.CreateOrderReqDto;
+import ru.master.service.model.dto.request.PostponeReqForMasterDto;
 import ru.master.service.model.dto.response.*;
 import ru.master.service.repository.*;
 import ru.master.service.service.MasterFeedbackService;
@@ -39,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
     private final MasterFeedbackService masterFeedbackService;
     private final MasterProfileService masterProfileService;
     private final MasterProfileRepo masterProfileRepo;
+    private final OrderPostponementRepo orderPostponementRepo;
 
     @Override
     public IdDto create(CreateOrderReqDto reqDto) {
@@ -206,6 +209,81 @@ public class OrderServiceImpl implements OrderService {
                 .orElse(null);
 
         return orderMapper.toOrderDetailForMasterResDto(order, masterFeedback);
+    }
+
+    @Override
+    public void arriveOrderForMaster(UUID orderId) {
+
+        var order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        order.setMasterOrderStatus(MasterOrderStatus.ARRIVED_AT_CLIENT);
+
+        orderRepo.save(order);
+    }
+
+    @Override
+    public void acceptOrderForMaster(UUID orderId) {
+        var user = authUtil.getAuthenticatedUser();
+
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        if (order.getClientOrderStatus() == ClientOrderStatus.TAKEN_IN_WORK) {
+            throw new AppException(
+                    ErrorMessage.ORDER_TAKEN,
+                    HttpStatus.NOT_FOUND
+            );
+        }
+        order.setMasterProfile(master);
+        order.setClientOrderStatus(ClientOrderStatus.TAKEN_IN_WORK);
+        order.setMasterOrderStatus(MasterOrderStatus.TAKEN_IN_WORK);
+
+        orderRepo.save(order);
+    }
+
+    @Override
+    public void availabilityOrderForMaster() {
+        // TODO при нажатия на кнопку готов принимать заказы тут изменяется
+        // TODO                                     его статус на (ЖДУ ЗАЯВОК)
+    }
+
+    @Override
+    public void postponeOrderForMaster(UUID orderId, PostponeReqForMasterDto reqDto) {
+        var user = authUtil.getAuthenticatedUser();
+
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var order = orderRepo.findByIdAndMasterProfileId(orderId, master.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        order.setMasterOrderStatus(MasterOrderStatus.DEFERRED_REPAIR);
+
+        OrderPostponement postponement = OrderPostponement.builder()
+                .newAppointmentDate(reqDto.getNewAppointmentDate())
+                .reason(reqDto.getReason())
+                .order(order)
+                .master(master)
+                .build();
+
+        orderPostponementRepo.save(postponement);
     }
 
     private Order getClientOrder(UUID reqDto) {

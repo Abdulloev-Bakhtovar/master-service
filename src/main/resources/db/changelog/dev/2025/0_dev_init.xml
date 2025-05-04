@@ -60,6 +60,11 @@
                  relativeToChangelogFile="true"
                  splitStatements="false"/>
     </changeSet>
+    <changeSet author="author" id="040520251331">
+        <sqlFile path="12_add_order_postponement.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
 
     <!-- FILL -->
     <changeSet author="author" id="30042025124">

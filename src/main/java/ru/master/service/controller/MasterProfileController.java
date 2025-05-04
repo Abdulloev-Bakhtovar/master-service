@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
+import ru.master.service.model.dto.request.PostponeReqForMasterDto;
 import ru.master.service.model.dto.response.MasterActiveOrdersResDto;
 import ru.master.service.model.dto.response.MasterAvailableOrdersResDto;
 import ru.master.service.model.dto.response.MasterCompletedOrdersResDto;
@@ -52,4 +53,30 @@ public class MasterProfileController {
     public OrderDetailForMasterResDto getByIdForMaster(@PathVariable UUID orderId) {
         return orderService.getByIdForMaster(orderId);
     }
+
+    @PatchMapping("/orders/{orderId}/accept")
+    @ResponseStatus(HttpStatus.OK)
+    public void acceptOrderForMaster(@PathVariable UUID orderId) {
+        orderService.acceptOrderForMaster(orderId);
+    }
+
+    @PatchMapping("/orders/{orderId}/arrived")
+    @ResponseStatus(HttpStatus.OK)
+    public void arriveOrderForMaster(@PathVariable UUID orderId) {
+        orderService.arriveOrderForMaster(orderId);
+    }
+
+    @PatchMapping("/orders/availability")
+    @ResponseStatus(HttpStatus.OK)
+    public void availabilityOrderForMaster() {
+        orderService.availabilityOrderForMaster();
+    }
+
+    @PatchMapping("/orders/{orderId}/postpone")
+    @ResponseStatus(HttpStatus.OK)
+    public void postponeOrderForMaster(@PathVariable UUID orderId,
+                                       @RequestBody PostponeReqForMasterDto reqDto) {
+        orderService.postponeOrderForMaster(orderId, reqDto);
+    }
+
 }

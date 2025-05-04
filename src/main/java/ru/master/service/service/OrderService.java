@@ -3,6 +3,7 @@ package ru.master.service.service;
 import ru.master.service.model.dto.request.CancelOrderForClientDto;
 import ru.master.service.model.dto.request.CompleteOrderForClientDto;
 import ru.master.service.model.dto.request.CreateOrderReqDto;
+import ru.master.service.model.dto.request.PostponeReqForMasterDto;
 import ru.master.service.model.dto.response.*;
 
 import java.util.List;
@@ -27,4 +28,12 @@ public interface OrderService {
     List<MasterActiveOrdersResDto> getMasterActiveOrders();
 
     OrderDetailForMasterResDto getByIdForMaster(UUID orderId);
+
+    void arriveOrderForMaster(UUID orderId);
+
+    void acceptOrderForMaster(UUID orderId);
+
+    void availabilityOrderForMaster();
+
+    void postponeOrderForMaster(UUID orderId, PostponeReqForMasterDto reqDto);
 }
