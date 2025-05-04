@@ -17,6 +17,7 @@ import ru.master.service.model.dto.request.CompleteOrderForClientDto;
 import ru.master.service.model.dto.request.CreateOrderReqDto;
 import ru.master.service.model.dto.response.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,6 +172,7 @@ public class OrderMapperImpl implements OrderMapper {
     public void toCompleteOrderForClient(CompleteOrderForClientDto reqDto, Order order) {
         order.setClientOrderStatus(ClientOrderStatus.COMPLETED);
         order.setMasterOrderStatus(MasterOrderStatus.COMPLETED);
+        order.setClosedAt(Instant.now());
 
         order.getMasterProfile().setMasterStatus(MasterStatus.WAITING_FOR_ORDERS);
     }

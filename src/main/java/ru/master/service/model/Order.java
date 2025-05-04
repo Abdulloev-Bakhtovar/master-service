@@ -32,6 +32,7 @@ public class Order extends TimestampedEntity {
     boolean agreeToTerms;
     BigDecimal price;
     String rejectionReason;
+    Instant closedAt;
 
     @Enumerated(EnumType.STRING)
     ServiceType serviceType;

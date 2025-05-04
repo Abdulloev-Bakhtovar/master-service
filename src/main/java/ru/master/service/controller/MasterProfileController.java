@@ -8,11 +8,9 @@ import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.request.PostponeReqForMasterDto;
-import ru.master.service.model.dto.response.MasterActiveOrdersResDto;
-import ru.master.service.model.dto.response.MasterAvailableOrdersResDto;
-import ru.master.service.model.dto.response.MasterCompletedOrdersResDto;
-import ru.master.service.model.dto.response.OrderDetailForMasterResDto;
+import ru.master.service.model.dto.response.*;
 import ru.master.service.service.MasterProfileService;
+import ru.master.service.service.MasterStatisticsService;
 import ru.master.service.service.OrderService;
 
 import java.util.List;
@@ -25,6 +23,7 @@ public class MasterProfileController {
 
     private final MasterProfileService masterProfileService;
     private final OrderService orderService;
+    private final MasterStatisticsService masterStatisticsService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -91,4 +90,9 @@ public class MasterProfileController {
         return masterProfileService.getMasterStatus();
     }
 
+    @GetMapping("/statistics")
+    @ResponseStatus(HttpStatus.OK)
+    public MasterStatisticsResDto getMasterStatistics() {
+        return masterStatisticsService.getStatisticsForMaster();
+    }
 }
