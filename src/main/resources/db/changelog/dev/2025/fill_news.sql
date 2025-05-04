@@ -1,5 +1,5 @@
 -- Новость 1 (Москва, видимая)
-INSERT INTO news (id, title, content, isVisible, city_id, created_at, updated_at)
+INSERT INTO news (id, title, content, is_visible, city_id, created_at, updated_at)
 VALUES (
            '11111111-1111-1111-1111-111991111111',
            'Открытие нового сервисного центра',
@@ -11,7 +11,7 @@ VALUES (
        );
 
 -- Новость 2 (Казань, видимая)
-INSERT INTO news (id, title, content, isVisible, city_id, created_at, updated_at)
+INSERT INTO news (id, title, content, is_visible, city_id, created_at, updated_at)
 VALUES (
            '22222222-2222-2222-2222-222288222222',
            'Акция для новых клиентов',
@@ -23,7 +23,7 @@ VALUES (
        );
 
 -- Новость 3 (Екатеринбург, невидимая)
-INSERT INTO news (id, title, content, isVisible, city_id, created_at, updated_at)
+INSERT INTO news (id, title, content, is_visible, city_id, created_at, updated_at)
 VALUES (
            '33333333-3333-3333-3333-333773333333',
            'Плановые работы',
@@ -35,7 +35,7 @@ VALUES (
        );
 
 -- Новость 4 (Москва, видимая)
-INSERT INTO news (id, title, content, isVisible, city_id, created_at, updated_at)
+INSERT INTO news (id, title, content, is_visible, city_id, created_at, updated_at)
 VALUES (
            '44444444-4444-4444-4444-444415444444',
            'Новые мастера в команде',
@@ -47,7 +47,7 @@ VALUES (
        );
 
 -- Новость 5 (Казань, видимая)
-INSERT INTO news (id, title, content, isVisible, city_id, created_at, updated_at)
+INSERT INTO news (id, title, content, is_visible, city_id, created_at, updated_at)
 VALUES (
            '55555555-5555-5555-5555-555765555555',
            'Обновление мобильного приложения',

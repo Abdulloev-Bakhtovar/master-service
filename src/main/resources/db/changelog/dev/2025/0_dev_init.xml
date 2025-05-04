@@ -65,6 +65,11 @@
                  relativeToChangelogFile="true"
                  splitStatements="false"/>
     </changeSet>
+    <changeSet author="author" id="040520251524">
+        <sqlFile path="13_add_news.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
 
     <!-- FILL -->
     <changeSet author="author" id="30042025124">
@@ -74,6 +79,11 @@
     </changeSet>
     <changeSet author="author" id="300420251749">
         <sqlFile path="fill_service_and_subservice.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="040520251525">
+        <sqlFile path="fill_news.sql"
                  relativeToChangelogFile="true"
                  splitStatements="false"/>
     </changeSet>
