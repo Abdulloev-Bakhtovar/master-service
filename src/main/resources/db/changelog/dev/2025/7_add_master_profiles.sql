@@ -12,6 +12,7 @@ CREATE TABLE master_profiles
     work_experience TEXT,
     has_conviction  BOOLEAN,
     average_rating  NUMERIC(2, 1),
+    rating_count    BIGINT,
     created_at      TIMESTAMPTZ,
     updated_at      TIMESTAMPTZ
 );

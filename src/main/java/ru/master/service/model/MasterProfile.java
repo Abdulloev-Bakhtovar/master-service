@@ -25,6 +25,7 @@ public class MasterProfile extends BaseProfile {
     String workExperience;
     boolean hasConviction;
     float averageRating;
+    long ratingCount;
 
     @Enumerated(EnumType.STRING)
     Education education;

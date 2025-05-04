@@ -73,6 +73,8 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
                 .education(dto.getEducation())
                 .subservices(subservices)
                 .masterStatus(MasterStatus.OFFLINE)
+                .averageRating(0.0F)
+                .ratingCount(0L)
                 .city(city)
                 .user(user)
                 .build();

@@ -26,6 +26,7 @@ public class MasterProfileForCreateDto extends TimestampedDto {
     String workExperience;
     boolean hasConviction;
     float averageRating;
+    long ratingCount;
     MaritalStatus maritalStatus;
     Education education;
     List<MasterSubserviceDto> masterSubserviceDtos;

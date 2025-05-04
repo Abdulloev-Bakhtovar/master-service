@@ -11,7 +11,6 @@ import ru.master.service.constant.DocumentType;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterProfileMapper;
-import ru.master.service.model.MasterFeedback;
 import ru.master.service.model.MasterProfile;
 import ru.master.service.model.Subservice;
 import ru.master.service.model.dto.MasterProfileForCreateDto;
@@ -27,7 +26,6 @@ import ru.master.service.util.AuthUtil;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -82,32 +80,19 @@ public class MasterProfileServiceImpl implements MasterProfileService {
 
     @Override
     public void updateMasterAverageRating(MasterProfile master, Float newRating) {
-
         if (newRating < 1 || newRating > 5) {
-            throw new AppException(
-                    "Rating must be between 1 and 5",
-                    HttpStatus.BAD_REQUEST
-            );
+            throw new AppException("Rating must be between 1 and 5", HttpStatus.BAD_REQUEST);
         }
 
-        // Получаем все завершенные отзывы мастера с оценками
-        List<MasterFeedback> feedbacks = masterFeedbackRepo.findByMasterIdAndRatingIsNotNull(master.getId());
+        long currentCount = master.getRatingCount();
+        float currentAverage = master.getAverageRating();
 
-        // Собираем все оценки
-        List<Float> allRatings = feedbacks.stream()
-                .map(MasterFeedback::getRating)
-                .collect(Collectors.toList());
-        allRatings.add(newRating);
+        float updatedAverage = (currentAverage * currentCount + newRating) / (currentCount + 1);
 
-        // Вычисляем новый средний рейтинг
-        double average = allRatings.stream()
-                .mapToDouble(Float::doubleValue)
-                .average()
-                .orElse(0.0);
-
-        // Обновляем профиль мастера
-        master.setAverageRating((float) average);
+        master.setAverageRating(updatedAverage);
+        master.setRatingCount(currentCount + 1);
     }
+
 
     @Override
     public void updateMasterStatus(MasterStatusUpdateDto reqDto) {

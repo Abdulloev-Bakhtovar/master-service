@@ -18,4 +18,5 @@ public class MasterInfoForClientOrderDetailDto extends BaseDto {
     String lastName;
     String phoneNumber;
     float averageRating;
+    long ratingCount;
 }

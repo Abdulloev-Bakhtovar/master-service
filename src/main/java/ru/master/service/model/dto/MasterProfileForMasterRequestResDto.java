@@ -24,6 +24,7 @@ public class MasterProfileForMasterRequestResDto extends TimestampedDto {
     String workExperience;
     boolean hasConviction;
     float averageRating;
+    long ratingCount;
     MaritalStatus maritalStatus;
     Education education;
     List<MasterSubserviceDto> subserviceDtos;
