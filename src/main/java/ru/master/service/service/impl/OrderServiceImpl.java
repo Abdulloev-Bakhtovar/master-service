@@ -9,10 +9,7 @@ import ru.master.service.exception.AppException;
 import ru.master.service.mapper.OrderMapper;
 import ru.master.service.model.Order;
 import ru.master.service.model.OrderPostponement;
-import ru.master.service.model.dto.request.CancelOrderForClientDto;
-import ru.master.service.model.dto.request.CompleteOrderForClientDto;
-import ru.master.service.model.dto.request.CreateOrderReqDto;
-import ru.master.service.model.dto.request.PostponeReqForMasterDto;
+import ru.master.service.model.dto.request.*;
 import ru.master.service.model.dto.response.*;
 import ru.master.service.repository.*;
 import ru.master.service.service.MasterFeedbackService;
@@ -20,6 +17,7 @@ import ru.master.service.service.MasterProfileService;
 import ru.master.service.service.OrderService;
 import ru.master.service.util.AuthUtil;
 
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -303,6 +301,25 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderPostponementRepo.save(postponement);
+    }
+
+    @Override
+    public void updateOrderPrice(UUID orderId, UpdateOrderPriceReqDto reqDto) {
+        var user = authUtil.getAuthenticatedUser();
+
+        var client = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.CLIENT_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+        var order = orderRepo.findByIdAndClientProfileId(orderId, client.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        order.setPrice(reqDto.getNewPrice().setScale(2, RoundingMode.HALF_UP));
+        orderRepo.save(order);
     }
 
     private Order getClientOrder(UUID reqDto) {

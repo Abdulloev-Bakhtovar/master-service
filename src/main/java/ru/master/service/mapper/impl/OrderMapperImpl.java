@@ -17,6 +17,7 @@ import ru.master.service.model.dto.request.CompleteOrderForClientDto;
 import ru.master.service.model.dto.request.CreateOrderReqDto;
 import ru.master.service.model.dto.response.*;
 
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class OrderMapperImpl implements OrderMapper {
                 .preferredDateTime(dto.getPreferredDateTime())
                 .urgent(dto.isUrgent())
                 .agreeToTerms(dto.isAgreeToTerms())
-                .price(dto.getPrice())
+                .price(dto.getPrice().setScale(2, RoundingMode.HALF_UP))
                 .serviceType(dto.getServiceType())
                 .clientOrderStatus(clientOrderStatus)
                 .masterOrderStatus(masterOrderStatus)

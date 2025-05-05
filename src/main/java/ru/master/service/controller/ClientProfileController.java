@@ -3,10 +3,9 @@ package ru.master.service.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.model.dto.request.CancelOrderForClientDto;
-import ru.master.service.model.dto.request.CompleteOrderForClientDto;
-import ru.master.service.model.dto.request.CreateClientProfileReqDto;
+import ru.master.service.model.dto.request.*;
 import ru.master.service.model.dto.response.AllClientOrderResDto;
+import ru.master.service.model.dto.response.IdDto;
 import ru.master.service.model.dto.response.OrderDetailForClientResDto;
 import ru.master.service.service.ClientProfileService;
 import ru.master.service.service.OrderService;
@@ -34,6 +33,17 @@ public class ClientProfileController {
         return orderService.getAllClientOrders();
     }
 
+    @PostMapping("/orders")
+    @ResponseStatus(HttpStatus.CREATED)
+    public IdDto createOrder(@RequestBody CreateOrderReqDto reqDto) {
+        return orderService.create(reqDto);
+    }
+
+    @PatchMapping("/orders/{orderId}/price")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateOrderPrice(@PathVariable("orderId") UUID orderId, @RequestBody UpdateOrderPriceReqDto reqDto) {
+        orderService.updateOrderPrice(orderId, reqDto);
+    }
 
     @GetMapping("/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
