@@ -25,16 +25,16 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
 
     List<Order> findCurrentOrderByMasterProfileId(UUID id);
 
-    int countByMasterProfileIdAndCreatedAtBetween(UUID masterId, Instant monthAgo, Instant now);
-
     int countByMasterProfileIdAndMasterOrderStatusAndClosedAtBetween(UUID masterId,
                                                                      MasterOrderStatus masterOrderStatus,
                                                                      Instant monthAgo,
                                                                      Instant now);
 
-    int countByMasterProfileId(UUID masterId);
-
     int countByMasterProfileIdAndMasterOrderStatus(UUID masterId, MasterOrderStatus masterOrderStatus);
 
     int countByCityIdAndClientOrderStatus(UUID cityId, ClientOrderStatus clientOrderStatus);
+
+    int countByCityId(UUID id);
+
+    int countByCityIdAndCreatedAtBetween(UUID id, Instant monthAgo, Instant now);
 }

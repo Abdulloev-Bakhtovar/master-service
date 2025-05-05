@@ -40,7 +40,7 @@ public class MasterStatisticsServiceImpl implements MasterStatisticsService {
         Instant now = Instant.now();
         Instant monthAgo = now.minus(30, ChronoUnit.DAYS);
 
-        int receivedLastMonth = orderRepo.countByMasterProfileIdAndCreatedAtBetween(masterId, monthAgo, now);
+        int receivedLastMonth = orderRepo.countByCityIdAndCreatedAtBetween(master.getCity().getId(), monthAgo, now);
         int closedLastMonth = orderRepo.countByMasterProfileIdAndMasterOrderStatusAndClosedAtBetween(
                 masterId,
                 MasterOrderStatus.COMPLETED,
@@ -48,7 +48,7 @@ public class MasterStatisticsServiceImpl implements MasterStatisticsService {
                 now
         );
 
-        int receivedTotal = orderRepo.countByMasterProfileId(masterId);
+        int receivedTotal = orderRepo.countByCityId(master.getCity().getId());
         int closedTotal = orderRepo.countByMasterProfileIdAndMasterOrderStatus(masterId, MasterOrderStatus.COMPLETED);
 
         return MasterStatisticsResDto.builder()
