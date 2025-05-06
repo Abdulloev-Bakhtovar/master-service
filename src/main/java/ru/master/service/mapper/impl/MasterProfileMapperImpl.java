@@ -12,6 +12,7 @@ import ru.master.service.model.dto.MasterProfileForCreateDto;
 import ru.master.service.model.dto.MasterSubserviceDto;
 import ru.master.service.model.dto.UserAgreementDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
+import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,6 +78,19 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
                 .ratingCount(0L)
                 .city(city)
                 .user(user)
+                .build();
+    }
+
+    @Override
+    public MasterInfoForProfileResDto toMasterInfoForProfileResDto(MasterProfile master) {
+        if (master == null) return null;
+
+        return MasterInfoForProfileResDto.builder()
+                .firstName(master.getFirstName())
+                .lastName(master.getLastName())
+                .averageRating(master.getAverageRating())
+                .ratingCount(master.getRatingCount())
+                .balance(master.getBalance())
                 .build();
     }
 }

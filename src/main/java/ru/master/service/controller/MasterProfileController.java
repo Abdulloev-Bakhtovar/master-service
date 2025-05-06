@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.auth.model.dto.response.EnumResDto;
-import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.request.PostponeReqForMasterDto;
@@ -33,6 +32,12 @@ public class MasterProfileController {
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@ModelAttribute CreateMasterProfileReqDto reqDto) throws Exception {
         masterProfileService.create(reqDto);
+    }
+
+    @GetMapping("/info")
+    @ResponseStatus(HttpStatus.OK)
+    public MasterInfoForProfileResDto getMasterInfo() {
+        return masterProfileService.getMasterInfo();
     }
 
     @GetMapping("/orders/available")

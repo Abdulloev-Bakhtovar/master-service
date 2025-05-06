@@ -16,7 +16,7 @@ import ru.master.service.model.Subservice;
 import ru.master.service.model.dto.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
-import ru.master.service.model.dto.response.ImageResDto;
+import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
 import ru.master.service.repository.MasterFeedbackRepo;
 import ru.master.service.repository.MasterProfileRepo;
 import ru.master.service.repository.OrderRepo;
@@ -25,8 +25,6 @@ import ru.master.service.service.*;
 import ru.master.service.util.AuthUtil;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -125,6 +123,19 @@ public class MasterProfileServiceImpl implements MasterProfileService {
                 .name(master.getMasterStatus().name())
                 .displayName(master.getMasterStatus().getDisplayName())
                 .build();
+    }
+
+    @Override
+    public MasterInfoForProfileResDto getMasterInfo() {
+        var user = authUtil.getAuthenticatedUser();
+
+        var master = masterProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        return masterProfileMapper.toMasterInfoForProfileResDto(master);
     }
 
     private void addDocFile(CreateMasterProfileReqDto dto, UUID userId) throws IOException {

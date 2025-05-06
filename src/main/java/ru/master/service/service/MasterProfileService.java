@@ -4,6 +4,7 @@ import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.model.MasterProfile;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
+import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
 
 public interface MasterProfileService {
 
@@ -14,4 +15,6 @@ public interface MasterProfileService {
     void updateMasterStatus(MasterStatusUpdateDto reqDto);
 
     EnumResDto getMasterStatus();
+
+    MasterInfoForProfileResDto getMasterInfo();
 }

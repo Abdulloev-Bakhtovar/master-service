@@ -1,21 +1,22 @@
-package ru.master.service.model.dto;
-
+package ru.master.service.model.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.master.service.auth.model.dto.BaseDto;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
-@ToString
 @SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor()
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MasterInfoForClientOrderDetailDto extends BaseDto {
+public class MasterInfoForProfileResDto {
 
     String firstName;
     String lastName;
-    String phoneNumber;
+    BigDecimal balance;
     float averageRating;
+    long ratingCount;
 }
