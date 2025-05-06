@@ -52,6 +52,7 @@ public class MasterStatisticsServiceImpl implements MasterStatisticsService {
         int closedTotal = orderRepo.countByMasterProfileIdAndMasterOrderStatus(masterId, MasterOrderStatus.COMPLETED);
 
         return MasterStatisticsResDto.builder()
+                .balance(master.getBalance())
                 .availableOrders(orderRepo.countByCityIdAndClientOrderStatus(
                         master.getCity().getId(),
                         ClientOrderStatus.SEARCHING_FOR_MASTER

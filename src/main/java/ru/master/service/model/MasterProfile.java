@@ -8,6 +8,7 @@ import ru.master.service.constant.Education;
 import ru.master.service.constant.MaritalStatus;
 import ru.master.service.constant.MasterStatus;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class MasterProfile extends BaseProfile {
     boolean hasConviction;
     float averageRating;
     long ratingCount;
+    BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     Education education;

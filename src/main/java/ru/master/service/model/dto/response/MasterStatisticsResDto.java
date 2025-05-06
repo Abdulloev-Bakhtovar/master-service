@@ -4,6 +4,8 @@ package ru.master.service.model.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -12,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterStatisticsResDto {
 
-    int balance;
+    BigDecimal balance;
     int availableOrders;
 
     int receivedLastMonth;
