@@ -179,7 +179,9 @@ public class OrderMapperImpl implements OrderMapper {
         order.setMasterOrderStatus(MasterOrderStatus.COMPLETED);
         order.setClosedAt(Instant.now());
 
-        order.getMasterProfile().setMasterStatus(MasterStatus.WAITING_FOR_ORDERS);
+        if (order.getMasterProfile() != null) {
+            order.getMasterProfile().setMasterStatus(MasterStatus.WAITING_FOR_ORDERS);
+        }
     }
 
     @Override
