@@ -113,7 +113,6 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrderForClient(UUID orderId, CancelOrderForClientDto reqDto) {
         var order = getClientOrder(orderId);
         orderMapper.toCancelOrderForClient(reqDto, order);
-        order.getMasterProfile().setMasterStatus(MasterStatus.WAITING_FOR_ORDERS);
         orderRepo.save(order);
     }
 

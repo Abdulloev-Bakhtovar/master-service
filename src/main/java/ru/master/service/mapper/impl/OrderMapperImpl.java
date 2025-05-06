@@ -167,6 +167,10 @@ public class OrderMapperImpl implements OrderMapper {
         order.setClientOrderStatus(ClientOrderStatus.CANCELLED);
         order.setMasterOrderStatus(MasterOrderStatus.CANCELLED);
         order.setRejectionReason(reqDto.getRejectionReason());
+
+        if (order.getMasterProfile() != null) {
+            order.getMasterProfile().setMasterStatus(MasterStatus.WAITING_FOR_ORDERS);
+        }
     }
 
     @Override
