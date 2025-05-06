@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.auth.repository.UserRepo;
-import ru.master.service.auth.service.UserService;
 import ru.master.service.constant.DocumentType;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
@@ -17,9 +16,7 @@ import ru.master.service.model.dto.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
-import ru.master.service.repository.MasterFeedbackRepo;
 import ru.master.service.repository.MasterProfileRepo;
-import ru.master.service.repository.OrderRepo;
 import ru.master.service.repository.SubserviceRepo;
 import ru.master.service.service.*;
 import ru.master.service.util.AuthUtil;
@@ -40,11 +37,8 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final UserAgreementService userAgreementService;
     private final CityService cityService;
     private final FileStorageService docPhotoStorageService;
-    private final UserService userService;
     private final SubserviceRepo subserviceRepo;
     private final MasterRequestService masterRequestService;
-    private final OrderRepo orderRepo;
-    private final MasterFeedbackRepo masterFeedbackRepo;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -68,7 +62,6 @@ public class MasterProfileServiceImpl implements MasterProfileService {
         }
 
         userAgreementService.create(masterProfileDto.getUserAgreementDto(), user);
-
         List<Subservice> masterSubservices = subserviceRepo.findAllByIdIn(reqDto.getSubServiceIds());
         var city = cityService.getById(masterProfileDto.getCityDto().getId());
         var masterProfile = masterProfileMapper.toMasterProfileEntity(masterProfileDto, user, city, masterSubservices);

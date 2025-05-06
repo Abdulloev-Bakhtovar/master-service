@@ -14,6 +14,7 @@ import ru.master.service.model.dto.UserAgreementDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,7 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
                 .masterStatus(MasterStatus.OFFLINE)
                 .averageRating(0.0F)
                 .ratingCount(0L)
+                .balance(BigDecimal.valueOf(0.00))
                 .city(city)
                 .user(user)
                 .build();

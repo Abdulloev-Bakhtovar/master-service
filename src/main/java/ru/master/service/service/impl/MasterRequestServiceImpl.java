@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.auth.mapper.UserMapper;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
-import ru.master.service.mapper.MasterProfileMapper;
 import ru.master.service.mapper.MasterRequestMapper;
 import ru.master.service.model.dto.request.RejectMasterRequestReqDto;
 import ru.master.service.model.dto.response.MasterRequestResDto;
@@ -34,15 +32,13 @@ public class MasterRequestServiceImpl implements MasterRequestService {
     private final UserRepo userRepo;
     private final MasterProfileRepo masterProfileRepo;
     private final AuthUtil authUtil;
-    private final MasterProfileMapper masterProfileMapper;
-    private final UserMapper userMapper;
 
     @Override
     public void create(User user) {
 
         if (masterRequestRepo.existsByUserId(user.getId())) {
             throw new AppException(
-                    ErrorMessage.MASTER_REQUEST_NOT_FOUND,
+                    ErrorMessage.MASTER_REQUEST_EXISTS,
                     HttpStatus.CONFLICT);
         }
 

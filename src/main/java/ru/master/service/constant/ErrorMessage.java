@@ -55,4 +55,5 @@ public class ErrorMessage {
     public static final String SUB_SERVICE_DOES_NOT_BELONG_THIS_SERVICE = "Sub service does not belong to this service category";
     public static final String NEWS_NOT_FOUND = "News not found";
     public static final String ORDER_TAKEN = "Order is taken into work by another master";
+    public static final String MASTER_REQUEST_EXISTS = "Master request already exists";
 }
