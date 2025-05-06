@@ -5,7 +5,9 @@ import ru.master.service.auth.model.User;
 import ru.master.service.mapper.ClientProfileMapper;
 import ru.master.service.model.City;
 import ru.master.service.model.ClientProfile;
+import ru.master.service.model.dto.CityDto;
 import ru.master.service.model.dto.request.CreateClientProfileReqDto;
+import ru.master.service.model.dto.response.ClientInfoForCreateOrderResDto;
 
 @Component
 public class ClientProfileMapperImpl implements ClientProfileMapper {
@@ -27,6 +29,30 @@ public class ClientProfileMapperImpl implements ClientProfileMapper {
                 .city(city)
                 .address(dto.getAddress())
                 .user(user)
+                .build();
+    }
+
+    /**
+     * get client info for create order
+     * @param clientProfile
+     * @return ClientInfoForCreateOrderResDto
+     */
+    @Override
+    public ClientInfoForCreateOrderResDto toClientInfoForCreateOrderResDto(ClientProfile clientProfile) {
+        if (clientProfile == null) return null;
+
+        var cityDto = CityDto.builder()
+                .id(clientProfile.getCity().getId())
+                .name(clientProfile.getCity().getName())
+                .isVisible(clientProfile.getCity().isVisible())
+                .build();
+
+        return ClientInfoForCreateOrderResDto.builder()
+                .firstName(clientProfile.getFirstName())
+                .lastName(clientProfile.getLastName())
+                .phoneNumber(clientProfile.getUser().getPhoneNumber())
+                .address(clientProfile.getAddress())
+                .cityDto(cityDto)
                 .build();
     }
 }

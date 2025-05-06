@@ -10,10 +10,12 @@ import ru.master.service.constant.ErrorMessage;
 import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ClientProfileMapper;
-import ru.master.service.repository.ClientProfileRepo;
-import ru.master.service.service.ClientProfileService;
+import ru.master.service.model.ClientProfile;
 import ru.master.service.model.dto.request.CreateClientProfileReqDto;
+import ru.master.service.model.dto.response.ClientInfoForCreateOrderResDto;
+import ru.master.service.repository.ClientProfileRepo;
 import ru.master.service.service.CityService;
+import ru.master.service.service.ClientProfileService;
 import ru.master.service.service.UserAgreementService;
 import ru.master.service.util.AuthUtil;
 
@@ -57,5 +59,18 @@ public class ClientProfileServiceImpl implements ClientProfileService {
         userService.updateVerificationStatus(user, VerificationStatus.APPROVED);
 
         clientProfileRepo.save(clientProfileEntity);
+    }
+
+    @Override
+    public ClientInfoForCreateOrderResDto getClientInfo() {
+        var user = authUtil.getAuthenticatedUser();
+
+        ClientProfile profile = clientProfileRepo.findByUserId(user.getId())
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.CLIENT_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        return clientProfileMapper.toClientInfoForCreateOrderResDto(profile);
     }
 }

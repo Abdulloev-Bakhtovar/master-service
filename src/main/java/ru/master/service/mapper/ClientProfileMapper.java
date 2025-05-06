@@ -4,8 +4,11 @@ import ru.master.service.auth.model.User;
 import ru.master.service.model.City;
 import ru.master.service.model.ClientProfile;
 import ru.master.service.model.dto.request.CreateClientProfileReqDto;
+import ru.master.service.model.dto.response.ClientInfoForCreateOrderResDto;
 
 public interface ClientProfileMapper {
 
     ClientProfile toEntity(CreateClientProfileReqDto dto, User user, City city);
+
+    ClientInfoForCreateOrderResDto toClientInfoForCreateOrderResDto(ClientProfile profile);
 }

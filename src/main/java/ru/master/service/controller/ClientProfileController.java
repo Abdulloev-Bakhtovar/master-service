@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.request.*;
 import ru.master.service.model.dto.response.AllClientOrderResDto;
+import ru.master.service.model.dto.response.ClientInfoForCreateOrderResDto;
 import ru.master.service.model.dto.response.IdDto;
 import ru.master.service.model.dto.response.OrderDetailForClientResDto;
 import ru.master.service.service.ClientProfileService;
@@ -20,6 +21,12 @@ public class ClientProfileController {
 
     private final ClientProfileService clientProfileService;
     private final OrderService orderService;
+
+    @GetMapping("/info")
+    @ResponseStatus(HttpStatus.OK)
+    public ClientInfoForCreateOrderResDto getClientInfo() {
+        return clientProfileService.getClientInfo();
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
