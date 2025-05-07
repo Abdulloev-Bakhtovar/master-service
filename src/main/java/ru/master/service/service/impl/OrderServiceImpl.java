@@ -192,13 +192,12 @@ public class OrderServiceImpl implements OrderService {
                         ErrorMessage.MASTER_PROFILE_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
-        var orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatus(
-                        master.getId(), MasterOrderStatus.TAKEN_IN_WORK
-                )
-                .orElseThrow(() -> new AppException(
-                        ErrorMessage.ORDER_NOT_FOUND,
-                        HttpStatus.NOT_FOUND
-                ));
+        var statuses = List.of(
+                MasterOrderStatus.TAKEN_IN_WORK,
+                MasterOrderStatus.DEFERRED_REPAIR,
+                MasterOrderStatus.ARRIVED_AT_CLIENT
+        );
+        List<Order> orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatusIn(master.getId(), statuses);
 
         return orders.stream()
                 .map(orderMapper::toMasterActiveOrdersResDto)

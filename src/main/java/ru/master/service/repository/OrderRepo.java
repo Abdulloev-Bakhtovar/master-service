@@ -37,4 +37,9 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
     int countByCityId(UUID id);
 
     int countByCityIdAndCreatedAtBetween(UUID id, Instant monthAgo, Instant now);
+
+    List<Order> findAllByMasterProfileIdAndMasterOrderStatusIn(
+            UUID masterId,
+            List<MasterOrderStatus> statuses
+    );
 }
