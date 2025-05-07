@@ -29,9 +29,9 @@ public class MasterStatisticsServiceImpl implements MasterStatisticsService {
     public MasterStatisticsResDto getStatisticsForMaster() {
 
         var authMaster = authUtil.getAuthenticatedUser();
-        UUID masterId = authMaster.getId();
+        UUID userId = authMaster.getId();
 
-        var master = masterProfileRepo.findById(masterId)
+        var master = masterProfileRepo.findByUserId(userId)
                 .orElseThrow(() -> new AppException(
                     ErrorMessage.MASTER_PROFILE_NOT_FOUND,
                     HttpStatus.NOT_FOUND
@@ -42,14 +42,15 @@ public class MasterStatisticsServiceImpl implements MasterStatisticsService {
 
         int receivedLastMonth = orderRepo.countByCityIdAndCreatedAtBetween(master.getCity().getId(), monthAgo, now);
         int closedLastMonth = orderRepo.countByMasterProfileIdAndMasterOrderStatusAndClosedAtBetween(
-                masterId,
+                master.getId(),
                 MasterOrderStatus.COMPLETED,
                 monthAgo,
                 now
         );
 
         int receivedTotal = orderRepo.countByCityId(master.getCity().getId());
-        int closedTotal = orderRepo.countByMasterProfileIdAndMasterOrderStatus(masterId, MasterOrderStatus.COMPLETED);
+        int closedTotal = orderRepo.countByMasterProfileIdAndMasterOrderStatus(master.getId(),
+                MasterOrderStatus.COMPLETED);
 
         return MasterStatisticsResDto.builder()
                 .balance(master.getBalance())
