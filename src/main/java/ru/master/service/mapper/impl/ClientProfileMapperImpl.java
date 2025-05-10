@@ -48,6 +48,7 @@ public class ClientProfileMapperImpl implements ClientProfileMapper {
                 .build();
 
         return ClientInfoForCreateOrderResDto.builder()
+                .id(clientProfile.getId())
                 .firstName(clientProfile.getFirstName())
                 .lastName(clientProfile.getLastName())
                 .phoneNumber(clientProfile.getUser().getPhoneNumber())
