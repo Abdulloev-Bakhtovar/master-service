@@ -15,6 +15,7 @@ import ru.master.service.model.dto.ServiceCategoryForAvailableOrdersDto;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterAvailableOrdersResDto extends TimestampedDto {
 
+    String address;
     ServiceCategoryForAvailableOrdersDto serviceCategoryDto;
     EnumResDto clientOrderStatus;
     EnumResDto masterOrderStatus;

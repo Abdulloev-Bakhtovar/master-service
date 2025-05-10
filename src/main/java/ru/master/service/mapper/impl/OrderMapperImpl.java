@@ -374,6 +374,7 @@ public class OrderMapperImpl implements OrderMapper {
                 .id(entity.getId())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
+                .address(entity.getAddress())
                 .serviceType(serviceType)
                 .clientOrderStatus(clientOrderStatus)
                 .masterOrderStatus(masterOrderStatus)
