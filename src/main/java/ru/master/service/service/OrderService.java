@@ -1,5 +1,6 @@
 package ru.master.service.service;
 
+import ru.master.service.admin.model.dto.responce.AdminOrderSummaryResDto;
 import ru.master.service.model.dto.request.*;
 import ru.master.service.model.dto.response.*;
 
@@ -35,4 +36,6 @@ public interface OrderService {
     void postponeOrderForMaster(UUID orderId, PostponeReqForMasterDto reqDto);
 
     void updateOrderPrice(UUID orderId, UpdateOrderPriceReqDto reqDto);
+
+    AdminOrderSummaryResDto getAdminOrderSummary();
 }

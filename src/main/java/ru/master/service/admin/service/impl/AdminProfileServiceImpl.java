@@ -8,15 +8,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.admin.model.AdminProfile;
-import ru.master.service.admin.model.dto.CreateAdminProfileReqDto;
 import ru.master.service.admin.model.dto.EmailDto;
-import ru.master.service.admin.model.dto.LoginAdminProfileReqDto;
-import ru.master.service.admin.model.dto.ResetPasswordDto;
+import ru.master.service.admin.model.dto.request.CreateAdminProfileReqDto;
+import ru.master.service.admin.model.dto.request.LoginAdminProfileReqDto;
+import ru.master.service.admin.model.dto.request.ResetPasswordReqDto;
 import ru.master.service.admin.repository.AdminProfileRepo;
 import ru.master.service.admin.service.AdminProfileService;
 import ru.master.service.admin.service.EmailService;
 import ru.master.service.auth.model.dto.response.TokenDto;
 import ru.master.service.auth.service.JwtService;
+import ru.master.service.auth.service.TokenBlacklistService;
 import ru.master.service.auth.service.VerificationService;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.constant.Role;
@@ -33,6 +34,7 @@ public class AdminProfileServiceImpl implements AdminProfileService {
     private final JwtService jwtService;
     private final EmailService emailService;
     private final VerificationService verificationService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Override
     public void create(CreateAdminProfileReqDto reqDto) {
@@ -64,6 +66,11 @@ public class AdminProfileServiceImpl implements AdminProfileService {
     }
 
     @Override
+    public void logout(TokenDto tokenDto) {
+        tokenBlacklistService.addToBlacklist(tokenDto);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String email) {
         return adminProfileRepo.findByEmail(email)
                 .orElseThrow(() -> new AppException(
@@ -85,7 +92,7 @@ public class AdminProfileServiceImpl implements AdminProfileService {
     }
 
     @Override
-    public void confirmTokenFromEmailAndResetPass(ResetPasswordDto reqDto) {
+    public void confirmTokenFromEmailAndResetPass(ResetPasswordReqDto reqDto) {
 
         var admin = adminProfileRepo.findByEmail(reqDto.getEmail())
                 .orElseThrow(() -> new AppException(

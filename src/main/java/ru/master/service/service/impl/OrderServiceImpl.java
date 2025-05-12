@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.admin.model.dto.responce.AdminOrderSummaryResDto;
 import ru.master.service.constant.*;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.OrderMapper;
@@ -17,11 +18,9 @@ import ru.master.service.service.MasterProfileService;
 import ru.master.service.service.OrderService;
 import ru.master.service.util.AuthUtil;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -318,6 +317,31 @@ public class OrderServiceImpl implements OrderService {
 
         order.setPrice(reqDto.getNewPrice().setScale(2, RoundingMode.HALF_UP));
         orderRepo.save(order);
+    }
+
+    @Override
+    public AdminOrderSummaryResDto getAdminOrderSummary() {
+
+        var openStatuses = List.of(
+                ClientOrderStatus.TAKEN_IN_WORK,
+                ClientOrderStatus.SEARCHING_FOR_MASTER
+        );
+
+        var closedStatuses = List.of(ClientOrderStatus.FINISHED);
+
+        int open = orderRepo.countByClientOrderStatusIn(openStatuses);
+        int closed = orderRepo.countByClientOrderStatusIn(closedStatuses);
+        int total = open + closed;
+
+        double openPct = total == 0 ? 0.0 : (open * 100.0) / total;
+        double closedPct = total == 0 ? 0.0 : (closed * 100.0) / total;
+
+        BigDecimal revenue = orderRepo.findAllByClientOrderStatus(ClientOrderStatus.FINISHED).stream()
+                .map(Order::getPrice)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new AdminOrderSummaryResDto(open, openPct, closed, closedPct, revenue);
     }
 
     private Order getClientOrder(UUID reqDto) {

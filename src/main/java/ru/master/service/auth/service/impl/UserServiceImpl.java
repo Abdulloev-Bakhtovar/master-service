@@ -19,7 +19,6 @@ import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.util.AuthUtil;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void logout(TokenDto tokenDto) {
-        addToBlacklist(tokenDto);
+        tokenBlacklistService.addToBlacklist(tokenDto);
     }
 
     @Override
@@ -83,7 +82,7 @@ public class UserServiceImpl implements UserService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        addToBlacklist(tokenDto);
+        tokenBlacklistService.addToBlacklist(tokenDto);
         userRepo.delete(user);
     }
 
@@ -105,19 +104,6 @@ public class UserServiceImpl implements UserService {
                 .name(user.getVerificationStatus().name())
                 .displayName(user.getVerificationStatus().getDisplayName())
                 .build();
-    }
-
-    private void addToBlacklist(TokenDto tokenDto) {
-        // Проверяем и добавляем refresh token
-        Optional.ofNullable(tokenDto.getRefreshToken())
-                .filter(jwtService::isTokenSignatureValid)
-                .filter(refreshToken -> !jwtService.isTokenExpired(refreshToken))
-                .ifPresent(tokenBlacklistService::addToBlacklist);
-
-        // Проверяем и добавляем access token
-        Optional.ofNullable(tokenDto.getAccessToken())
-                .filter(accessToken -> !jwtService.isTokenExpired(accessToken))
-                .ifPresent(tokenBlacklistService::addToBlacklist);
     }
 
 

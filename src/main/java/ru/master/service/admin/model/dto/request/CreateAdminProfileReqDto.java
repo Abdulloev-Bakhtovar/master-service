@@ -1,8 +1,9 @@
-package ru.master.service.admin.model.dto;
+package ru.master.service.admin.model.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import ru.master.service.admin.model.dto.EmailDto;
 
 @Getter
 @Setter
@@ -10,7 +11,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResetPasswordDto extends EmailDto {
-    String code;
-    String newPassword;
+public class CreateAdminProfileReqDto extends EmailDto {
+
+    String name;
+    String password;
 }

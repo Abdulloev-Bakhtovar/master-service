@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.admin.model.dto.ResetPasswordDto;
+import ru.master.service.admin.model.dto.request.ResetPasswordReqDto;
 import ru.master.service.auth.mapper.TokenMapper;
 import ru.master.service.auth.model.User;
 import ru.master.service.auth.model.dto.request.AccountVerifyDto;
@@ -102,7 +102,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     @Transactional
-    public boolean isValidCodeForResetPass(ResetPasswordDto dto) {
+    public boolean isValidCodeForResetPass(ResetPasswordReqDto dto) {
         String key = prefix + dto.getEmail();
         String storedCode = redisTemplate.opsForValue().get(key);
 

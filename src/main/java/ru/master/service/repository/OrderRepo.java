@@ -42,4 +42,8 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
             UUID masterId,
             List<MasterOrderStatus> statuses
     );
+
+    int countByClientOrderStatusIn(List<ClientOrderStatus> clientOrderStatus);
+
+    List<Order> findAllByClientOrderStatus(ClientOrderStatus clientOrderStatus);
 }
