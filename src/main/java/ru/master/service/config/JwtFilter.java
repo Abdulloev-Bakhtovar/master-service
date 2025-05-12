@@ -16,7 +16,7 @@ import ru.master.service.auth.service.JwtService;
 import ru.master.service.auth.service.TokenBlacklistService;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.constant.Role;
-import ru.master.service.model.AdminProfile;
+import ru.master.service.admin.model.AdminProfile;
 
 import java.io.IOException;
 import java.util.UUID;

@@ -1,16 +1,16 @@
-package ru.master.service.model.dto.request;
+package ru.master.service.admin.model.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginAdminProfileReqDto {
+public class LoginAdminProfileReqDto extends EmailDto {
 
-    String email;
     String password;
 }

@@ -1,4 +1,4 @@
-package ru.master.service.model;
+package ru.master.service.admin.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

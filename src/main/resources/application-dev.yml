@@ -43,7 +43,7 @@ logging:
   config: classpath:logging/logback-dev.xml
 
 application:
-  sms-verification:
+  verification:
     prefix: "verify:"
     ttl-minutes: 5
     code-length: 6
@@ -70,6 +70,10 @@ application:
         path: /admin/register
       - method: POST
         path: /admin/login
+      - method: PATCH
+        path: /password/reset-request
+      - method: PATCH
+        path: /password/reset-confirm
       - method: POST
         path: /auth/refresh
       - method: GET
@@ -120,3 +124,9 @@ application:
       - image/jpg
     file-path: "./src/main/resources/static"
     images-sub-dir: "photos"
+
+  email:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}

@@ -1,6 +1,5 @@
 package ru.master.service.auth.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +19,8 @@ public class VerificationController {
 
     @PostMapping("/verify")
     @ResponseStatus(HttpStatus.OK)
-    public TokenDto verifyCode(@RequestBody AccountVerifyDto accountVerifyDto, HttpServletResponse response) {
-        return verificationService.verifyCode(accountVerifyDto, response);
+    public TokenDto verifyCode(@RequestBody AccountVerifyDto accountVerifyDto) {
+        return verificationService.verifyCode(accountVerifyDto);
     }
 
     @PostMapping("/resend-code")

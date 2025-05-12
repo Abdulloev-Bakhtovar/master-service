@@ -3,7 +3,7 @@ package ru.master.service.auth.service;
 import org.springframework.security.core.GrantedAuthority;
 import ru.master.service.auth.model.User;
 import ru.master.service.constant.Role;
-import ru.master.service.model.AdminProfile;
+import ru.master.service.admin.model.AdminProfile;
 
 import java.time.Instant;
 import java.util.Collection;

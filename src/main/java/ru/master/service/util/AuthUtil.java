@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.master.service.auth.model.User;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.exception.AppException;
-import ru.master.service.model.AdminProfile;
+import ru.master.service.admin.model.AdminProfile;
 
 @Component
 public class AuthUtil {

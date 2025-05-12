@@ -1,17 +1,17 @@
 package ru.master.service.auth.service.impl;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.admin.model.dto.ResetPasswordDto;
+import ru.master.service.auth.mapper.TokenMapper;
+import ru.master.service.auth.model.User;
 import ru.master.service.auth.model.dto.request.AccountVerifyDto;
 import ru.master.service.auth.model.dto.request.PhoneNumberDto;
 import ru.master.service.auth.model.dto.response.TokenDto;
-import ru.master.service.auth.mapper.TokenMapper;
-import ru.master.service.auth.model.User;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.auth.service.JwtService;
 import ru.master.service.auth.service.SmsService;
@@ -38,13 +38,13 @@ public class VerificationServiceImpl implements VerificationService {
     private final CookieUtil cookieUtil;
     private final TokenMapper tokenMapper;
 
-    @Value("${application.sms-verification.prefix}")
+    @Value("${application.verification.prefix}")
     private String prefix;
 
-    @Value("${application.sms-verification.ttl-minutes}")
+    @Value("${application.verification.ttl-minutes}")
     private long codeTtlMinutes;
 
-    @Value("${application.sms-verification.code-length}")
+    @Value("${application.verification.code-length}")
     private int codeLength;
 
     @Override
@@ -68,7 +68,7 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     @Transactional
-    public TokenDto verifyCode(AccountVerifyDto dto, HttpServletResponse response) {
+    public TokenDto verifyCode(AccountVerifyDto dto) {
         String key = prefix + dto.getPhoneNumber();
         String storedCode = redisTemplate.opsForValue().get(key);
 
@@ -98,6 +98,30 @@ public class VerificationServiceImpl implements VerificationService {
         redisTemplate.delete(key);
 
         return tokenMapper.toDto(accessToken, refreshToken);
+    }
+
+    @Override
+    @Transactional
+    public boolean isValidCodeForResetPass(ResetPasswordDto dto) {
+        String key = prefix + dto.getEmail();
+        String storedCode = redisTemplate.opsForValue().get(key);
+
+        if (storedCode == null) {
+            throw new AppException(
+                    ErrorMessage.CODE_EXPIRED_OR_NOT_FOUND,
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        if (!storedCode.equals(dto.getCode())) {
+            throw new AppException(
+                    ErrorMessage.INVALID_VERIFICATION_CODE,
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        redisTemplate.delete(key);
+        return true;
     }
 
     @Override

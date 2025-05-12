@@ -14,7 +14,7 @@ import ru.master.service.auth.service.JwtService;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.constant.Role;
 import ru.master.service.exception.AppException;
-import ru.master.service.model.AdminProfile;
+import ru.master.service.admin.model.AdminProfile;
 import ru.master.service.util.KeyProviderUtil;
 
 import java.nio.file.NoSuchFileException;
