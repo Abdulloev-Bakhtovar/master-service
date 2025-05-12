@@ -40,7 +40,7 @@ spring:
       password: ${REDIS_PASSWORD}
 
 logging:
-  config: classpath:logging/logback-master.xml
+  config: classpath:logging/logback-dev.xml
 
 application:
   sms-verification:
@@ -66,6 +66,10 @@ application:
     public-endpoints:
       - method: POST
         path: /auth/register-or-login
+      - method: POST
+        path: /admin/register
+      - method: POST
+        path: /admin/login
       - method: POST
         path: /auth/refresh
       - method: GET

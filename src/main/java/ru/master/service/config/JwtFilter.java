@@ -15,7 +15,8 @@ import ru.master.service.auth.model.User;
 import ru.master.service.auth.service.JwtService;
 import ru.master.service.auth.service.TokenBlacklistService;
 import ru.master.service.constant.ErrorMessage;
-import ru.master.service.exception.AppException;
+import ru.master.service.constant.Role;
+import ru.master.service.model.AdminProfile;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -40,7 +41,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        String userPhoneNumber = null;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
@@ -48,13 +48,6 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-
-        try {
-            userPhoneNumber = jwtService.extractPhoneNumber(jwt);
-        } catch (AppException e) {
-            response.sendError(e.getStatus().value(), e.getMessage());
-            return;
-        }
 
         if (!jwtService.isAccessToken(jwt)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorMessage.ONLY_ACCESS_TOKENS_ALLOWED);
@@ -66,21 +59,39 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (userPhoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if(!jwtService.isTokenExpired(jwt)) {
-                var userId = jwtService.extractUserId(jwt);
-                var authorities = jwtService.extractAuthorities(jwt);
-                var authenticatedUser = User.builder()
-                        .id(UUID.fromString(userId))
-                        .phoneNumber(userPhoneNumber)
-                        .role(jwtService.extractRole(jwt))
-                        .build();
+        var role = jwtService.extractRole(jwt);
 
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        authenticatedUser,
-                        null,
-                        authorities
-                );
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            if(!jwtService.isTokenExpired(jwt)) {
+                var userId = jwtService.extractId(jwt);
+                var authorities = jwtService.extractAuthorities(jwt);
+                UsernamePasswordAuthenticationToken authToken;
+
+                if (role == Role.ADMIN) {
+                    var email = jwtService.extractEmail(jwt);
+                    var authenticatedAdmin = AdminProfile.builder()
+                            .id(UUID.fromString(userId))
+                            .email(email)
+                            .role(role)
+                            .build();
+                    authToken = new UsernamePasswordAuthenticationToken(
+                            authenticatedAdmin,
+                            null,
+                            authorities
+                    );
+                } else {
+                    var userPhoneNumber = jwtService.extractPhoneNumber(jwt);
+                    var authenticatedUser = User.builder()
+                            .id(UUID.fromString(userId))
+                            .phoneNumber(userPhoneNumber)
+                            .role(role)
+                            .build();
+                    authToken = new UsernamePasswordAuthenticationToken(
+                            authenticatedUser,
+                            null,
+                            authorities
+                    );
+                }
 
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)

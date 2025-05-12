@@ -18,7 +18,6 @@ import ru.master.service.constant.Role;
 import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.util.AuthUtil;
-import ru.master.service.util.CookieUtil;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -32,7 +31,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final VerificationService verificationService;
     private final SmsService smsService;
-    private final CookieUtil cookieUtil;
     private final JwtService jwtService;
     private final TokenMapper tokenMapper;
     private final TokenBlacklistService tokenBlacklistService;
@@ -61,6 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenDto refreshToken(RefreshTokenDto refreshTokenDto) {
 
+        // TODO добавить старые токены в черный список
         User user = validateRefreshTokenAndGetUser(refreshTokenDto);
 
         String newAccessToken = jwtService.generateAccessToken(user);
@@ -146,7 +145,7 @@ public class UserServiceImpl implements UserService {
             );
         }
 
-        UUID userId = UUID.fromString(jwtService.extractUserId(refreshTokenDto.getToken()));
+        UUID userId = UUID.fromString(jwtService.extractId(refreshTokenDto.getToken()));
 
         return userRepo.findById(userId)
                 .orElseThrow(() -> new AppException(

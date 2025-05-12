@@ -1,4 +1,4 @@
-package ru.master.service.auth.model;
+package ru.master.service.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,9 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.master.service.auth.model.TimestampedEntity;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.constant.Role;
-import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 
 import java.util.Collection;
@@ -22,19 +22,20 @@ import java.util.Collections;
 @Getter
 @Setter
 @Entity
+@ToString
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "admin_profiles")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class User extends TimestampedEntity implements UserDetails {
+public class AdminProfile extends TimestampedEntity implements UserDetails {
+
+    String name;
+    String password;
 
     @EqualsAndHashCode.Include
-    String phoneNumber;
-
-    @Enumerated(EnumType.STRING)
-    VerificationStatus verificationStatus;
+    String email;
 
     @Enumerated(EnumType.STRING)
     Role role;
@@ -52,11 +53,11 @@ public class User extends TimestampedEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return phoneNumber;
+        return email;
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return password;
     }
 }

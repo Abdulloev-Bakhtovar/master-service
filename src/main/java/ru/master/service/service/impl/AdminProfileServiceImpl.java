@@ -1,0 +1,66 @@
+package ru.master.service.service.impl;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.master.service.auth.model.dto.response.TokenDto;
+import ru.master.service.auth.service.JwtService;
+import ru.master.service.constant.Role;
+import ru.master.service.exception.AppException;
+import ru.master.service.model.AdminProfile;
+import ru.master.service.model.dto.request.CreateAdminProfileReqDto;
+import ru.master.service.model.dto.request.LoginAdminProfileReqDto;
+import ru.master.service.repository.AdminProfileRepo;
+import ru.master.service.service.AdminProfileService;
+import ru.master.service.util.AuthUtil;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class AdminProfileServiceImpl implements AdminProfileService {
+
+    private final AdminProfileRepo adminProfileRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+
+    @Override
+    public void create(CreateAdminProfileReqDto reqDto) {
+        var adminProfile = AdminProfile.builder()
+                .name(reqDto.getName())
+                .email(reqDto.getEmail())
+                .role(Role.ADMIN)
+                .password(passwordEncoder.encode(reqDto.getPassword()))
+                .build();
+
+        adminProfileRepo.save(adminProfile);
+    }
+
+    @Override
+    public TokenDto login(LoginAdminProfileReqDto reqDto) {
+
+        var admin = adminProfileRepo.findByEmail(reqDto.getEmail())
+                        .orElseThrow(() -> new AppException(
+                                "User not found",
+                                HttpStatus.NOT_FOUND
+                        ));
+
+        AuthUtil.validateCredentials(reqDto.getEmail(), reqDto.getPassword());
+
+        var accessToken = jwtService.generateAdminAccessToken(admin);
+        var refreshToken = jwtService.generateAdminRefreshToken(admin);
+
+        return new TokenDto(accessToken, refreshToken);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        return adminProfileRepo.findByEmail(email)
+                .orElseThrow(() -> new AppException(
+                        "Admin not found",
+                        HttpStatus.NOT_FOUND
+                ));
+    }
+}

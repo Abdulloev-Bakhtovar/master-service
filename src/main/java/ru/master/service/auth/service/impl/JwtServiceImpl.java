@@ -14,6 +14,7 @@ import ru.master.service.auth.service.JwtService;
 import ru.master.service.constant.ErrorMessage;
 import ru.master.service.constant.Role;
 import ru.master.service.exception.AppException;
+import ru.master.service.model.AdminProfile;
 import ru.master.service.util.KeyProviderUtil;
 
 import java.nio.file.NoSuchFileException;
@@ -21,10 +22,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -51,6 +49,11 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
+    public String extractEmail(String jwt) {
+        return extractClaim(jwt, claims -> claims.get("email", String.class));
+    }
+
+    @Override
     public Role extractRole(String jwt) {
         String roleStr = extractClaim(jwt, claims -> claims.get("role", String.class));
         try {
@@ -63,7 +66,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String extractUserId(String jwt) {
+    public String extractId(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
     }
 
@@ -99,9 +102,10 @@ public class JwtServiceImpl implements JwtService {
         TokenClaim claims = new TokenClaim(
                 user.getPhoneNumber(),
                 user.getRole(),
-                TOKEN_TYPE_ACCESS
+                TOKEN_TYPE_ACCESS,
+                null
         );
-        return generateToken(user, accessTokenExpiration, claims.toMap());
+        return generateToken(user.getId(), accessTokenExpiration, claims.toMap());
     }
 
     @Override
@@ -109,12 +113,35 @@ public class JwtServiceImpl implements JwtService {
         TokenClaim claims = new TokenClaim(
                 user.getPhoneNumber(),
                 null,
-                TOKEN_TYPE_REFRESH
+                TOKEN_TYPE_REFRESH,
+                null
         );
-        return generateToken(user, refreshTokenExpiration, claims.toMap());
+        return generateToken(user.getId(), refreshTokenExpiration, claims.toMap());
     }
 
-    private String generateToken(User user,
+    @Override
+    public String generateAdminAccessToken(AdminProfile admin) {
+        TokenClaim claims = new TokenClaim(
+                null,
+                admin.getRole(),
+                TOKEN_TYPE_ACCESS,
+                admin.getEmail()
+        );
+        return generateToken(admin.getId(), accessTokenExpiration, claims.toMap());
+    }
+
+    @Override
+    public String generateAdminRefreshToken(AdminProfile admin) {
+        TokenClaim claims = new TokenClaim(
+                null,
+                null,
+                TOKEN_TYPE_REFRESH,
+                admin.getEmail()
+        );
+        return generateToken(admin.getId(), refreshTokenExpiration, claims.toMap());
+    }
+
+    private String generateToken(UUID sub,
                                  long expirationMinutes,
                                  Map<String, Object> customClaims) {
         Instant now = Instant.now();
@@ -125,7 +152,7 @@ public class JwtServiceImpl implements JwtService {
             PrivateKey privateKey = KeyProviderUtil.getPrivateKey(this.privateKeyFromFile);
 
             return Jwts.builder()
-                    .subject(String.valueOf(user.getId()))
+                    .subject(String.valueOf(sub))
                     .claims(customClaims)
                     .issuedAt(issuedAt)
                     .expiration(expiration)
