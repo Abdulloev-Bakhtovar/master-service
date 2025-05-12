@@ -12,6 +12,7 @@ import java.util.UUID;
  */
 @Getter
 @Setter
+@ToString(exclude = "userAgreementDto")
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

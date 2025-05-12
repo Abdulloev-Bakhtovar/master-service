@@ -9,7 +9,7 @@ import ru.master.service.model.dto.CityDto;
 @Getter
 @Setter
 @SuperBuilder
-@ToString
+@ToString(exclude = ("cityDto"))
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

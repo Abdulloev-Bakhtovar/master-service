@@ -14,6 +14,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"subserviceDtos", "cityDto"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterProfileForMasterRequestResDto extends TimestampedDto {
 

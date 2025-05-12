@@ -7,6 +7,7 @@ import ru.master.service.auth.model.dto.BaseDto;
 
 @Getter
 @Setter
+@ToString
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

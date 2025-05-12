@@ -13,6 +13,7 @@ import ru.master.service.auth.model.User;
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"city", "user"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class BaseProfile extends TimestampedEntity {
 

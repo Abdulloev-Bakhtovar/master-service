@@ -2,7 +2,6 @@ package ru.master.service.model.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.constant.Education;
 import ru.master.service.constant.MaritalStatus;
@@ -12,7 +11,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@SuperBuilder
+@Builder
+@ToString(exclude = {
+        "profilePhoto",
+        "passportMainPhoto",
+        "passportRegistrationPhoto",
+        "snilsPhoto",
+        "innPhoto"
+})
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

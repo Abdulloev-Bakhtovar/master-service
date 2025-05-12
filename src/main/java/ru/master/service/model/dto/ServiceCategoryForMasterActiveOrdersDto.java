@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
+@ToString(exclude = "subserviceDto")
 @NoArgsConstructor
 @AllArgsConstructor()
 @FieldDefaults(level = AccessLevel.PRIVATE)

@@ -16,6 +16,7 @@ import java.time.Instant;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"masterInfoDto", "masterFeedbackDto", "serviceCategoryDto"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDetailForClientResDto extends TimestampedDto {
 

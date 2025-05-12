@@ -9,6 +9,7 @@ import ru.master.service.auth.model.TimestampedEntity;
 @Getter
 @Setter
 @Entity
+@ToString(exclude = "city")
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

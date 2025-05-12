@@ -9,6 +9,7 @@ import ru.master.service.constant.VerificationStatus;
 
 @Getter
 @Setter
+@ToString
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -14,6 +14,7 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"masterInfoDto", "userDto"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterRequestResDto extends TimestampedDto {
 

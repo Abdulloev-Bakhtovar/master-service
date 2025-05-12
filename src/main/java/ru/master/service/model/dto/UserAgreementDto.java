@@ -7,6 +7,7 @@ import ru.master.service.auth.model.dto.TimestampedDto;
 
 @Getter
 @Setter
+@ToString
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

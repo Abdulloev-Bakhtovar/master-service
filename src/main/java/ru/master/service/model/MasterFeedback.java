@@ -14,6 +14,7 @@ import ru.master.service.auth.model.TimestampedEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "master_feedbacks")
+@ToString(exclude = {"order", "master"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterFeedback extends TimestampedEntity {
 

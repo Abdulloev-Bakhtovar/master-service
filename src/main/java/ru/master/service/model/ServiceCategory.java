@@ -16,6 +16,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "subservices")
 @Table(name = "service_categories")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceCategory extends BaseCategory {

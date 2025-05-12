@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "master_profiles")
+@ToString(exclude = "subservices")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterProfile extends BaseProfile {
 

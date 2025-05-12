@@ -13,6 +13,7 @@ import ru.master.service.model.dto.ServiceCategoryForAllClientOrderDto;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "serviceCategoryDto")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AllClientOrderResDto extends TimestampedDto {
 

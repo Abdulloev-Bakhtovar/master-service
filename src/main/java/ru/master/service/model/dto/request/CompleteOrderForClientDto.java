@@ -6,7 +6,7 @@ import ru.master.service.model.dto.MasterFeedbackForCompleteOrderForClientDto;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "masterFeedbackDto")
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

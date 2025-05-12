@@ -11,6 +11,7 @@ import ru.master.service.auth.model.dto.TimestampedDto;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"photo", "cityDto"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewsDto extends TimestampedDto {
 

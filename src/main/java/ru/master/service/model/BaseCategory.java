@@ -8,6 +8,7 @@ import ru.master.service.auth.model.TimestampedEntity;
 
 @Getter
 @Setter
+@ToString
 @SuperBuilder
 @MappedSuperclass
 @NoArgsConstructor

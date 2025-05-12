@@ -7,6 +7,7 @@ import ru.master.service.constant.MasterStatus;
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

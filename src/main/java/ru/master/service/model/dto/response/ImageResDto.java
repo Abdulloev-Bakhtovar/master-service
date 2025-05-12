@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@ToString(exclude = "data")
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

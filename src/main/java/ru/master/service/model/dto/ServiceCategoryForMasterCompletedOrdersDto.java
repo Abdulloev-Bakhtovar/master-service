@@ -7,8 +7,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
+@ToString(exclude = "subserviceDto")
 @NoArgsConstructor
-@AllArgsConstructor()
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceCategoryForMasterCompletedOrdersDto extends BaseCategoryDto {
 

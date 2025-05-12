@@ -15,6 +15,7 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "user")
 @Table(name = "master_requests")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterRequest extends TimestampedEntity {

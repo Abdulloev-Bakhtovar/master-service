@@ -10,6 +10,7 @@ import ru.master.service.auth.model.User;
 @Getter
 @Setter
 @Entity
+@ToString(exclude = "user")
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

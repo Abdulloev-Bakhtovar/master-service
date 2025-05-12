@@ -11,7 +11,8 @@ import ru.master.service.model.dto.ServiceCategoryForAvailableOrdersDto;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor()
+@AllArgsConstructor
+@ToString(exclude = "serviceCategoryDto")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MasterAvailableOrdersResDto extends TimestampedDto {
 

@@ -10,6 +10,7 @@ import ru.master.service.auth.model.BaseEntity;
 @Getter
 @Setter
 @Entity
+@ToString
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

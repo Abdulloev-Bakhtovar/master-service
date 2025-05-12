@@ -7,6 +7,7 @@ import ru.master.service.constant.Role;
 
 @Getter
 @Setter
+@ToString
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

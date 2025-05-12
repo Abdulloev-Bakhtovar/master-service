@@ -19,6 +19,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "orders")
+@ToString(exclude = {"city", "clientProfile", "subservice", "masterProfile"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order extends TimestampedEntity {
 

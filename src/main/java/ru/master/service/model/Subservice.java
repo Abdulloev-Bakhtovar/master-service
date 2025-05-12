@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "subservices")
+@ToString(exclude = "serviceCategory")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Subservice extends BaseCategory {
 
