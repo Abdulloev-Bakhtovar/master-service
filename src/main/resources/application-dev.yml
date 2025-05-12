@@ -71,9 +71,9 @@ application:
       - method: POST
         path: /admin/login
       - method: PATCH
-        path: /password/reset-request
+        path: /admin/password/reset-request
       - method: PATCH
-        path: /password/reset-confirm
+        path: /admin/password/reset-confirm
       - method: POST
         path: /auth/refresh
       - method: GET
