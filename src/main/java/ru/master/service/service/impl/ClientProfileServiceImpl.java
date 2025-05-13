@@ -12,18 +12,14 @@ import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.ClientProfileMapper;
 import ru.master.service.model.ClientProfile;
-import ru.master.service.model.Referral;
 import ru.master.service.model.dto.request.CreateClientProfileReqDto;
 import ru.master.service.model.dto.response.ClientInfoForCreateOrderResDto;
 import ru.master.service.repository.ClientProfileRepo;
-import ru.master.service.repository.ReferralRepo;
 import ru.master.service.service.CityService;
-import ru.master.service.service.ClientPointService;
 import ru.master.service.service.ClientProfileService;
+import ru.master.service.service.ReferralProgramService;
 import ru.master.service.service.UserAgreementService;
 import ru.master.service.util.AuthUtil;
-
-import java.time.Instant;
 
 @Service
 @Transactional
@@ -38,8 +34,7 @@ public class ClientProfileServiceImpl implements ClientProfileService {
     private final CityService cityService;
     private final UserService userService;
     private final VerificationService verificationService;
-    private final ReferralRepo referralRepo;
-    private final ClientPointService clientPointService;
+    private final ReferralProgramService referralProgramService;
 
     @Override
     public void create(CreateClientProfileReqDto reqDto) {
@@ -76,16 +71,8 @@ public class ClientProfileServiceImpl implements ClientProfileService {
                     .orElse(null);
 
             if (referrerProfile != null) {
-                // Сохраняем связь "кто кого пригласил"
-                Referral referral = Referral.builder()
-                        .referrer(referrerProfile)
-                        .referred(clientProfileEntity)
-                        .registeredAt(Instant.now())
-                        .firstOrderCompleted(false)
-                        .build();
-                referralRepo.save(referral);
 
-                clientPointService.addReferralRegistrationPoints(referrerProfile);
+                referralProgramService.addReferralRegistrationPoints(referrerProfile, clientProfileEntity);
                 verificationService.removeReferralCodeFromCache(user.getId());
             }
         }

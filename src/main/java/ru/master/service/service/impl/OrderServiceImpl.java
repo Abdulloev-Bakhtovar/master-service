@@ -16,6 +16,7 @@ import ru.master.service.repository.*;
 import ru.master.service.service.MasterFeedbackService;
 import ru.master.service.service.MasterProfileService;
 import ru.master.service.service.OrderService;
+import ru.master.service.service.ReferralProgramService;
 import ru.master.service.util.AuthUtil;
 
 import java.math.BigDecimal;
@@ -37,6 +38,8 @@ public class OrderServiceImpl implements OrderService {
     private final MasterProfileService masterProfileService;
     private final MasterProfileRepo masterProfileRepo;
     private final OrderPostponementRepo orderPostponementRepo;
+    private final ReferralRepo referralRepo;
+    private final ReferralProgramService referralProgramService;
 
     @Override
     public IdDto create(CreateOrderReqDto reqDto) {
@@ -127,6 +130,15 @@ public class OrderServiceImpl implements OrderService {
                 reqDto.getMasterFeedbackDto().getRating()
         );
         orderRepo.save(order);
+
+        referralRepo.findByReferred(order.getClientProfile())
+                .filter(ref -> !ref.isFirstOrderCompleted())
+                .ifPresent(referral -> {
+                    referral.setFirstOrderCompleted(true);
+                    referralRepo.save(referral);
+
+                    referralProgramService.addReferralFirstOrderPoints(referral.getReferrer());
+                });
     }
 
     @Override
