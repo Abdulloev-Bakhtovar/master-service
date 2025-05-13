@@ -29,7 +29,7 @@ public class ClientProfile extends BaseProfile {
     User referredBy; // Кто пригласил этого пользователя
 
     @OneToOne(mappedBy = "clientProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    ClientPoints clientPoints;
+    ClientPoint clientPoint;
 
     @OneToMany(mappedBy = "referrer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Referral> referrals;

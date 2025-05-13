@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum CertificateStatus {
+public enum CertificateStatus implements DisplayableEnum {
 
     ACTIVE("Активный"),
     USED("Использованный"),

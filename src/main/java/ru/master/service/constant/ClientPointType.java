@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ClientPointType {
+public enum ClientPointType implements DisplayableEnum {
 
     REFERRAL_REGISTRATION("Реферальный"),
     REFERRAL_FIRST_ORDER("Реферальный (первая покупка)");

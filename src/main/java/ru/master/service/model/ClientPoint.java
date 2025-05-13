@@ -15,7 +15,7 @@ import ru.master.service.constant.ClientPointType;
 @AllArgsConstructor
 @Table(name = "client_points")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClientPoints extends TimestampedEntity {
+public class ClientPoint extends TimestampedEntity {
 
     @OneToOne
     @JoinColumn(name = "client_profile_id")
