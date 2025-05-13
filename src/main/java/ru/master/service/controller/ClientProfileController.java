@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.request.*;
-import ru.master.service.model.dto.response.AllClientOrderResDto;
-import ru.master.service.model.dto.response.ClientInfoForCreateOrderResDto;
-import ru.master.service.model.dto.response.IdDto;
-import ru.master.service.model.dto.response.OrderDetailForClientResDto;
+import ru.master.service.model.dto.response.*;
 import ru.master.service.service.ClientProfileService;
 import ru.master.service.service.OrderService;
+import ru.master.service.service.ReferralProgramService;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +19,7 @@ public class ClientProfileController {
 
     private final ClientProfileService clientProfileService;
     private final OrderService orderService;
+    private final ReferralProgramService referralProgramService;
 
     @GetMapping("/info")
     @ResponseStatus(HttpStatus.OK)
@@ -68,5 +67,10 @@ public class ClientProfileController {
     @ResponseStatus(HttpStatus.OK)
     public void completeOrderForClient(@PathVariable UUID orderId, @RequestBody CompleteOrderForClientDto reqDto) {
         orderService.completeOrderForClient(orderId, reqDto);
+    }
+
+    @GetMapping("/referral/info")
+    public ClientReferralInfoResDto getReferralInfo() {
+        return referralProgramService.getReferralInfo();
     }
 }
