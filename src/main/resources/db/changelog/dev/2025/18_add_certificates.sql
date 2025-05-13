@@ -5,8 +5,6 @@ CREATE TABLE certificates
     status            VARCHAR(50)        NOT NULL,
     issued_at         TIMESTAMPTZ        NOT NULL,
     expires_at        TIMESTAMPTZ        NOT NULL,
-    created_at        TIMESTAMPTZ,
-    updated_at        TIMESTAMPTZ,
 
     FOREIGN KEY (client_profile_id) REFERENCES client_profiles (id)
 );

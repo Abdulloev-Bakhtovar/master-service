@@ -15,5 +15,6 @@ import ru.master.service.constant.Role;
 public class RegisterAndLoginDto {
 
     String phoneNumber;
+    String referralCode;
     Role role;
 }

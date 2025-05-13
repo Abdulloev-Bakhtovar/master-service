@@ -8,6 +8,7 @@ import ru.master.service.model.ClientProfile;
 import ru.master.service.model.dto.CityDto;
 import ru.master.service.model.dto.request.CreateClientProfileReqDto;
 import ru.master.service.model.dto.response.ClientInfoForCreateOrderResDto;
+import ru.master.service.util.CodeGeneratorUtil;
 
 @Component
 public class ClientProfileMapperImpl implements ClientProfileMapper {
@@ -26,6 +27,8 @@ public class ClientProfileMapperImpl implements ClientProfileMapper {
         return ClientProfile.builder()
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
+                .totalEarnedPoints(0)
+                .referralCode(CodeGeneratorUtil.generateReferralCode())
                 .city(city)
                 .address(dto.getAddress())
                 .user(user)

@@ -1,13 +1,12 @@
 ALTER TABLE client_profiles
-    ADD COLUMN referral_code UUID UNIQUE,
-    ADD COLUMN total_points INT,
-    ADD COLUMN referred_by UUID UNIQUE REFERENCES client_profiles (id) ON DELETE SET NULL;
+    ADD COLUMN referral_code VARCHAR(30) UNIQUE,
+    ADD COLUMN total_earned_points INT;
 
 
 UPDATE client_profiles
-SET referral_code = gen_random_uuid()
+SET referral_code = SUBSTRING(md5(random()::text), 1, 10)
 WHERE referral_code IS NULL;
 
 UPDATE client_profiles
-SET total_points = 0
-WHERE total_points IS NULL;
+SET total_earned_points = 0
+WHERE total_earned_points IS NULL;

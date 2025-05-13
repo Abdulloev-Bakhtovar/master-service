@@ -57,4 +57,5 @@ public class ErrorMessage {
     public static final String ORDER_TAKEN = "Order is taken into work by another master";
     public static final String MASTER_REQUEST_EXISTS = "Master request already exists";
     public static final String ADMIN_NOT_AUTHENTICATED = "Admin is not authenticated";
+    public static final String USER_STATUS_BLOCKED_OR_INVALID = "User is blocked";
 }

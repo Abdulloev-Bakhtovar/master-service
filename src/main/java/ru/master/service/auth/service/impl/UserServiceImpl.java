@@ -17,8 +17,10 @@ import ru.master.service.constant.ErrorMessage;
 import ru.master.service.constant.Role;
 import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
+import ru.master.service.repository.ClientProfileRepo;
 import ru.master.service.util.AuthUtil;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -34,25 +36,49 @@ public class UserServiceImpl implements UserService {
     private final TokenMapper tokenMapper;
     private final TokenBlacklistService tokenBlacklistService;
     private final AuthUtil authUtil;
+    private final ClientProfileRepo clientProfileRepo;
 
     @Override
-    public void registerOrLogin(RegisterAndLoginDto registerAndLoginDto) {
+    public void registerOrLogin(RegisterAndLoginDto dto) {
+        Optional<User> userOpt = userRepo.findByPhoneNumber(dto.getPhoneNumber());
 
-        if (!userRepo.existsByPhoneNumber(registerAndLoginDto.getPhoneNumber())) {
-            
-            if (registerAndLoginDto.getRole().equals(Role.ADMIN)) {
+        if (userOpt.isEmpty()) {
+            if (dto.getRole() == Role.ADMIN) {
                 throw new AppException(
                         ErrorMessage.ASSIGN_ADMIN_ROLE_FORBIDDEN,
                         HttpStatus.FORBIDDEN
                 );
             }
 
-            var user = userMapper.toEntity(registerAndLoginDto);
-            userRepo.save(user);
+            User newUser = userMapper.toEntity(dto);
+            userRepo.save(newUser);
+
+            if (dto.getRole() == Role.CLIENT &&
+                    dto.getReferralCode() != null &&
+                    !dto.getReferralCode().isBlank()) {
+
+                if (!clientProfileRepo.existsByReferralCode(dto.getReferralCode())) {
+                    throw new AppException(
+                            "Referral code not found",
+                            HttpStatus.NOT_FOUND
+                    );
+                }
+
+                verificationService.addReferralCodeToCache(newUser.getId(), dto.getReferralCode());
+            }
+        } else {
+            User user = userOpt.get();
+
+            if (user.getVerificationStatus() == VerificationStatus.REJECTED) {
+                throw new AppException(
+                        ErrorMessage.USER_STATUS_BLOCKED_OR_INVALID,
+                        HttpStatus.FORBIDDEN
+                );
+            }
         }
 
-        String code = verificationService.saveCode(registerAndLoginDto.getPhoneNumber());
-        smsService.sendVerificationCode(registerAndLoginDto.getPhoneNumber(), code);
+        String code = verificationService.saveCode(dto.getPhoneNumber());
+        smsService.sendVerificationCode(dto.getPhoneNumber(), code);
     }
 
     @Override

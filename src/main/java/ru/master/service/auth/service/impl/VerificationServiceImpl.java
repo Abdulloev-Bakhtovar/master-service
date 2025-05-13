@@ -25,6 +25,7 @@ import ru.master.service.util.CookieUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -40,6 +41,9 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Value("${application.verification.prefix}")
     private String prefix;
+
+    private final String referralPrefix = "referral:";
+    private final long referralTtlMinutes = 30;
 
     @Value("${application.verification.ttl-minutes}")
     private long codeTtlMinutes;
@@ -142,6 +146,32 @@ public class VerificationServiceImpl implements VerificationService {
         }
         return result;
     }
+
+    @Override
+    public void addReferralCodeToCache(UUID id, String referralCode) {
+        String key = referralPrefix + id;
+
+        redisTemplate.opsForValue().set(
+                key,
+                referralCode,
+                referralTtlMinutes,
+                TimeUnit.MINUTES
+        );
+    }
+
+    @Override
+    public String getReferralCodeFromCache(UUID userId) {
+        String key = referralPrefix + userId;
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    @Override
+    public void removeReferralCodeFromCache(UUID userId) {
+        String key = referralPrefix + userId;
+        redisTemplate.delete(key);
+    }
+
+
 
     private User getByPhoneNumber(String phoneNumber) {
 

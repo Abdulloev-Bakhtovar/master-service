@@ -11,4 +11,8 @@ public interface ClientProfileRepo extends JpaRepository<ClientProfile, UUID> {
     boolean existsByUserId(UUID userId);
 
     Optional<ClientProfile> findByUserId(UUID id);
+
+    Optional<ClientProfile> findByReferralCode(String  referralCode);
+
+    boolean existsByReferralCode(String referralCode);
 }

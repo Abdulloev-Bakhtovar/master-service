@@ -5,7 +5,7 @@ CREATE TABLE client_points
     type              VARCHAR(50),
     created_at        TIMESTAMPTZ,
     updated_at        TIMESTAMPTZ,
-    client_profile_id UUID UNIQUE,
+    client_profile_id UUID,
 
     FOREIGN KEY (client_profile_id) REFERENCES client_profiles (id)
 );
