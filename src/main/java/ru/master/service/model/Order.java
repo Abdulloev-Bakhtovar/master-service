@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import ru.master.service.auth.model.TimestampedEntity;
 import ru.master.service.constant.ClientOrderStatus;
 import ru.master.service.constant.MasterOrderStatus;
+import ru.master.service.constant.PaymentMethod;
 import ru.master.service.constant.ServiceType;
 
 import java.math.BigDecimal;
@@ -34,6 +35,9 @@ public class Order extends TimestampedEntity {
     BigDecimal price;
     String rejectionReason;
     Instant closedAt;
+
+    @Enumerated(EnumType.STRING)
+    PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     ServiceType serviceType;

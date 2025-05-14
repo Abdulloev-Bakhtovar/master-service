@@ -53,4 +53,9 @@ public class EnumController {
     public List<EnumResDto> getMasterStatus() {
         return enumService.getAllValues(MasterStatus.class);
     }
+
+    @GetMapping("/payment-method")
+    public List<EnumResDto> getPaymentMethod() {
+        return enumService.getAllValues(PaymentMethod.class);
+    }
 }

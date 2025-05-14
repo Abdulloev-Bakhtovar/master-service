@@ -38,4 +38,8 @@ public interface OrderService {
     void updateOrderPrice(UUID orderId, UpdateOrderPriceReqDto reqDto);
 
     AdminOrderSummaryResDto getAdminOrderSummary();
+
+    PaymentResDto createPaymentForOrder(UUID orderId);
+
+    void choosePaymentMethod(UUID orderId, ChoosePaymentMethodReqDto dto);
 }

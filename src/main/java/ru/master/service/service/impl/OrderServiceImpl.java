@@ -13,10 +13,7 @@ import ru.master.service.model.OrderPostponement;
 import ru.master.service.model.dto.request.*;
 import ru.master.service.model.dto.response.*;
 import ru.master.service.repository.*;
-import ru.master.service.service.MasterFeedbackService;
-import ru.master.service.service.MasterProfileService;
-import ru.master.service.service.OrderService;
-import ru.master.service.service.ReferralProgramService;
+import ru.master.service.service.*;
 import ru.master.service.util.AuthUtil;
 
 import java.math.BigDecimal;
@@ -40,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderPostponementRepo orderPostponementRepo;
     private final ReferralRepo referralRepo;
     private final ReferralProgramService referralProgramService;
+    private final PaymentService paymentService;
 
     @Override
     public IdDto create(CreateOrderReqDto reqDto) {
@@ -354,6 +352,41 @@ public class OrderServiceImpl implements OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return new AdminOrderSummaryResDto(open, openPct, closed, closedPct, revenue);
+    }
+
+    @Override
+    public PaymentResDto createPaymentForOrder(UUID orderId) {
+        Order order = Order.builder()
+                .id(UUID.randomUUID())
+                .price(BigDecimal.valueOf(1500))
+                .build();
+                /*orderRepo.findById(orderId)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.ORDER_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));*/
+
+        // Можете использовать параметры из заказа, если это необходимо
+        var paymentReqDto = PaymentReqDto.builder()
+                        .amount(order.getPrice())
+                        .orderId(orderId)
+                        .description("Оплата за заказ №" + orderId)
+                        .build();
+
+        // Создаем платеж через сервис PaymentService
+        return paymentService.createPayment(paymentReqDto);
+    }
+
+    @Override
+    public void choosePaymentMethod(UUID orderId, ChoosePaymentMethodReqDto dto) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new AppException(
+                ErrorMessage.ORDER_NOT_FOUND,
+                HttpStatus.NOT_FOUND
+        ));
+
+        order.setPaymentMethod(dto.getPaymentMethod());
+        orderRepo.save(order);
     }
 
     private Order getClientOrder(UUID reqDto) {
