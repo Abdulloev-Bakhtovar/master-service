@@ -65,6 +65,12 @@ application:
       - "https://localhost:9090"
     public-endpoints:
       - method: POST
+        path: /payments/create
+      - method: POST
+        path: /payments/webhook
+      - method: GET
+        path: /payments/status/*
+      - method: POST
         path: /auth/register-or-login
       - method: POST
         path: /admin/register
@@ -130,3 +136,9 @@ application:
     port: ${EMAIL_PORT}
     username: ${EMAIL_USERNAME}
     password: ${EMAIL_PASSWORD}
+
+  yookassa:
+    shop-id: ${YOOKASSA_SHOP_ID}
+    secret-key: ${YOOKASSA_SECRET_KEY}
+    return-url: ${YOOKASSA_RETURN_URL}
+    test-mode: true # false для продакшена

@@ -73,4 +73,9 @@ public class ClientProfileController {
     public ClientReferralInfoResDto getReferralInfo() {
         return referralProgramService.getReferralInfo();
     }
+
+    @PostMapping("/orders/payments")
+    public PaymentResDto createPayments() {
+        return orderService.createPaymentForOrder(UUID.randomUUID());
+    }
 }
