@@ -9,6 +9,7 @@ import ru.master.service.model.dto.ClientInfoForMasterOrderDetailDto;
 import ru.master.service.model.dto.MasterFeedbackForMasterOrderDetailDto;
 import ru.master.service.model.dto.ServiceCategoryForMasterOrderDetailDto;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Getter
@@ -26,6 +27,7 @@ public class OrderDetailForMasterResDto extends TimestampedDto {
     Instant preferredDateTime;
     boolean urgent;
     String comment;
+    BigDecimal price;
     ClientInfoForMasterOrderDetailDto clientInfoDto;
     MasterFeedbackForMasterOrderDetailDto masterFeedbackDto;
 }

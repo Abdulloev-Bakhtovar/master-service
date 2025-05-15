@@ -7,6 +7,8 @@ import ru.master.service.auth.model.dto.TimestampedDto;
 import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.model.dto.ServiceCategoryForAvailableOrdersDto;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -17,6 +19,7 @@ import ru.master.service.model.dto.ServiceCategoryForAvailableOrdersDto;
 public class MasterAvailableOrdersResDto extends TimestampedDto {
 
     String address;
+    BigDecimal price;
     ServiceCategoryForAvailableOrdersDto serviceCategoryDto;
     EnumResDto clientOrderStatus;
     EnumResDto masterOrderStatus;

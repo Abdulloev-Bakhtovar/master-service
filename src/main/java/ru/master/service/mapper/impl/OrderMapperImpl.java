@@ -312,6 +312,7 @@ public class OrderMapperImpl implements OrderMapper {
 
         var request = OrderDetailForMasterResDto.builder()
                 .id(entity.getId())
+                .price(entity.getPrice())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .comment(entity.getComment())
@@ -379,6 +380,7 @@ public class OrderMapperImpl implements OrderMapper {
                 .clientOrderStatus(clientOrderStatus)
                 .masterOrderStatus(masterOrderStatus)
                 .serviceCategoryDto(serviceCategoryDto)
+                .price(entity.getPrice())
                 .build();
     }
 }
