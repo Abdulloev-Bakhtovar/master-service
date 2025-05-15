@@ -1,3 +1,4 @@
+/*
 package ru.master.service.service.impl;
 
 import jakarta.annotation.PostConstruct;
@@ -197,4 +198,4 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         return originalFilename.substring(originalFilename.lastIndexOf("."));
     }
-}
+}*/

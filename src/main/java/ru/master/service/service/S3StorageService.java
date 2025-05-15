@@ -1,4 +1,3 @@
-/*
 package ru.master.service.service;
 
 import org.springframework.http.MediaType;
@@ -10,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-public interface FileStorageService {
+public interface S3StorageService {
 
     void storeFile(MultipartFile file, DocumentType docType, UUID entityId) throws IOException;
 
@@ -24,4 +23,3 @@ public interface FileStorageService {
 
     ImageResDto getNewsImage(UUID id);
 }
-*/

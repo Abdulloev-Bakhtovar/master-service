@@ -142,3 +142,15 @@ application:
     secret-key: ${YOOKASSA_SECRET_KEY}
     return-url: ${YOOKASSA_RETURN_URL}
     test-mode: true # false для продакшена
+
+  yandex:
+    s3:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+      region: ${REGION}
+      endpoint: https://storage.yandexcloud.net
+      bucket: ${BUCKET}
+      allowed-types:
+        - image/png
+        - image/jpeg
+        - image/jpg

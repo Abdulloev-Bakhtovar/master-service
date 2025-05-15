@@ -12,8 +12,8 @@ import ru.master.service.model.dto.NewsDto;
 import ru.master.service.model.dto.request.CreateNewsReqDto;
 import ru.master.service.repository.CityRepo;
 import ru.master.service.repository.NewsRepo;
-import ru.master.service.service.FileStorageService;
 import ru.master.service.service.NewsService;
+import ru.master.service.service.S3StorageService;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,7 +27,7 @@ public class NewsServiceImpl implements NewsService {
     private final CityRepo cityRepo;
     private final NewsRepo newsRepo;
     private final NewsMapper newsMapper;
-    private final FileStorageService fileStorageService;
+    private final S3StorageService fileStorageService;
 
     @Override
     public List<NewsDto> getAll() {

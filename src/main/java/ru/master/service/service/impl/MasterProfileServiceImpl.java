@@ -36,7 +36,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final UserRepo userRepo;
     private final UserAgreementService userAgreementService;
     private final CityService cityService;
-    private final FileStorageService docPhotoStorageService;
+    private final S3StorageService docPhotoStorageService;
     private final SubserviceRepo subserviceRepo;
     private final MasterRequestService masterRequestService;
 

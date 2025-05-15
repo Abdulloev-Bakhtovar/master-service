@@ -10,7 +10,7 @@ import ru.master.service.model.dto.request.IdReqDto;
 import ru.master.service.model.dto.response.ImageResDto;
 import ru.master.service.model.dto.response.ServiceCategoryResDto;
 import ru.master.service.model.dto.response.ServiceCategoryWithSubserviceResDto;
-import ru.master.service.service.FileStorageService;
+import ru.master.service.service.S3StorageService;
 import ru.master.service.service.ServiceCategoryService;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ServiceCategoryController {
 
     private final ServiceCategoryService serviceCategoryService;
-    private final FileStorageService fileStorageService;
+    private final S3StorageService fileStorageService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

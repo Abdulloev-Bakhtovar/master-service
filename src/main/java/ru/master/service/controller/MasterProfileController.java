@@ -10,10 +10,10 @@ import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.request.PostponeReqForMasterDto;
 import ru.master.service.model.dto.response.*;
-import ru.master.service.service.FileStorageService;
 import ru.master.service.service.MasterProfileService;
 import ru.master.service.service.MasterStatisticsService;
 import ru.master.service.service.OrderService;
+import ru.master.service.service.S3StorageService;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +26,7 @@ public class MasterProfileController {
     private final MasterProfileService masterProfileService;
     private final OrderService orderService;
     private final MasterStatisticsService masterStatisticsService;
-    private final FileStorageService fileStorageService;
+    private final S3StorageService fileStorageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)

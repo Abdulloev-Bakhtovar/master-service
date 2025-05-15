@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.NewsDto;
 import ru.master.service.model.dto.request.CreateNewsReqDto;
 import ru.master.service.model.dto.response.ImageResDto;
-import ru.master.service.service.FileStorageService;
 import ru.master.service.service.NewsService;
+import ru.master.service.service.S3StorageService;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class NewsController {
 
     private final NewsService newsService;
-    private final FileStorageService fileStorageService;
+    private final S3StorageService fileStorageService;
 
     @GetMapping
     public List<NewsDto> getNews() {
