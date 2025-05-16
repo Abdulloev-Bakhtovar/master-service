@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.request.CreateServiceCategoryReqDto;
-import ru.master.service.model.dto.request.IdReqDto;
 import ru.master.service.model.dto.response.ImageResDto;
 import ru.master.service.model.dto.response.ServiceCategoryResDto;
 import ru.master.service.model.dto.response.ServiceCategoryWithSubserviceResDto;
@@ -14,6 +14,7 @@ import ru.master.service.service.S3StorageService;
 import ru.master.service.service.ServiceCategoryService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,10 +42,13 @@ public class ServiceCategoryController {
         serviceCategoryService.create(reqDto);
     }
 
-    @PostMapping("/images")
-    public ResponseEntity<List<ImageResDto>> getImages(@RequestBody IdReqDto idReqDto) {
-        List<ImageResDto> images = serviceCategoryService.getImages(idReqDto);
-        return ResponseEntity.ok(images);
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getServiceCategoryImage(@PathVariable UUID id) {
+        ImageResDto image = fileStorageService.getImage(DocumentType.SERVICE_CATEGORY_PHOTO, id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getContentType()))
+                .body(image.getData());
     }
 
 }

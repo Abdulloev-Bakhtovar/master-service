@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.auth.model.dto.response.EnumResDto;
+import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.request.PostponeReqForMasterDto;
@@ -105,17 +106,53 @@ public class MasterProfileController {
         return masterStatisticsService.getStatisticsForMaster();
     }
 
-    @GetMapping("/documents")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ImageResDto>> getMasterDocuments() {
-        List<ImageResDto> docs = fileStorageService.getMasterDocuments();
-        return ResponseEntity.ok(docs);
+    @GetMapping("/{id}/photo-profile")
+    public ResponseEntity<byte[]> getMasterPhotoProfile(@PathVariable UUID id) {
+        ImageResDto image = fileStorageService.getMasterDocumentPhoto(DocumentType.PROFILE, id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getContentType()))
+                .body(image.getData());
+
     }
 
-    @GetMapping("/photo-profile")
-    public ResponseEntity<ImageResDto> getMasterPhotoProfile() {
-        ImageResDto profileImage = fileStorageService.getMasterProfileImage();
-        return ResponseEntity.ok(profileImage);
+    @GetMapping("/{id}/photo-passport-main")
+    public ResponseEntity<byte[]> getMasterPhotoPassportMain(@PathVariable UUID id) {
+        ImageResDto image = fileStorageService.getMasterDocumentPhoto(DocumentType.PASSPORT_MAIN, id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getContentType()))
+                .body(image.getData());
+
     }
 
+    @GetMapping("/{id}/photo-passport-register")
+    public ResponseEntity<byte[]> getMasterPhotoPassportRegister(@PathVariable UUID id) {
+        ImageResDto image = fileStorageService.getMasterDocumentPhoto(DocumentType.PASSPORT_REGISTRATION, id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getContentType()))
+                .body(image.getData());
+
+    }
+
+    @GetMapping("/{id}/photo-snils")
+    public ResponseEntity<byte[]> getMasterPhotoSnils(@PathVariable UUID id) {
+        ImageResDto image = fileStorageService.getMasterDocumentPhoto(DocumentType.SNILS, id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getContentType()))
+                .body(image.getData());
+
+    }
+
+    @GetMapping("/{id}/photo-inn")
+    public ResponseEntity<byte[]> getMasterPhotoInn(@PathVariable UUID id) {
+        ImageResDto image = fileStorageService.getMasterDocumentPhoto(DocumentType.INN, id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getContentType()))
+                .body(image.getData());
+
+    }
 }

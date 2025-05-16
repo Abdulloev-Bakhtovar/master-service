@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.master.service.config.S3Config;
 import ru.master.service.constant.DocumentType;
 import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.Role;
 import ru.master.service.exception.AppException;
 import ru.master.service.model.dto.response.ImageResDto;
 import ru.master.service.service.S3StorageService;
@@ -20,7 +21,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +35,10 @@ public class S3StorageServiceImpl implements S3StorageService {
     @Override
     public void storeFile(MultipartFile file, DocumentType docType, UUID entityId) throws IOException {
         if (file == null || file.isEmpty()) {
-            throw new AppException(ErrorMessage.FILE_IS_EMPTY, HttpStatus.BAD_REQUEST);
+            throw new AppException(
+                    ErrorMessage.FILE_IS_EMPTY,
+                    HttpStatus.BAD_REQUEST
+            );
         }
 
         String contentType = file.getContentType();
@@ -79,51 +82,7 @@ public class S3StorageServiceImpl implements S3StorageService {
     }
 
     @Override
-    public List<ImageResDto> getMasterDocuments() {
-        UUID masterId = authUtil.getAuthenticatedUser().getId();
-        List<ImageResDto> result = new ArrayList<>();
-
-        List<DocumentType> masterDocs = List.of(
-                DocumentType.PASSPORT_MAIN,
-                DocumentType.PASSPORT_REGISTRATION,
-                DocumentType.SNILS,
-                DocumentType.INN
-        );
-
-        for (DocumentType docType : masterDocs) {
-            try {
-                String keyPrefix = buildS3KeyPrefix(docType, masterId);
-                String objectKey = findObjectKeyByPrefix(keyPrefix);
-
-                byte[] data = s3Client.getObjectAsBytes(GetObjectRequest.builder()
-                                .bucket(s3Config.getBucket())
-                                .key(objectKey)
-                                .build())
-                        .asByteArray();
-
-                MediaType mediaType = determineMediaType(objectKey);
-                result.add(new ImageResDto(masterId, mediaType.toString(), data));
-            } catch (Exception e) {
-                // Пропускаем документы, которые не найдены
-                continue;
-            }
-        }
-
-        return result;
-    }
-
-    @Override
-    public ImageResDto getMasterProfileImage() {
-        UUID masterId = authUtil.getAuthenticatedUser().getId();
-        return getImage(DocumentType.PROFILE, masterId);
-    }
-
-    @Override
-    public ImageResDto getNewsImage(UUID id) {
-        return getImage(DocumentType.NEWS_PHOTO, id);
-    }
-
-    private ImageResDto getImage(DocumentType docType, UUID entityId) {
+    public ImageResDto getImage(DocumentType docType, UUID entityId) {
         try {
             String keyPrefix = buildS3KeyPrefix(docType, entityId);
             String objectKey = findObjectKeyByPrefix(keyPrefix);
@@ -135,10 +94,28 @@ public class S3StorageServiceImpl implements S3StorageService {
                     .asByteArray();
 
             MediaType mediaType = determineMediaType(objectKey);
-            return new ImageResDto(entityId, mediaType.toString(), data);
+            return new ImageResDto(mediaType.toString(), data);
         } catch (Exception e) {
             throw new AppException(ErrorMessage.FILE_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public ImageResDto getMasterDocumentPhoto(DocumentType documentType, UUID id) {
+        var authUser = authUtil.getAuthenticatedUser();
+
+        if (authUser.getRole() == Role.ADMIN) {
+            return getImage(documentType, id);
+        }
+
+        if (authUser.getId() == id) {
+            return getImage(documentType, id);
+        }
+
+        throw new AppException(
+                ErrorMessage.INVALID_ROLE_FOR_OPERATION,
+                HttpStatus.FORBIDDEN
+        );
     }
 
     private String buildS3Key(DocumentType docType, UUID entityId, String originalFilename) {

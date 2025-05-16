@@ -6,7 +6,6 @@ import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.response.ImageResDto;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 public interface S3StorageService {
@@ -17,9 +16,7 @@ public interface S3StorageService {
 
     MediaType getMediaType(DocumentType docType, UUID entityId);
 
-    List<ImageResDto> getMasterDocuments();
+    ImageResDto getImage(DocumentType docType, UUID entityId);
 
-    ImageResDto getMasterProfileImage();
-
-    ImageResDto getNewsImage(UUID id);
+    ImageResDto getMasterDocumentPhoto(DocumentType documentType, UUID id);
 }

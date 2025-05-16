@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.NewsDto;
 import ru.master.service.model.dto.request.CreateNewsReqDto;
 import ru.master.service.model.dto.response.ImageResDto;
@@ -50,9 +51,12 @@ public class NewsController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<ImageResDto> getNewsImage(@PathVariable UUID id) {
-        ImageResDto image = fileStorageService.getNewsImage(id);
-        return ResponseEntity.ok(image);
+    public ResponseEntity<byte[]> getNewsImage(@PathVariable UUID id) {
+        ImageResDto image = fileStorageService.getImage(DocumentType.NEWS_PHOTO, id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getContentType()))
+                .body(image.getData());
     }
 
 }
