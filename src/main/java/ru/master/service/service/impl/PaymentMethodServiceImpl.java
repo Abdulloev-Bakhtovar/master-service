@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.master.service.constant.PayMethod;
 import ru.master.service.exception.AppException;
 import ru.master.service.model.dto.AdminForPayMethodResDto;
+import ru.master.service.model.dto.request.PayMethodReqDto;
 import ru.master.service.model.dto.response.PayMethodResDto;
 import ru.master.service.repository.PaymentMethodRepo;
 import ru.master.service.service.PaymentMethodService;
@@ -19,12 +19,12 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     private final PaymentMethodRepo paymentMethodRepo;
 
     @Override
-    public void update(PayMethod payMethod) {
+    public void update(PayMethodReqDto reqDto) {
 
         var payEntities = paymentMethodRepo.findAll();
 
         for (var payEntity : payEntities) {
-            payEntity.setValue(payMethod);
+            payEntity.setValue(reqDto.getPayMethod());
         }
 
         paymentMethodRepo.saveAll(payEntities);

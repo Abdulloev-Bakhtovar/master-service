@@ -2,7 +2,7 @@ package ru.master.service.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.constant.PayMethod;
+import ru.master.service.model.dto.request.PayMethodReqDto;
 import ru.master.service.model.dto.response.PayMethodResDto;
 import ru.master.service.service.PaymentMethodService;
 
@@ -19,7 +19,7 @@ public class PaymentMethodController {
     }
 
     @PatchMapping("/admin/payment-method/update")
-    public void updatePaymentMethod(@RequestBody PayMethod dto) {
+    public void updatePaymentMethod(@RequestBody PayMethodReqDto dto) {
         paymentMethodService.update(dto);
     }
 }
