@@ -74,8 +74,8 @@ public class ClientProfileController {
         return referralProgramService.getReferralInfo();
     }
 
-    @PostMapping("/orders/payments")
-    public PaymentResDto createPayments() {
-        return orderService.createPaymentForOrder(UUID.randomUUID());
+    @PostMapping("/orders/{id}/payments")
+    public PaymentResDto createPayment(@PathVariable UUID id) {
+        return orderService.createPaymentForOrder(id);
     }
 }

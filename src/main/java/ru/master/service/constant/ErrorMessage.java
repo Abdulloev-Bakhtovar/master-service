@@ -60,4 +60,6 @@ public class ErrorMessage {
     public static final String USER_STATUS_BLOCKED_OR_INVALID = "User is blocked";
     public static final String FILE_IS_EMPTY = "File is empty";
     public static final String MEDIA_TYPE_DETERMINATION_ERROR = "Media type determination error";
+    public static final String PAYMENT_NOT_REQUIRED_FOR_CASH = "Payment not required for Cash";
+    public static final String FORBIDDEN_ORDER_ACCESS = "Forbidden order access";
 }

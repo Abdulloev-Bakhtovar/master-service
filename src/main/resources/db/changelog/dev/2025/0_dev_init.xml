@@ -100,6 +100,21 @@
                  relativeToChangelogFile="true"
                  splitStatements="false"/>
     </changeSet>
+    <changeSet author="author" id="170520251220">
+        <sqlFile path="20_add_payment_method.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="170520251316">
+        <sqlFile path="21_alter_orders.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="170520251317">
+        <sqlFile path="22_add_payments.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
 
     <!-- FILL -->
     <changeSet author="author" id="30042025124">
@@ -119,6 +134,11 @@
     </changeSet>
     <changeSet author="author" id="120520251509">
         <sqlFile path="fill_admin_profiles.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="170520251645">
+        <sqlFile path="fill_payment_method.sql"
                  relativeToChangelogFile="true"
                  splitStatements="false"/>
     </changeSet>

@@ -2,7 +2,7 @@ package ru.master.service.model.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.master.service.constant.PaymentMethod;
+import ru.master.service.constant.PayMethod;
 
 @Getter
 @Setter
@@ -11,5 +11,5 @@ import ru.master.service.constant.PaymentMethod;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ChoosePaymentMethodReqDto {
-    PaymentMethod paymentMethod;
+    PayMethod payMethod;
 }

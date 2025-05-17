@@ -7,10 +7,7 @@ import ru.master.service.constant.ClientOrderStatus;
 import ru.master.service.constant.MasterOrderStatus;
 import ru.master.service.constant.MasterStatus;
 import ru.master.service.mapper.OrderMapper;
-import ru.master.service.model.ClientProfile;
-import ru.master.service.model.MasterFeedback;
-import ru.master.service.model.Order;
-import ru.master.service.model.Subservice;
+import ru.master.service.model.*;
 import ru.master.service.model.dto.*;
 import ru.master.service.model.dto.request.CancelOrderForClientDto;
 import ru.master.service.model.dto.request.CompleteOrderForClientDto;
@@ -31,9 +28,10 @@ public class OrderMapperImpl implements OrderMapper {
                                ClientProfile clientProfile,
                                Subservice subservice,
                                ClientOrderStatus clientOrderStatus,
-                               MasterOrderStatus masterOrderStatus
-    ) {
+                               MasterOrderStatus masterOrderStatus,
+                               PaymentMethod paymentMethod) {
         if (dto == null) return null;
+
 
         return Order.builder()
                 .firstName(clientProfile.getFirstName())
@@ -51,6 +49,7 @@ public class OrderMapperImpl implements OrderMapper {
                 .masterOrderStatus(masterOrderStatus)
                 .clientProfile(clientProfile)
                 .subservice(subservice)
+                .paymentMethod(paymentMethod)
                 .build();
     }
 

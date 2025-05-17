@@ -55,17 +55,6 @@ public class ServiceCategoryServiceImpl implements ServiceCategoryService {
     }
 
     @Override
-    public List<ImageResDto> getImages(IdReqDto idReqDto) {
-        return idReqDto.getIds().stream()
-                .map(id -> {
-                    byte[] data = fileStorageService.loadFile(DocumentType.SERVICE_CATEGORY_PHOTO, id);
-                    MediaType mediaType = fileStorageService.getMediaType(DocumentType.SERVICE_CATEGORY_PHOTO, id);
-                    return new ImageResDto(id, mediaType.toString(), data);
-                })
-                .toList();
-    }
-
-    @Override
     public void create(CreateServiceCategoryReqDto reqDto) throws IOException {
 
         if (serviceCategoryRepo.existsByName(reqDto.getName())) {

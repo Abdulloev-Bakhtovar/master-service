@@ -56,6 +56,6 @@ public class EnumController {
 
     @GetMapping("/payment-method")
     public List<EnumResDto> getPaymentMethod() {
-        return enumService.getAllValues(PaymentMethod.class);
+        return enumService.getAllValues(PayMethod.class);
     }
 }

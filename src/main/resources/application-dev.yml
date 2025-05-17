@@ -1,13 +1,13 @@
 debug: true
 
 server:
-  port: 9093
+  port: 8443 #9093
   ssl:
     key-store: classpath:static/security/keystore.p12
     key-store-password: mypassword
     key-password: mypassword
     key-alias: mykey
-    enabled: true
+    enabled: false
   servlet:
     context-path: /api
 
@@ -122,14 +122,6 @@ application:
         path: /swagger-ui/**
       - method: GET
         path: /webjars/**
-
-  doc-file:
-    allowed-types:
-      - image/png
-      - image/jpeg
-      - image/jpg
-    file-path: "./src/main/resources/static"
-    images-sub-dir: "photos"
 
   email:
     host: ${EMAIL_HOST}

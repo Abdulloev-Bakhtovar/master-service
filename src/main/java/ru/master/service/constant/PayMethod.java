@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PaymentMethod implements DisplayableEnum {
+public enum PayMethod implements DisplayableEnum {
 
     ONLINE("Онлайн оплата"),
     CASH("Оплата наличными");

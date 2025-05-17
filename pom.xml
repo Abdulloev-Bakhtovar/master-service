@@ -123,6 +123,13 @@
             <version>2.31.41</version>
             <scope>compile</scope>
         </dependency>
+        <!--ip-->
+        <dependency>
+            <groupId>com.github.seancfoley</groupId>
+            <artifactId>ipaddress</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

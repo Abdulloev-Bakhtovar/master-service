@@ -1,13 +1,17 @@
 package ru.master.service.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.master.service.model.dto.request.PaymentReqDto;
+import ru.master.service.model.dto.request.YookassaWebhookDto;
 import ru.master.service.model.dto.response.PaymentResDto;
 import ru.master.service.service.PaymentService;
+import ru.master.service.util.IpUtil;
 
-import java.util.Map;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/payments")
@@ -15,41 +19,58 @@ import java.util.Map;
 public class PaymentController {
     private final PaymentService paymentService;
 
-    @PostMapping("/create")
-    public PaymentResDto createPayment(@RequestBody PaymentReqDto request) {
-        return paymentService.createPayment(request);
-    }
-
     @GetMapping("/status/{paymentId}")
-    public ResponseEntity<?> checkPaymentStatus(@PathVariable String paymentId) {
+    public PaymentResDto checkPaymentStatus(@PathVariable String paymentId) {
         try {
-            PaymentResDto payment = paymentService.checkPaymentStatus(paymentId);
-            return null;
+            return paymentService.checkPaymentStatus(paymentId);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "error", e.getMessage()
-            ));
+            return null;
         }
     }
 
     // Webhook endpoint остается без изменений
     @PostMapping("/webhook")
-    public ResponseEntity<Void> handleWebhook(@RequestBody Map<String, Object> payload,
-                                              @RequestHeader(value = "Content-HMAC", required = false) String signatureHeader) {
+    public void handleWebhook(@RequestBody YookassaWebhookDto dto,
+                              HttpServletRequest request
+    ) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
 
-        if (signatureHeader != null) {
-            String rawBody = (String) payload.get("paymentId");
-            paymentService.isValid(rawBody,signatureHeader);
+        // start test
+        var res = paymentService.checkPaymentStatus(dto.getObject().getId());
+        dto.getObject().setPaid(res.isPaid());
+        dto.getObject().setStatus(res.getStatus());
+        paymentService.updatePaymentStatus(dto);
+        //end test
+
+
+        /*String ip = request.getRemoteAddr(); // Получаем IP
+
+        if (!isAllowedYookassaIp(ip)) {
+            throw new AppException("Unauthorized IP", HttpStatus.FORBIDDEN);
         }
 
-        // 1. Вытащим из webhook'а paymentId
-        Map<String, Object> object = (Map<String, Object>) payload.get("object");
-        String paymentId = (String) object.get("id");
-        String status = (String) object.get("status");
+        String signature = request.getHeader("Content-HMAC");
 
-        System.out.println(paymentId + " : " + status);
-        paymentService.updatePaymentStatus(paymentId, status);
+        if (signature != null) {
+            String payload = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            String computedSignature = paymentService.computeHmacSHA256(payload);
 
-        return ResponseEntity.ok().build();
+            if (!computedSignature.equals(signature)) {
+                throw new AppException("Unauthorized IP", HttpStatus.FORBIDDEN);
+            }
+        }
+        paymentService.updatePaymentStatus(dto);*/
+    }
+
+    private boolean isAllowedYookassaIp(String ip) {
+        List<String> allowedCidrs = List.of(
+                "185.71.76.0/27",
+                "185.71.77.0/27",
+                "77.75.153.0/25",
+                "77.75.156.11/32",
+                "77.75.156.35/32",
+                "77.75.154.128/25",
+                "2a02:5180::/32"
+        );
+        return allowedCidrs.stream().anyMatch(cidr -> IpUtil.isIpInCidr(ip, cidr));
     }
 }

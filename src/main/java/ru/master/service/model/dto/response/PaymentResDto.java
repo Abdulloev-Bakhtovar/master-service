@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -21,11 +23,11 @@ public class PaymentResDto {
     boolean paid;
     boolean test;
     String description;
-    String orderId;
+    String clientOrderId;
 
     @Data
     public static class Amount {
-        private String value;
+        private BigDecimal value;
         private String currency;
     }
 

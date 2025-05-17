@@ -38,6 +38,9 @@ public class OrderServiceImpl implements OrderService {
     private final ReferralRepo referralRepo;
     private final ReferralProgramService referralProgramService;
     private final PaymentService paymentService;
+    private final PaymentMethodService paymentMethodService;
+    private final PaymentMethodRepo paymentMethodRepo;
+    private final PaymentRepo paymentRepo;
 
     @Override
     public IdDto create(CreateOrderReqDto reqDto) {
@@ -56,12 +59,22 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND
                 ));
 
+
+        var paymentMethod = paymentMethodRepo.findAll()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new AppException(
+                        "No payment method configured",
+                        HttpStatus.NOT_FOUND
+                ));
+
         var orderEntity = orderMapper.toOrderEntity(
                 reqDto,
                 clientProfile,
                 subServiceCategory,
                 ClientOrderStatus.SEARCHING_FOR_MASTER,
-                MasterOrderStatus.SEARCHING_FOR_MASTER);
+                MasterOrderStatus.SEARCHING_FOR_MASTER,
+                paymentMethod);
 
         orderRepo.save(orderEntity);
 
@@ -356,37 +369,63 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PaymentResDto createPaymentForOrder(UUID orderId) {
-        Order order = Order.builder()
-                .id(UUID.randomUUID())
-                .price(BigDecimal.valueOf(1500))
-                .build();
-                /*orderRepo.findById(orderId)
+
+        var userId = authUtil.getAuthenticatedUser().getId();
+
+        var client = clientProfileRepo.findByUserId(userId)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.CLIENT_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new AppException(
                         ErrorMessage.ORDER_NOT_FOUND,
                         HttpStatus.NOT_FOUND
-                ));*/
+                ));
 
-        // Можете использовать параметры из заказа, если это необходимо
+        if (order.getPaymentMethod().getValue() == PayMethod.CASH) {
+            throw new AppException(
+                    ErrorMessage.PAYMENT_NOT_REQUIRED_FOR_CASH,
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        if (order.getClientProfile().getId() != client.getId()) {
+            throw new AppException(
+                    ErrorMessage.FORBIDDEN_ORDER_ACCESS,
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
         var paymentReqDto = PaymentReqDto.builder()
                         .amount(order.getPrice())
                         .orderId(orderId)
                         .description("Оплата за заказ №" + orderId)
                         .build();
 
-        // Создаем платеж через сервис PaymentService
-        return paymentService.createPayment(paymentReqDto);
+        var payEntity = paymentRepo.findTopByOrderIdOrderByCreatedAtDesc(order.getId())
+                .orElse(null);
+
+        if (payEntity != null && payEntity.isPaid()) {
+            throw new AppException(
+                    "Order has been paid",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        return paymentService.createPayment(paymentReqDto, order);
     }
 
     @Override
     public void choosePaymentMethod(UUID orderId, ChoosePaymentMethodReqDto dto) {
-        Order order = orderRepo.findById(orderId)
+       /* Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new AppException(
                 ErrorMessage.ORDER_NOT_FOUND,
                 HttpStatus.NOT_FOUND
         ));
 
-        order.setPaymentMethod(dto.getPaymentMethod());
-        orderRepo.save(order);
+        order.setPaymentMethod(dto.getPayMethod());
+        orderRepo.save(order);*/
     }
 
     private Order getClientOrder(UUID reqDto) {

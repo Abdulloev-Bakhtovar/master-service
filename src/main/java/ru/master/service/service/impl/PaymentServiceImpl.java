@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -16,29 +15,36 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.config.YooKassaConfig;
 import ru.master.service.exception.AppException;
+import ru.master.service.model.Order;
+import ru.master.service.model.Payment;
 import ru.master.service.model.dto.request.PaymentReqDto;
+import ru.master.service.model.dto.request.YookassaWebhookDto;
 import ru.master.service.model.dto.response.PaymentResDto;
+import ru.master.service.repository.PaymentRepo;
 import ru.master.service.service.PaymentService;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.UUID;
 
-import static org.apache.commons.codec.digest.HmacUtils.hmacSha256;
-
 @Service
+@Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class PaymentServiceImpl implements PaymentService {
     private final YooKassaConfig yooKassaConfig;
 
     private static final String YOOKASSA_API_URL = "https://api.yookassa.ru/v3/payments";
+    private final PaymentRepo paymentRepo;
 
-    public PaymentResDto createPayment(PaymentReqDto paymentRequest) {
+    public PaymentResDto createPayment(PaymentReqDto paymentRequest, Order order) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(YOOKASSA_API_URL);
 
@@ -88,7 +94,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         // Метаданные
         ObjectNode metadata = objectMapper.createObjectNode();
-        metadata.put("orderId", String.valueOf(paymentRequest.getOrderId()));
+        metadata.put("clientOrderId", String.valueOf(paymentRequest.getOrderId()));
         requestBody.set("metadata", metadata);
 
         try {
@@ -105,9 +111,21 @@ public class PaymentServiceImpl implements PaymentService {
 
                 // Дополнительно устанавливаем orderId из metadata
                 JsonNode rootNode = objectMapper.readTree(responseBody);
-                if (rootNode.has("metadata") && rootNode.get("metadata").has("orderId")) {
-                    paymentResDto.setOrderId(rootNode.get("metadata").get("orderId").asText());
+                if (rootNode.has("metadata") && rootNode.get("metadata").has("clientOrderId")) {
+                    paymentResDto.setClientOrderId(rootNode.get("metadata").get("clientOrderId").asText());
                 }
+
+                var payment = Payment.builder()
+                        .status(paymentResDto.getStatus())
+                        .externalId(paymentResDto.getId())
+                        .paid(paymentResDto.isPaid())
+                        .amount(paymentResDto.getAmount().getValue())
+                        .description(paymentResDto.getDescription())
+                        .confirmationUrl(paymentResDto.getConfirmation().getConfirmationUrl())
+                        .order(order)
+                        .build();
+
+                paymentRepo.save(payment);
 
                 return paymentResDto;
             } else {
@@ -116,17 +134,16 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new AppException(errorDesc, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            log.error("Payment creation error", e);
+            System.out.println("Payment creation error" + e);
             throw new AppException("Payment processing error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException e) {
-                log.error("Error closing HTTP client", e);
+                System.out.println("Error closing HTTP client" + e);
             }
         }
     }
-
 
     public PaymentResDto checkPaymentStatus(String paymentId) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -143,34 +160,44 @@ public class PaymentServiceImpl implements PaymentService {
             if (response.getStatusLine().getStatusCode() == 200) {
                 return new ObjectMapper().readValue(responseBody, PaymentResDto.class);
             } else {
-                log.error("Payment status check failed: {}", responseBody);
+                System.out.println("Payment status check failed: {}" + responseBody);
                 throw new RuntimeException("Payment status check failed: " + responseBody);
             }
         } catch (Exception e) {
-            log.error("Error checking payment status", e);
+            System.out.println("Error checking payment status" + e);
             throw new RuntimeException("Error checking payment status", e);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException e) {
-                log.error("Error closing HTTP client", e);
+                System.out.println("Error closing HTTP client" + e);
             }
         }
     }
 
     @Override
-    public void updatePaymentStatus(String paymentId, String status) {
+    public void updatePaymentStatus(YookassaWebhookDto reqDto) {
 
+        var payEntity = paymentRepo.findByExternalId(reqDto.getObject().getId())
+                .orElseThrow(null);
+
+        if (payEntity != null) {
+            payEntity.setStatus(reqDto.getObject().getStatus());
+            if (reqDto.getObject().getStatus().equals("succeeded")) {
+                payEntity.setPaid(true);// TODO добавит логирования
+            }
+            paymentRepo.save(payEntity);
+        }
     }
 
     @Override
-    public void isValid(String rawBody, String signatureHeader) {
-        String secret = yooKassaConfig.getSecretKey();
-        String expectedSignature = Arrays.toString(hmacSha256(secret, rawBody));
-
-        if (!expectedSignature.equals(signatureHeader)) {
-            log.warn("Invalid webhook signature");
-            throw new RuntimeException("Invalid webhook signature");
-        }
+    public String computeHmacSHA256(String payload) throws NoSuchAlgorithmException, InvalidKeyException {
+        String key = yooKassaConfig.getSecretKey();
+        Mac mac = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        mac.init(secretKeySpec);
+        byte[] hmacBytes = mac.doFinal(payload.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(hmacBytes);
     }
+
 }

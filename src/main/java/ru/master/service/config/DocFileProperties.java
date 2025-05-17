@@ -1,3 +1,4 @@
+/*
 package ru.master.service.config;
 
 import lombok.Getter;
@@ -16,3 +17,4 @@ public class DocFileProperties {
     private String filePath;
     private String imagesSubDir = "photos";
 }
+*/
