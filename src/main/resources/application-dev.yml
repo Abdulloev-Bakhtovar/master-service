@@ -1,13 +1,13 @@
 debug: true
 
 server:
-  port: 8443 #9093
+  port: 9093
   ssl:
     key-store: classpath:static/security/keystore.p12
     key-store-password: mypassword
     key-password: mypassword
     key-alias: mykey
-    enabled: false
+    enabled: true
   servlet:
     context-path: /api
 
@@ -40,7 +40,7 @@ spring:
       password: ${REDIS_PASSWORD}
 
 logging:
-  config: classpath:logging/logback-dev.xml
+  config: classpath:logging/logback-master.xml
 
 application:
   verification:
