@@ -57,6 +57,10 @@ public class OrderMapperImpl implements OrderMapper {
     public OrderDetailForClientResDto toOrderDetailResForClientDto(Order entity, MasterFeedback masterFeedback) {
         if (entity == null) return null;
 
+        var paymentMethodDto = PayMethodResDto.builder()
+                .value(entity.getPaymentMethod().getValue())
+                .build();
+
         var serviceType = EnumResDto.builder()
                 .name(entity.getServiceType().name())
                 .displayName(entity.getServiceType().getDisplayName())
@@ -94,6 +98,7 @@ public class OrderMapperImpl implements OrderMapper {
                 .serviceType(serviceType)
                 .clientOrderStatus(clientOrderStatus)
                 .serviceCategoryDto(serviceCategoryDto)
+                .paymentMethod(paymentMethodDto)
                 .build();
 
         if (masterFeedback != null) {

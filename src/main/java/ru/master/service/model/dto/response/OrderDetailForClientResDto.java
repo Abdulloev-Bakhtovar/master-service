@@ -21,6 +21,7 @@ import java.time.Instant;
 public class OrderDetailForClientResDto extends TimestampedDto {
 
     ServiceCategoryForClientOrderDetailDto serviceCategoryDto;
+    PayMethodResDto paymentMethod;
     EnumResDto clientOrderStatus;
     EnumResDto serviceType;
     String address;
