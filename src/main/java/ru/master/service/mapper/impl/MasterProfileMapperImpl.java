@@ -88,6 +88,7 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
         if (master == null) return null;
 
         return MasterInfoForProfileResDto.builder()
+                .id(master.getId())
                 .firstName(master.getFirstName())
                 .lastName(master.getLastName())
                 .averageRating(master.getAverageRating())
