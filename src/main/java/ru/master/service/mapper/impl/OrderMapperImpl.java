@@ -28,8 +28,7 @@ public class OrderMapperImpl implements OrderMapper {
                                ClientProfile clientProfile,
                                Subservice subservice,
                                ClientOrderStatus clientOrderStatus,
-                               MasterOrderStatus masterOrderStatus,
-                               PaymentMethod paymentMethod) {
+                               MasterOrderStatus masterOrderStatus) {
         if (dto == null) return null;
 
 
@@ -49,17 +48,13 @@ public class OrderMapperImpl implements OrderMapper {
                 .masterOrderStatus(masterOrderStatus)
                 .clientProfile(clientProfile)
                 .subservice(subservice)
-                .paymentMethod(paymentMethod)
+                .paymentMethod(dto.getPaymentMethod())
                 .build();
     }
 
     @Override
     public OrderDetailForClientResDto toOrderDetailResForClientDto(Order entity, MasterFeedback masterFeedback) {
         if (entity == null) return null;
-
-        var paymentMethodDto = PayMethodResDto.builder()
-                .value(entity.getPaymentMethod().getValue())
-                .build();
 
         var serviceType = EnumResDto.builder()
                 .name(entity.getServiceType().name())
@@ -98,7 +93,7 @@ public class OrderMapperImpl implements OrderMapper {
                 .serviceType(serviceType)
                 .clientOrderStatus(clientOrderStatus)
                 .serviceCategoryDto(serviceCategoryDto)
-                .paymentMethod(paymentMethodDto)
+                .paymentMethod(entity.getPaymentMethod())
                 .build();
 
         if (masterFeedback != null) {

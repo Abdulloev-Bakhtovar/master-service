@@ -16,8 +16,7 @@ public interface OrderMapper {
                         ClientProfile clientProfile,
                         Subservice subservice,
                         ClientOrderStatus clientOrderStatus,
-                        MasterOrderStatus masterOrderStatus,
-                        PaymentMethod paymentMethod);
+                        MasterOrderStatus masterOrderStatus);
 
     OrderDetailForClientResDto toOrderDetailResForClientDto(Order order,
                                                             MasterFeedback masterFeedback);

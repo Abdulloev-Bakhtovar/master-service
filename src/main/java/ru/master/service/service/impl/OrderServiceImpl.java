@@ -59,22 +59,12 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND
                 ));
 
-
-        var paymentMethod = paymentMethodRepo.findAll()
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new AppException(
-                        "No payment method configured",
-                        HttpStatus.NOT_FOUND
-                ));
-
         var orderEntity = orderMapper.toOrderEntity(
                 reqDto,
                 clientProfile,
                 subServiceCategory,
                 ClientOrderStatus.SEARCHING_FOR_MASTER,
-                MasterOrderStatus.SEARCHING_FOR_MASTER,
-                paymentMethod);
+                MasterOrderStatus.SEARCHING_FOR_MASTER);
 
         orderRepo.save(orderEntity);
 
@@ -388,7 +378,7 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND
                 ));
 
-        if (order.getPaymentMethod().getValue() == PayMethod.CASH) {
+        if (order.getPaymentMethod() == PayMethod.CASH) {
             throw new AppException(
                     ErrorMessage.PAYMENT_NOT_REQUIRED_FOR_CASH,
                     HttpStatus.BAD_REQUEST
@@ -422,14 +412,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void choosePaymentMethod(UUID orderId, ChoosePaymentMethodReqDto dto) {
-       /* Order order = orderRepo.findById(orderId)
+        Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new AppException(
                 ErrorMessage.ORDER_NOT_FOUND,
                 HttpStatus.NOT_FOUND
         ));
 
         order.setPaymentMethod(dto.getPayMethod());
-        orderRepo.save(order);*/
+        orderRepo.save(order);
     }
 
     private Order getClientOrder(UUID reqDto) {

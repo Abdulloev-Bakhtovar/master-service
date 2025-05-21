@@ -22,7 +22,14 @@ public class PaymentController {
     @GetMapping("/status/{paymentId}")
     public PaymentResDto checkPaymentStatus(@PathVariable String paymentId) {
         try {
-            return paymentService.checkPaymentStatus(paymentId);
+            // start test
+            YookassaWebhookDto dto = new YookassaWebhookDto();
+            var res = paymentService.checkPaymentStatus(paymentId);
+            dto.getObject().setPaid(res.isPaid());
+            dto.getObject().setStatus(res.getStatus());
+            paymentService.updatePaymentStatus(dto);
+            //end test
+            return res;
         } catch (Exception e) {
             return null;
         }

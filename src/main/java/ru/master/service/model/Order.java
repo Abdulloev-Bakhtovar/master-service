@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import ru.master.service.auth.model.TimestampedEntity;
 import ru.master.service.constant.ClientOrderStatus;
 import ru.master.service.constant.MasterOrderStatus;
+import ru.master.service.constant.PayMethod;
 import ru.master.service.constant.ServiceType;
 
 import java.math.BigDecimal;
@@ -44,13 +45,12 @@ public class Order extends TimestampedEntity {
     @Enumerated(EnumType.STRING)
     MasterOrderStatus masterOrderStatus;
 
+    @Enumerated(EnumType.STRING)
+    PayMethod paymentMethod;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     City city;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_method_id")
-    PaymentMethod paymentMethod;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_profile_id")

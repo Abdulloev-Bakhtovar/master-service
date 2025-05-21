@@ -11,7 +11,10 @@ import ru.master.service.admin.model.dto.request.ResetPasswordReqDto;
 import ru.master.service.admin.model.dto.responce.AdminOrderSummaryResDto;
 import ru.master.service.admin.service.AdminProfileService;
 import ru.master.service.auth.model.dto.response.TokenDto;
+import ru.master.service.model.dto.request.ChoosePaymentMethodReqDto;
 import ru.master.service.service.OrderService;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/admin")
@@ -56,10 +59,10 @@ public class AdminController {
         return orderService.getAdminOrderSummary();
     }
 
-    /* изменит способ оплату для определённый заказ
+    //изменит способ оплату для определённый заказ
     @PatchMapping("/orders/{orderId}/payment-method")
-    public void choosePaymentMethod(@PathVariable("orderId") UUID orderId,
+    public void choosePaymentMethod(@PathVariable UUID orderId,
                                     @RequestBody ChoosePaymentMethodReqDto dto) {
         orderService.choosePaymentMethod(orderId, dto);
-    }*/
+    }
 }

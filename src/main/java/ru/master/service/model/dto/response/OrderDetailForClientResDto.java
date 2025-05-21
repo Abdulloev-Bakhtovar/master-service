@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import ru.master.service.auth.model.dto.TimestampedDto;
 import ru.master.service.auth.model.dto.response.EnumResDto;
+import ru.master.service.constant.PayMethod;
 import ru.master.service.model.dto.MasterFeedbackForClientOrderDetailDto;
 import ru.master.service.model.dto.MasterInfoForClientOrderDetailDto;
 import ru.master.service.model.dto.ServiceCategoryForClientOrderDetailDto;
@@ -21,7 +22,7 @@ import java.time.Instant;
 public class OrderDetailForClientResDto extends TimestampedDto {
 
     ServiceCategoryForClientOrderDetailDto serviceCategoryDto;
-    PayMethodResDto paymentMethod;
+    PayMethod paymentMethod;
     EnumResDto clientOrderStatus;
     EnumResDto serviceType;
     String address;

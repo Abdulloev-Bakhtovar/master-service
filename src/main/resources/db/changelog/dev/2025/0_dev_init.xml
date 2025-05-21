@@ -125,6 +125,11 @@
                  relativeToChangelogFile="true"
                  splitStatements="false"/>
     </changeSet>
+    <changeSet author="author" id="210520251559">
+        <sqlFile path="25_alter_orders.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
 
     <!-- FILL -->
     <changeSet author="author" id="30042025124">
