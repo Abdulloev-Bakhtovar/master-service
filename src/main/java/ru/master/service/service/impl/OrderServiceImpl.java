@@ -115,7 +115,11 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND
                 ));
         var orders = orderRepo.findAllByClientProfileId(client.getId())
-                .orElse(new ArrayList<>());
+                .orElse(null);
+
+        if (orders == null) {
+            return Collections.emptyList();
+        }
 
         return orders.stream()
                 .map(orderMapper::toAllClientOrderResDto)
