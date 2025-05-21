@@ -11,5 +11,6 @@ import ru.master.service.constant.PayMethod;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PayMethodReqDto {
-    PayMethod payMethod;
+    PayMethod value;
+    boolean isVisible;
 }

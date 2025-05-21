@@ -120,6 +120,11 @@
                  relativeToChangelogFile="true"
                  splitStatements="false"/>
     </changeSet>
+    <changeSet author="author" id="210520251537">
+        <sqlFile path="24_alter_payment_method.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
 
     <!-- FILL -->
     <changeSet author="author" id="30042025124">

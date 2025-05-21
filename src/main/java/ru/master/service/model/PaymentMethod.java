@@ -24,4 +24,6 @@ public class PaymentMethod extends TimestampedEntity {
 
     @Enumerated(EnumType.STRING)
     PayMethod value;
+
+    boolean isVisible;
 }

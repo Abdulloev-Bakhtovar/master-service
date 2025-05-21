@@ -3,9 +3,16 @@ package ru.master.service.service;
 import ru.master.service.model.dto.request.PayMethodReqDto;
 import ru.master.service.model.dto.response.PayMethodResDto;
 
+import java.util.List;
+import java.util.UUID;
+
 public interface PaymentMethodService {
 
-    void update(PayMethodReqDto reqDto);
+    List<PayMethodResDto> getAll();
 
-    PayMethodResDto getCurrentPaymentMethod();
+    List<PayMethodResDto> getAllVisible();
+
+    void create(PayMethodReqDto reqDto);
+
+    void changeVisibility(UUID id, boolean isVisible);
 }
