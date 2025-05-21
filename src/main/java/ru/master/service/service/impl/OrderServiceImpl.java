@@ -41,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentMethodService paymentMethodService;
     private final PaymentMethodRepo paymentMethodRepo;
     private final PaymentRepo paymentRepo;
+    private final MasterPaymentHistoryService masterPaymentHistoryService;
 
     @Override
     public IdDto create(CreateOrderReqDto reqDto) {
@@ -127,6 +128,10 @@ public class OrderServiceImpl implements OrderService {
     public void completeOrderForClient(UUID orderId, CompleteOrderForClientDto reqDto) {
         var order = getClientOrder(orderId);
 
+        if (order.getClientOrderStatus() == ClientOrderStatus.COMPLETED) {
+            return;
+        }
+
         orderMapper.toCompleteOrderForClient(reqDto, order);
         masterFeedbackService.create(reqDto.getMasterFeedbackDto(), order);
 
@@ -135,6 +140,8 @@ public class OrderServiceImpl implements OrderService {
                 reqDto.getMasterFeedbackDto().getRating()
         );
         orderRepo.save(order);
+
+        masterPaymentHistoryService.create(order);
 
         referralRepo.findByReferred(order.getClientProfile())
                 .filter(ref -> !ref.isFirstOrderCompleted())

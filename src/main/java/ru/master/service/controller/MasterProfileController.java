@@ -28,6 +28,7 @@ public class MasterProfileController {
     private final MasterStatisticsService masterStatisticsService;
     private final S3StorageService fileStorageService;
     private final MasterDocumentService masterDocumentService;
+    private final MasterPaymentHistoryService payHistoryService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -173,6 +174,16 @@ public class MasterProfileController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(file.getContentType()))
                 .body(file.getData());
+    }
+
+    @GetMapping("/payment-history/credits")
+    public List<MasterPaymentHistoryResDto> getCreditHistory() {
+        return payHistoryService.getCreditHistory();
+    }
+
+    @GetMapping("/payment-history/debits")
+    public List<MasterPaymentHistoryResDto> getDebitHistory() {
+        return payHistoryService.getDebitHistory();
     }
 
 }
