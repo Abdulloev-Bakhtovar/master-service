@@ -118,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElse(null);
 
         if (orders == null) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
 
         return orders.stream()
