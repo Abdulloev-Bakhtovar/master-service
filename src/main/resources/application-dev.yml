@@ -39,8 +39,13 @@ spring:
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 logging:
-  config: classpath:logging/logback-master.xml
+  config: classpath:logging/logback-dev.xml
 
 application:
   verification:
@@ -64,6 +69,10 @@ application:
       - "http://localhost:9090"
       - "https://localhost:9090"
     public-endpoints:
+      - method: GET
+        path: /master-profiles/other-documents/*/file
+      - method: GET
+        path: /master-profiles/*/other-documents
       - method: POST
         path: /payments/create
       - method: POST
@@ -146,3 +155,4 @@ application:
         - image/png
         - image/jpeg
         - image/jpg
+        - application/pdf

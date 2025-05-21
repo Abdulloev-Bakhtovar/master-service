@@ -8,14 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.constant.DocumentType;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
+import ru.master.service.model.dto.request.MasterDocumentReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.request.PostponeReqForMasterDto;
 import ru.master.service.model.dto.response.*;
-import ru.master.service.service.MasterProfileService;
-import ru.master.service.service.MasterStatisticsService;
-import ru.master.service.service.OrderService;
-import ru.master.service.service.S3StorageService;
+import ru.master.service.service.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +27,7 @@ public class MasterProfileController {
     private final OrderService orderService;
     private final MasterStatisticsService masterStatisticsService;
     private final S3StorageService fileStorageService;
+    private final MasterDocumentService masterDocumentService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -155,4 +155,24 @@ public class MasterProfileController {
                 .body(image.getData());
 
     }
+
+    @PostMapping(value = "/add-other-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void addOtherDocument(@ModelAttribute MasterDocumentReqDto reqDto) throws IOException {
+        masterDocumentService.add(reqDto);
+    }
+
+    @GetMapping("/{masterId}/other-documents")
+    public List<MasterDocumentResDto> getAllDocuments(@PathVariable UUID masterId) {
+        return masterDocumentService.getAll(masterId);
+    }
+
+    @GetMapping("/other-documents/{id}/file")
+    public ResponseEntity<byte[]> getOtherDocument(@PathVariable UUID id) {
+        ImageResDto file = fileStorageService.getOtherDocument(DocumentType.OTHER, id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.getContentType()))
+                .body(file.getData());
+    }
+
 }

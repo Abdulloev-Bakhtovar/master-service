@@ -16,6 +16,7 @@ import ru.master.service.model.dto.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
 import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
+import ru.master.service.repository.ClientProfileRepo;
 import ru.master.service.repository.MasterProfileRepo;
 import ru.master.service.repository.SubserviceRepo;
 import ru.master.service.service.*;
@@ -39,6 +40,7 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final S3StorageService docPhotoStorageService;
     private final SubserviceRepo subserviceRepo;
     private final MasterRequestService masterRequestService;
+    private final ClientProfileRepo clientProfileRepo;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -57,6 +59,12 @@ public class MasterProfileServiceImpl implements MasterProfileService {
         if (masterProfileRepo.existsByUserId(userId)) {
             throw new AppException(
                     ErrorMessage.MASTER_PROFILE_EXISTS,
+                    HttpStatus.CONFLICT
+            );
+        }
+        if (clientProfileRepo.existsByUserId(userId)) {
+            throw new AppException(
+                    ErrorMessage.CLIENT_PROFILE_EXISTS,
                     HttpStatus.CONFLICT
             );
         }

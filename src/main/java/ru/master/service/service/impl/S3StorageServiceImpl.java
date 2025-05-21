@@ -56,32 +56,6 @@ public class S3StorageServiceImpl implements S3StorageService {
     }
 
     @Override
-    public byte[] loadFile(DocumentType docType, UUID entityId) {
-        String keyPrefix = buildS3KeyPrefix(docType, entityId);
-
-        String objectKey = findObjectKeyByPrefix(keyPrefix);
-
-        return s3Client.getObjectAsBytes(GetObjectRequest.builder()
-                        .bucket(s3Config.getBucket())
-                        .key(objectKey)
-                        .build())
-                .asByteArray();
-    }
-
-    @Override
-    public MediaType getMediaType(DocumentType docType, UUID entityId) {
-        String keyPrefix = buildS3KeyPrefix(docType, entityId);
-
-        try {
-            String objectKey = findObjectKeyByPrefix(keyPrefix);
-            return determineMediaType(objectKey);
-        } catch (Exception e) {
-            throw new AppException(ErrorMessage.MEDIA_TYPE_DETERMINATION_ERROR,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Override
     public ImageResDto getImage(DocumentType docType, UUID entityId) {
         try {
             String keyPrefix = buildS3KeyPrefix(docType, entityId);
@@ -118,6 +92,11 @@ public class S3StorageServiceImpl implements S3StorageService {
         );
     }
 
+    @Override
+    public ImageResDto getOtherDocument(DocumentType documentType, UUID id) {
+        return getImage(documentType, id);
+    }
+
     private String buildS3Key(DocumentType docType, UUID entityId, String originalFilename) {
         validateFilename(originalFilename);
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -148,6 +127,9 @@ public class S3StorageServiceImpl implements S3StorageService {
         }
         if (objectKey.endsWith(".jpg") || objectKey.endsWith(".jpeg")) {
             return MediaType.IMAGE_JPEG;
+        }
+        if (objectKey.endsWith(".pdf")) {
+            return MediaType.APPLICATION_PDF;
         }
         return MediaType.APPLICATION_OCTET_STREAM;
     }

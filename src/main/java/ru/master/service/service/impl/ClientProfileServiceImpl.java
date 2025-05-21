@@ -15,6 +15,7 @@ import ru.master.service.model.ClientProfile;
 import ru.master.service.model.dto.request.CreateClientProfileReqDto;
 import ru.master.service.model.dto.response.ClientInfoForCreateOrderResDto;
 import ru.master.service.repository.ClientProfileRepo;
+import ru.master.service.repository.MasterProfileRepo;
 import ru.master.service.service.CityService;
 import ru.master.service.service.ClientProfileService;
 import ru.master.service.service.ReferralProgramService;
@@ -35,6 +36,7 @@ public class ClientProfileServiceImpl implements ClientProfileService {
     private final UserService userService;
     private final VerificationService verificationService;
     private final ReferralProgramService referralProgramService;
+    private final MasterProfileRepo masterProfileRepo;
 
     @Override
     public void create(CreateClientProfileReqDto reqDto) {
@@ -50,6 +52,13 @@ public class ClientProfileServiceImpl implements ClientProfileService {
         if (clientProfileRepo.existsByUserId(user.getId())) {
             throw new AppException(
                     ErrorMessage.CLIENT_PROFILE_EXISTS,
+                    HttpStatus.CONFLICT
+            );
+        }
+
+        if (masterProfileRepo.existsByUserId(user.getId())) {
+            throw new AppException(
+                    ErrorMessage.MASTER_PROFILE_EXISTS,
                     HttpStatus.CONFLICT
             );
         }
