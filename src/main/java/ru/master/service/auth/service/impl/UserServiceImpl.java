@@ -75,6 +75,12 @@ public class UserServiceImpl implements UserService {
                         HttpStatus.FORBIDDEN
                 );
             }
+            if (user.getRole() != dto.getRole()) {
+                throw new AppException(
+                        ErrorMessage.INVALID_ROLE_FOR_OPERATION,
+                        HttpStatus.FORBIDDEN
+                );
+            }
         }
 
         String code = verificationService.saveCode(dto.getPhoneNumber());
