@@ -163,17 +163,21 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_FOUND
                 ));
 
+        var statuses = List.of(
+                MasterOrderStatus.TAKEN_IN_WORK,
+                MasterOrderStatus.ARRIVED_AT_CLIENT
+        );
+
         List<Order> orders =  switch (master.getMasterStatus()) {
-            case WAITING_FOR_ORDERS ->
-                    orderRepo.findAllByCityIdAndMasterOrderStatus(
-                                    master.getCity().getId(),
-                                    MasterOrderStatus.SEARCHING_FOR_MASTER
-                            )
-                            .orElse(new ArrayList<>());
+            case WAITING_FOR_ORDERS -> orderRepo.findAllByCityIdAndMasterOrderStatus(
+                            master.getCity().getId(),
+                            MasterOrderStatus.SEARCHING_FOR_MASTER
+                    )
+                    .orElse(new ArrayList<>());
             case ON_ORDER ->
-                    orderRepo.findCurrentOrderByMasterProfileId(master.getId());
+                    orderRepo.findAllByMasterProfileIdAndMasterOrderStatusIn(master.getId(), statuses);
             case OFFLINE ->
-                    Collections.emptyList();
+                    new ArrayList<>();
         };
 
         return orderMapper.toAllAvailableOrderForMasterDto(orders);
