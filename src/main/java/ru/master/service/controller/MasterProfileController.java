@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.constant.DocumentType;
-import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
-import ru.master.service.model.dto.request.MasterDocumentReqDto;
-import ru.master.service.model.dto.request.MasterStatusUpdateDto;
-import ru.master.service.model.dto.request.PostponeReqForMasterDto;
+import ru.master.service.model.dto.request.*;
 import ru.master.service.model.dto.response.*;
 import ru.master.service.service.*;
 
@@ -29,6 +26,7 @@ public class MasterProfileController {
     private final S3StorageService fileStorageService;
     private final MasterDocumentService masterDocumentService;
     private final MasterPaymentHistoryService payHistoryService;
+    private final PaymentService paymentService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -186,4 +184,8 @@ public class MasterProfileController {
         return payHistoryService.getDebitHistory();
     }
 
+    @PostMapping("/top-up-balance")
+    public PaymentResDto topUp(@RequestBody PaymentReqDto payReqDto) {
+        return paymentService.createTopUpPayment(payReqDto);
+    }
 }

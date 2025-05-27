@@ -2,7 +2,9 @@ package ru.master.service.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.master.service.exception.AppException;
 import ru.master.service.model.dto.request.YookassaWebhookDto;
 import ru.master.service.model.dto.response.PaymentResDto;
 import ru.master.service.service.PaymentService;
@@ -22,16 +24,23 @@ public class PaymentController {
     @GetMapping("/status/{paymentId}")
     public PaymentResDto checkPaymentStatus(@PathVariable String paymentId) {
         try {
-            // start test
+            var res = paymentService.checkAndUpdatePaymentStatus(paymentId);
+
             YookassaWebhookDto dto = new YookassaWebhookDto();
-            var res = paymentService.checkPaymentStatus(paymentId);
-            dto.getObject().setPaid(res.isPaid());
-            dto.getObject().setStatus(res.getStatus());
+            YookassaWebhookDto.PaymentObject object = new YookassaWebhookDto.PaymentObject();
+            object.setId(paymentId);
+            object.setPaid(res.isPaid());
+            object.setStatus(res.getStatus());
+
+            dto.setObject(object);
             paymentService.updatePaymentStatus(dto);
-            //end test
+
             return res;
         } catch (Exception e) {
-            return null;
+            throw new AppException(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -42,7 +51,7 @@ public class PaymentController {
     ) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
 
         // start test
-        var res = paymentService.checkPaymentStatus(dto.getObject().getId());
+        var res = paymentService.checkAndUpdatePaymentStatus(dto.getObject().getId());
         dto.getObject().setPaid(res.isPaid());
         dto.getObject().setStatus(res.getStatus());
         paymentService.updatePaymentStatus(dto);

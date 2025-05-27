@@ -1,5 +1,6 @@
 package ru.master.service.service;
 
+import ru.master.service.model.MasterProfile;
 import ru.master.service.model.Order;
 import ru.master.service.model.dto.request.PaymentReqDto;
 import ru.master.service.model.dto.request.YookassaWebhookDto;
@@ -10,9 +11,11 @@ import java.security.NoSuchAlgorithmException;
 
 public interface PaymentService {
 
-    PaymentResDto createPayment(PaymentReqDto paymentRequest, Order order);
+    PaymentResDto createPayment(PaymentReqDto paymentRequest, Order order, MasterProfile master);
 
-    PaymentResDto checkPaymentStatus(String paymentId);
+    PaymentResDto createTopUpPayment(PaymentReqDto request);
+
+    PaymentResDto checkAndUpdatePaymentStatus(String paymentId);
 
     void updatePaymentStatus(YookassaWebhookDto reqDto);
 

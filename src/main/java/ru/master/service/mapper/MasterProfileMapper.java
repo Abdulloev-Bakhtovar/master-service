@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface MasterProfileMapper {
 
-    /** For create master profile */
+    /** For createForOrder master profile */
     MasterProfileForCreateDto toMasterProfileForCreateDto(CreateMasterProfileReqDto reqDto);
 
     MasterProfile toMasterProfileEntity(MasterProfileForCreateDto masterProfileDto,

@@ -2,9 +2,9 @@ package ru.master.service.model.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.master.service.constant.PaymentPurpose;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,6 +15,6 @@ import java.util.UUID;
 public class PaymentReqDto {
 
     BigDecimal amount;
-    UUID orderId;
     String description;
+    PaymentPurpose paymentPurpose;
 }

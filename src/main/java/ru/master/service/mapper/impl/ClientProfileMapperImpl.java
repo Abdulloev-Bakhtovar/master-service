@@ -14,7 +14,7 @@ import ru.master.service.util.CodeGeneratorUtil;
 public class ClientProfileMapperImpl implements ClientProfileMapper {
 
     /**
-     * Mapper for create client profile
+     * Mapper for createForOrder client profile
      * @param dto
      * @param user
      * @param city
@@ -36,7 +36,7 @@ public class ClientProfileMapperImpl implements ClientProfileMapper {
     }
 
     /**
-     * get client info for create order
+     * get client info for createForOrder order
      * @param clientProfile
      * @return ClientInfoForCreateOrderResDto
      */

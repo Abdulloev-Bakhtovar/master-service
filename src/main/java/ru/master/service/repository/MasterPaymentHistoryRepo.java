@@ -9,5 +9,5 @@ import java.util.UUID;
 
 public interface MasterPaymentHistoryRepo extends JpaRepository<MasterPaymentHistory, UUID> {
 
-    List<MasterPaymentHistory> findAllByMasterIdAndType(UUID masterId, PaymentHistoryType type);
+    List<MasterPaymentHistory> findAllByMasterIdAndTypeIn(UUID id, List<PaymentHistoryType> creditTypes);
 }

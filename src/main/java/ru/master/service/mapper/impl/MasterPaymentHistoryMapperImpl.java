@@ -16,7 +16,7 @@ public class MasterPaymentHistoryMapperImpl implements MasterPaymentHistoryMappe
                 .id(entity.getId())
                 .type(entity.getType())
                 .amount(entity.getAmount())
-                .orderId(entity.getOrder().getId())
+                .orderId(entity.getOrder() != null ? entity.getOrder().getId() : null)
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();

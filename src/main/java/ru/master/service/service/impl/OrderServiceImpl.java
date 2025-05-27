@@ -141,7 +141,9 @@ public class OrderServiceImpl implements OrderService {
         );
         orderRepo.save(order);
 
-        masterPaymentHistoryService.create(order);
+        if (order.getPaymentMethod() == PayMethod.CASH) {
+            masterPaymentHistoryService.createForOrder(order);
+        }
 
         referralRepo.findByReferred(order.getClientProfile())
                 .filter(ref -> !ref.isFirstOrderCompleted())
@@ -169,7 +171,8 @@ public class OrderServiceImpl implements OrderService {
         );
 
         List<Order> orders =  switch (master.getMasterStatus()) {
-            case WAITING_FOR_ORDERS -> orderRepo.findAllByCityIdAndMasterOrderStatus(
+            case WAITING_FOR_ORDERS ->
+                    orderRepo.findAllByCityIdAndMasterOrderStatus(
                             master.getCity().getId(),
                             MasterOrderStatus.SEARCHING_FOR_MASTER
                     )
@@ -403,11 +406,11 @@ public class OrderServiceImpl implements OrderService {
             );
         }
 
-        var paymentReqDto = PaymentReqDto.builder()
-                        .amount(order.getPrice())
-                        .orderId(orderId)
-                        .description("Оплата за заказ №" + orderId)
-                        .build();
+        PaymentReqDto paymentReqDto = PaymentReqDto.builder()
+                .amount(order.getPrice())
+                .description("Оплата за заказ №" + order.getId())
+                .paymentPurpose(PaymentPurpose.ORDER_PAYMENT)
+                .build();
 
         var payEntity = paymentRepo.findTopByOrderIdOrderByCreatedAtDesc(order.getId())
                 .orElse(null);
@@ -418,7 +421,7 @@ public class OrderServiceImpl implements OrderService {
                     HttpStatus.BAD_REQUEST
             );
         }
-        return paymentService.createPayment(paymentReqDto, order);
+        return paymentService.createPayment(paymentReqDto, order, null);
     }
 
     @Override

@@ -10,6 +10,7 @@ import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterPaymentHistoryMapper;
 import ru.master.service.model.MasterPaymentHistory;
 import ru.master.service.model.Order;
+import ru.master.service.model.Payment;
 import ru.master.service.model.dto.response.MasterPaymentHistoryResDto;
 import ru.master.service.repository.MasterPaymentHistoryRepo;
 import ru.master.service.repository.MasterProfileRepo;
@@ -41,7 +42,12 @@ public class MasterPaymentHistoryServiceImpl implements MasterPaymentHistoryServ
                         HttpStatus.NOT_FOUND
                 ));
 
-        return historyRepo.findAllByMasterIdAndType(master.getId(), PaymentHistoryType.CREDIT)
+        List<PaymentHistoryType> creditTypes = List.of(
+                PaymentHistoryType.CREDIT_ORDER,
+                PaymentHistoryType.CREDIT_TOP_UP
+        );
+
+        return historyRepo.findAllByMasterIdAndTypeIn(master.getId(), creditTypes)
                 .stream()
                 .map(historyMapper::toDto)
                 .toList();
@@ -56,14 +62,19 @@ public class MasterPaymentHistoryServiceImpl implements MasterPaymentHistoryServ
                         HttpStatus.NOT_FOUND
                 ));
 
-        return historyRepo.findAllByMasterIdAndType(master.getId(), PaymentHistoryType.DEBIT)
+        List<PaymentHistoryType> debitTypes = List.of(
+                PaymentHistoryType.DEBIT_COMMISSION,
+                PaymentHistoryType.DEBIT_WITHDRAWAL
+        );
+
+        return historyRepo.findAllByMasterIdAndTypeIn(master.getId(), debitTypes)
                 .stream()
                 .map(historyMapper::toDto)
                 .toList();
     }
 
     @Override
-    public void create(Order completeOrder) {
+    public void createForOrder(Order completeOrder) {
 
         var master = completeOrder.getMasterProfile();
         var currentBalance = master.getBalance() != null ? master.getBalance() : BigDecimal.ZERO;
@@ -73,7 +84,7 @@ public class MasterPaymentHistoryServiceImpl implements MasterPaymentHistoryServ
 
         // CREDIT
         var creditHistory = MasterPaymentHistory.builder()
-                .type(PaymentHistoryType.CREDIT)
+                .type(PaymentHistoryType.CREDIT_ORDER)
                 .amount(creditAmount)
                 .master(master)
                 .order(completeOrder)
@@ -82,7 +93,7 @@ public class MasterPaymentHistoryServiceImpl implements MasterPaymentHistoryServ
 
         // DEBIT
         var debitHistory = MasterPaymentHistory.builder()
-                .type(PaymentHistoryType.DEBIT)
+                .type(PaymentHistoryType.DEBIT_COMMISSION)
                 .amount(debitAmount)
                 .master(master)
                 .order(completeOrder)
@@ -91,6 +102,26 @@ public class MasterPaymentHistoryServiceImpl implements MasterPaymentHistoryServ
 
         // Update balance
         master.setBalance(currentBalance.add(creditAmount).subtract(debitAmount));
+
+        masterProfileRepo.save(master);
     }
 
+    @Override
+    public void createForTopUp(Payment payEntity) {
+        var master = payEntity.getMaster();
+        var currentBalance = master.getBalance() != null ? master.getBalance() : BigDecimal.ZERO;
+
+        var amount = payEntity.getAmount();
+        master.setBalance(currentBalance.add(amount));
+
+        // сохраняем историю
+        var history = MasterPaymentHistory.builder()
+                .type(PaymentHistoryType.CREDIT_TOP_UP)
+                .amount(amount)
+                .master(master)
+                .build();
+
+        historyRepo.save(history);
+        masterProfileRepo.save(master);
+    }
 }

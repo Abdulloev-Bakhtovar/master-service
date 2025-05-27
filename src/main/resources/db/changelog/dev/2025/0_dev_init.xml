@@ -135,6 +135,16 @@
                  relativeToChangelogFile="true"
                  splitStatements="false"/>
     </changeSet>
+    <changeSet author="author" id="270520251528">
+        <sqlFile path="27_alter_payments.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
+    <changeSet author="author" id="270520251605">
+        <sqlFile path="28_alter_master_payment_history.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"/>
+    </changeSet>
 
     <!-- FILL -->
     <changeSet author="author" id="30042025124">
