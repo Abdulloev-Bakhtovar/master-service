@@ -34,4 +34,6 @@ public interface OrderMapper {
     MasterActiveOrdersResDto toMasterActiveOrdersResDto(Order order);
 
     OrderDetailForMasterResDto toOrderDetailForMasterResDto(Order order, MasterFeedback masterFeedback);
+
+    MasterAvailableOrdersResDto toAllAvailableOrderForMasterDto(Order entity);
 }

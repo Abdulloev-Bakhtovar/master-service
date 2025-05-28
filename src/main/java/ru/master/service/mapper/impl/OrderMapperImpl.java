@@ -337,7 +337,7 @@ public class OrderMapperImpl implements OrderMapper {
         return request;
     }
 
-    private MasterAvailableOrdersResDto toAllAvailableOrderForMasterDto(Order entity) {
+    public MasterAvailableOrdersResDto toAllAvailableOrderForMasterDto(Order entity) {
         if (entity == null) return null;
 
         var serviceType = EnumResDto.builder()

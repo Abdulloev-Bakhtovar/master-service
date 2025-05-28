@@ -38,10 +38,9 @@ public class OrderServiceImpl implements OrderService {
     private final ReferralRepo referralRepo;
     private final ReferralProgramService referralProgramService;
     private final PaymentService paymentService;
-    private final PaymentMethodService paymentMethodService;
-    private final PaymentMethodRepo paymentMethodRepo;
     private final PaymentRepo paymentRepo;
     private final MasterPaymentHistoryService masterPaymentHistoryService;
+    private final OrderNotificationService orderNotificationService;
 
     @Override
     public IdDto create(CreateOrderReqDto reqDto) {
@@ -68,6 +67,8 @@ public class OrderServiceImpl implements OrderService {
                 MasterOrderStatus.SEARCHING_FOR_MASTER);
 
         orderRepo.save(orderEntity);
+
+        orderNotificationService.notifyMasters(orderEntity);
 
         return IdDto.builder()
                 .id(orderEntity.getId())
