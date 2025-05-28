@@ -70,6 +70,10 @@ application:
       - "https://localhost:9090"
     public-endpoints:
       - method: GET
+        path: /ws/**
+      - method: POST
+        path: /ws/**
+      - method: GET
         path: /master-profiles/other-documents/*/file
       - method: GET
         path: /master-profiles/*/other-documents
