@@ -6,24 +6,17 @@ import ru.master.service.constant.MasterOrderStatus;
 import ru.master.service.model.Order;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface OrderRepo extends JpaRepository<Order, UUID> {
 
-    Optional<ArrayList<Order>> findAllByClientProfileId(UUID id);
-
     Optional<Order> findByIdAndClientProfileId(UUID id, UUID clientProfileId);
 
     Optional<Order> findByIdAndMasterProfileId(UUID orderId, UUID id);
 
-    Optional<List<Order>> findAllByCityIdAndMasterOrderStatus(UUID city_id, MasterOrderStatus masterOrderStatus);
-
-    Optional<List<Order>> findAllByMasterProfileIdAndMasterOrderStatus(UUID id, MasterOrderStatus status);
-
-    List<Order> findCurrentOrderByMasterProfileId(UUID id);
+    Optional<List<Order>> findAllByMasterProfileIdAndMasterOrderStatusOrderByCreatedAtDesc(UUID id, MasterOrderStatus status);
 
     int countByMasterProfileIdAndMasterOrderStatusAndClosedAtBetween(UUID masterId,
                                                                      MasterOrderStatus masterOrderStatus,
@@ -38,12 +31,13 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
 
     int countByCityIdAndCreatedAtBetween(UUID id, Instant monthAgo, Instant now);
 
-    List<Order> findAllByMasterProfileIdAndMasterOrderStatusIn(
-            UUID masterId,
-            List<MasterOrderStatus> statuses
-    );
-
     int countByClientOrderStatusIn(List<ClientOrderStatus> clientOrderStatus);
 
     List<Order> findAllByClientOrderStatus(ClientOrderStatus clientOrderStatus);
+
+    Optional<List<Order>> findAllByCityIdAndMasterOrderStatusOrderByCreatedAtDesc(UUID id, MasterOrderStatus masterOrderStatus);
+
+    List<Order> findAllByMasterProfileIdAndMasterOrderStatusInOrderByCreatedAtDesc(UUID id, List<MasterOrderStatus> statuses);
+
+    Optional<List<Order>> findAllByClientProfileIdOrderByCreatedAtDesc(UUID id);
 }

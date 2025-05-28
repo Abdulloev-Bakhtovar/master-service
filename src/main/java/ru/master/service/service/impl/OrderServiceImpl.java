@@ -40,7 +40,6 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentService paymentService;
     private final PaymentRepo paymentRepo;
     private final MasterPaymentHistoryService masterPaymentHistoryService;
-    private final OrderNotificationService orderNotificationService;
 
     @Override
     public IdDto create(CreateOrderReqDto reqDto) {
@@ -104,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
                         ErrorMessage.CLIENT_PROFILE_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
-        var orders = orderRepo.findAllByClientProfileId(client.getId())
+        var orders = orderRepo.findAllByClientProfileIdOrderByCreatedAtDesc(client.getId())
                 .orElse(null);
 
         if (orders == null) {
@@ -171,13 +170,13 @@ public class OrderServiceImpl implements OrderService {
 
         List<Order> orders =  switch (master.getMasterStatus()) {
             case WAITING_FOR_ORDERS ->
-                    orderRepo.findAllByCityIdAndMasterOrderStatus(
+                    orderRepo.findAllByCityIdAndMasterOrderStatusOrderByCreatedAtDesc(
                             master.getCity().getId(),
                             MasterOrderStatus.SEARCHING_FOR_MASTER
                     )
                     .orElse(new ArrayList<>());
             case ON_ORDER ->
-                    orderRepo.findAllByMasterProfileIdAndMasterOrderStatusIn(master.getId(), statuses);
+                    orderRepo.findAllByMasterProfileIdAndMasterOrderStatusInOrderByCreatedAtDesc(master.getId(), statuses);
             case OFFLINE ->
                     new ArrayList<>();
         };
@@ -194,7 +193,7 @@ public class OrderServiceImpl implements OrderService {
                         ErrorMessage.MASTER_PROFILE_NOT_FOUND,
                         HttpStatus.NOT_FOUND
                 ));
-        var orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatus(
+        var orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatusOrderByCreatedAtDesc(
                         master.getId(), MasterOrderStatus.COMPLETED
                 )
                 .orElseThrow(() -> new AppException(
@@ -226,7 +225,7 @@ public class OrderServiceImpl implements OrderService {
                 MasterOrderStatus.DEFERRED_REPAIR,
                 MasterOrderStatus.ARRIVED_AT_CLIENT
         );
-        List<Order> orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatusIn(master.getId(), statuses);
+        List<Order> orders = orderRepo.findAllByMasterProfileIdAndMasterOrderStatusInOrderByCreatedAtDesc(master.getId(), statuses);
 
         return orders.stream()
                 .map(orderMapper::toMasterActiveOrdersResDto)
