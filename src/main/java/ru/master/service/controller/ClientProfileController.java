@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.master.service.model.dto.request.*;
 import ru.master.service.model.dto.response.*;
 import ru.master.service.service.ClientProfileService;
+import ru.master.service.service.OrderNotificationService;
 import ru.master.service.service.OrderService;
 import ru.master.service.service.ReferralProgramService;
 
@@ -20,6 +21,7 @@ public class ClientProfileController {
     private final ClientProfileService clientProfileService;
     private final OrderService orderService;
     private final ReferralProgramService referralProgramService;
+    private final OrderNotificationService orderNotificationService;
 
     @GetMapping("/info")
     @ResponseStatus(HttpStatus.OK)
@@ -42,7 +44,10 @@ public class ClientProfileController {
     @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto createOrder(@RequestBody CreateOrderReqDto reqDto) {
-        return orderService.create(reqDto);
+        var orderId =  orderService.create(reqDto);
+
+        orderNotificationService.notifyMasters(orderId);
+        return orderId;
     }
 
     @PatchMapping("/orders/{orderId}/price")

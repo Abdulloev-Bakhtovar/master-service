@@ -66,9 +66,7 @@ public class OrderServiceImpl implements OrderService {
                 ClientOrderStatus.SEARCHING_FOR_MASTER,
                 MasterOrderStatus.SEARCHING_FOR_MASTER);
 
-        orderRepo.save(orderEntity);
-
-        orderNotificationService.notifyMasters(orderEntity);
+        orderEntity = orderRepo.save(orderEntity);
 
         return IdDto.builder()
                 .id(orderEntity.getId())
