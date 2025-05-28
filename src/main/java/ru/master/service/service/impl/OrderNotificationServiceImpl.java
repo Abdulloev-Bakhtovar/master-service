@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.OrderMapper;
 import ru.master.service.model.dto.response.IdDto;
@@ -13,6 +14,7 @@ import ru.master.service.service.OrderNotificationService;
 import java.util.Map;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrderNotificationServiceImpl implements OrderNotificationService {
 
