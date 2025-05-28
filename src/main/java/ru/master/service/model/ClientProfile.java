@@ -22,8 +22,8 @@ public class ClientProfile extends BaseProfile {
     String referralCode;
     int totalEarnedPoints;
 
-    @OneToOne(mappedBy = "clientProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    ClientPoint clientPoint;
+    @OneToMany(mappedBy = "clientProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<ClientPoint> clientPoints;
 
     @OneToMany(mappedBy = "referrer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Referral> referrals;
