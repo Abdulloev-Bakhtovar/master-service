@@ -62,7 +62,8 @@ public class SecurityConfig {
 
         // Остальные — с ограничениями
         CorsConfiguration securedConfig = new CorsConfiguration();
-        securedConfig.setAllowedOrigins(List.of("*"));//securityProperties.getCorsAllowedOrigins());
+        //securedConfig.setAllowedOrigins(securityProperties.getCorsAllowedOrigins());
+        securedConfig.setAllowedOriginPatterns(List.of("*")); // для тестирование в место setAllowedOrigins
         securedConfig.setAllowedMethods(List.of("*"));
         securedConfig.setAllowCredentials(true);
         securedConfig.setAllowedHeaders(List.of("*"));
