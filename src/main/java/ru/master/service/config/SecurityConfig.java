@@ -31,22 +31,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)/*
-                .cors(cors -> cors.configurationSource(request -> {
-                    CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(securityProperties.getCorsAllowedOrigins());
-                    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    configuration.setAllowCredentials(true);
-                    configuration.setAllowedHeaders(List.of("*"));
-                    configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
-                    configuration.setMaxAge(3600L);
-                    return configuration;
-                }))*/
-                /*.csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**", "/api/ws/**"))
-                .headers(headers -> headers
-                        .frameOptions().disable()
-                        .httpStrictTransportSecurity().disable()
-                )*/
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> {
                     for (SecurityProperties.PublicEndpoint endpoint : securityProperties.getPublicEndpoints()) {
@@ -77,11 +62,11 @@ public class SecurityConfig {
 
         // Остальные — с ограничениями
         CorsConfiguration securedConfig = new CorsConfiguration();
-        securedConfig.setAllowedOrigins(securityProperties.getCorsAllowedOrigins());
+        securedConfig.setAllowedOrigins(List.of("*"));//securityProperties.getCorsAllowedOrigins());
         securedConfig.setAllowedMethods(List.of("*"));
         securedConfig.setAllowCredentials(true);
         securedConfig.setAllowedHeaders(List.of("*"));
-        securedConfig.setExposedHeaders(List.of("Content-Disposition"));
+        securedConfig.setExposedHeaders(List.of("Content-Disposition", "Authorization"));
         securedConfig.setMaxAge(3600L);
         source.registerCorsConfiguration("/**", securedConfig);
 
