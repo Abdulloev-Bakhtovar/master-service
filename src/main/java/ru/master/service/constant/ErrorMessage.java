@@ -63,4 +63,5 @@ public class ErrorMessage {
     public static final String PAYMENT_NOT_REQUIRED_FOR_CASH = "Payment not required for Cash";
     public static final String FORBIDDEN_ORDER_ACCESS = "Forbidden order access";
     public static final String ADMIN_PROFILE_NOT_FOUND = "Admin profile not found";
+    public static final String ADMIN_PROFILE_EXISTS = "Admin profile already exists";
 }

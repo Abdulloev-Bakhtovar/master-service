@@ -38,6 +38,14 @@ public class AdminProfileServiceImpl implements AdminProfileService {
 
     @Override
     public void create(CreateAdminProfileReqDto reqDto) {
+
+        if (adminProfileRepo.existsByEmail(reqDto.getEmail())) {
+            throw new AppException(
+                    ErrorMessage.ADMIN_PROFILE_EXISTS,
+                    HttpStatus.CONFLICT
+            );
+        }
+
         var adminProfile = AdminProfile.builder()
                 .name(reqDto.getName())
                 .email(reqDto.getEmail())
