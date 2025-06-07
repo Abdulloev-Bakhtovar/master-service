@@ -52,7 +52,7 @@ spring:
       max-request-size: 10MB
 
 logging:
-  config: classpath:logging/logback-dev.xml
+  config: classpath:logging/logback-master.xml
 
 application:
   verification:
@@ -98,6 +98,8 @@ application:
         path: /admin/register
       - method: POST
         path: /admin/login
+      - method: POST
+        path: /admin/logout
       - method: PATCH
         path: /admin/password/reset-request
       - method: PATCH
