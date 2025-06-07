@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @PermitAll
 @RestController
-@RequestMapping("/master-requests")
+@RequestMapping("/admin/master-requests")
 @RequiredArgsConstructor
 public class MasterRequestController {
 

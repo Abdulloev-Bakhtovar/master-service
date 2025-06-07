@@ -21,7 +21,6 @@ import java.util.UUID;
 public class MasterProfileController {
 
     private final MasterProfileService masterProfileService;
-    private final OrderService orderService;
     private final MasterStatisticsService masterStatisticsService;
     private final S3StorageService fileStorageService;
     private final MasterDocumentService masterDocumentService;
@@ -38,55 +37,6 @@ public class MasterProfileController {
     @ResponseStatus(HttpStatus.OK)
     public MasterInfoForProfileResDto getMasterInfo() {
         return masterProfileService.getMasterInfo();
-    }
-
-    @GetMapping("/orders/available")
-    @ResponseStatus(HttpStatus.OK)
-    public List<MasterAvailableOrdersResDto> getMasterAvailableOrders() {
-        return orderService.getMasterAvailableOrders();
-    }
-
-    @GetMapping("/orders/completed")
-    @ResponseStatus(HttpStatus.OK)
-    public List<MasterCompletedOrdersResDto> getMasterCompletedOrders() {
-        return orderService.getMasterCompletedOrders();
-    }
-
-    @GetMapping("/orders/active")
-    @ResponseStatus(HttpStatus.OK)
-    public List<MasterActiveOrdersResDto> getMasterActiveOrders() {
-        return orderService.getMasterActiveOrders();
-    }
-
-    @GetMapping("/orders/{orderId}")
-    @ResponseStatus(HttpStatus.OK)
-    public OrderDetailForMasterResDto getByIdForMaster(@PathVariable UUID orderId) {
-        return orderService.getByIdForMaster(orderId);
-    }
-
-    @PatchMapping("/orders/{orderId}/accept")
-    @ResponseStatus(HttpStatus.OK)
-    public void acceptOrderForMaster(@PathVariable UUID orderId) {
-        orderService.acceptOrderForMaster(orderId);
-    }
-
-    @PatchMapping("/orders/{orderId}/arrived")
-    @ResponseStatus(HttpStatus.OK)
-    public void arriveOrderForMaster(@PathVariable UUID orderId) {
-        orderService.arriveOrderForMaster(orderId);
-    }
-
-    @PatchMapping("/orders/availability")
-    @ResponseStatus(HttpStatus.OK)
-    public void availabilityOrderForMaster() {
-        orderService.availabilityOrderForMaster();
-    }
-
-    @PatchMapping("/orders/{orderId}/postpone")
-    @ResponseStatus(HttpStatus.OK)
-    public void postponeOrderForMaster(@PathVariable UUID orderId,
-                                       @RequestBody PostponeReqForMasterDto reqDto) {
-        orderService.postponeOrderForMaster(orderId, reqDto);
     }
 
     @PostMapping("/change-status")

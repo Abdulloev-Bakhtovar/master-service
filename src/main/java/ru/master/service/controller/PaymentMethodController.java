@@ -16,14 +16,11 @@ public class PaymentMethodController {
 
     private final PaymentMethodService paymentMethodService;
 
+    /********************** ADMIN START ************************/
+
     @GetMapping("/admin/payment-methods")
     public List<PayMethodResDto> getAll() {
         return paymentMethodService.getAll();
-    }
-
-    @GetMapping("/payment-methods")
-    public List<PayMethodResDto> getAllVisible() {
-        return paymentMethodService.getAllVisible();
     }
 
     @PostMapping("/admin/payment-methods")
@@ -39,5 +36,12 @@ public class PaymentMethodController {
     @PatchMapping("/admin/payment-methods/{id}/visible")
     public void showMegapixel(@PathVariable UUID id) {
         paymentMethodService.changeVisibility(id, true);
+    }
+
+    /********************** CLIENT START ************************/
+
+    @GetMapping("/payment-methods")
+    public List<PayMethodResDto> getAllVisible() {
+        return paymentMethodService.getAllVisible();
     }
 }
