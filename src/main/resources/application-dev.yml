@@ -11,6 +11,13 @@ server:
   servlet:
     context-path: /api
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+  api-docs:
+    enabled: true
 
 spring:
   application:
@@ -45,7 +52,7 @@ spring:
       max-request-size: 10MB
 
 logging:
-  config: classpath:logging/logback-master.xml
+  config: classpath:logging/logback-dev.xml
 
 application:
   verification:
