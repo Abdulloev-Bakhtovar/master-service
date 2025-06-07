@@ -7,12 +7,11 @@ import ru.master.service.mapper.MasterProfileMapper;
 import ru.master.service.model.City;
 import ru.master.service.model.MasterProfile;
 import ru.master.service.model.Subservice;
-import ru.master.service.model.dto.CityDto;
-import ru.master.service.model.dto.MasterProfileForCreateDto;
-import ru.master.service.model.dto.MasterSubserviceDto;
-import ru.master.service.model.dto.UserAgreementDto;
+import ru.master.service.model.dto.*;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
+import ru.master.service.model.dto.response.AllMastersResDto;
 import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
+import ru.master.service.model.dto.response.MasterProfileResDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -94,6 +93,69 @@ public class MasterProfileMapperImpl implements MasterProfileMapper {
                 .averageRating(master.getAverageRating())
                 .ratingCount(master.getRatingCount())
                 .balance(master.getBalance())
+                .build();
+    }
+
+    @Override
+    public AllMastersResDto toAllMastersResDto(MasterProfile masterProfile, int completedOrderCount) {
+        if (masterProfile == null) return null;
+
+        return AllMastersResDto.builder()
+                .id(masterProfile.getId())
+                .firstName(masterProfile.getFirstName())
+                .lastName(masterProfile.getLastName())
+                .phoneNumber(masterProfile.getUser().getPhoneNumber())
+                .completedOrdersCount(completedOrderCount)
+                .build();
+    }
+
+    @Override
+    public MasterProfileResDto toMasterProfileResDto(MasterProfile entity,
+                                                     int completedOrdersThisMonth,
+                                                     int totalCompletedOrders
+    ) {
+        if (entity == null) return null;
+
+        var userDto = UserDto.builder()
+                .id(entity.getUser().getId())
+                .phoneNumber(entity.getUser().getPhoneNumber())
+                .verificationStatus(entity.getUser().getVerificationStatus())
+                .createdAt(entity.getUser().getCreatedAt())
+                .updatedAt(entity.getUser().getUpdatedAt())
+                .build();
+
+        var cityDto = CityDto.builder()
+                .id(entity.getCity().getId())
+                .name(entity.getCity().getName())
+                .build();
+
+        List<MasterSubserviceDto> masterSebserviceDtos = entity.getSubservices().stream()
+                .map(sub -> MasterSubserviceDto.builder()
+                        .id(sub.getId())
+                        .name(sub.getName())
+                        .createdAt(sub.getCreatedAt())
+                        .updatedAt(sub.getUpdatedAt())
+                        .build())
+                .collect(Collectors.toList());
+
+        var masterInfoDto = MasterProfileForMasterRequestResDto.builder()
+                .id(entity.getId())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .email(entity.getEmail())
+                .education(entity.getEducation())
+                .maritalStatus(entity.getMaritalStatus())
+                .cityDto(cityDto)
+                .subserviceDtos(masterSebserviceDtos)
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .build();
+
+        return MasterProfileResDto.builder()
+                .userDto(userDto)
+                .masterInfoDto(masterInfoDto)
+                .completedOrdersThisMonth(completedOrdersThisMonth)
+                .totalCompletedOrders(totalCompletedOrders)
                 .build();
     }
 }

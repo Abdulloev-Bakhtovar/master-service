@@ -10,7 +10,6 @@ import ru.master.service.admin.model.dto.request.LoginAdminProfileReqDto;
 import ru.master.service.admin.model.dto.request.ResetPasswordReqDto;
 import ru.master.service.admin.service.AdminProfileService;
 import ru.master.service.auth.model.dto.response.TokenDto;
-import ru.master.service.service.OrderService;
 
 @RestController
 @RequestMapping("/admin")
@@ -18,7 +17,6 @@ import ru.master.service.service.OrderService;
 public class AdminController {
 
     private final AdminProfileService adminProfileService;
-    private final OrderService orderService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)

@@ -8,6 +8,8 @@ import ru.master.service.auth.model.dto.response.EnumResDto;
 import ru.master.service.auth.repository.UserRepo;
 import ru.master.service.constant.DocumentType;
 import ru.master.service.constant.ErrorMessage;
+import ru.master.service.constant.MasterOrderStatus;
+import ru.master.service.constant.VerificationStatus;
 import ru.master.service.exception.AppException;
 import ru.master.service.mapper.MasterProfileMapper;
 import ru.master.service.model.MasterProfile;
@@ -15,15 +17,21 @@ import ru.master.service.model.Subservice;
 import ru.master.service.model.dto.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
 import ru.master.service.model.dto.request.MasterStatusUpdateDto;
+import ru.master.service.model.dto.response.AllMastersResDto;
 import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
+import ru.master.service.model.dto.response.MasterProfileResDto;
 import ru.master.service.repository.ClientProfileRepo;
 import ru.master.service.repository.MasterProfileRepo;
+import ru.master.service.repository.OrderRepo;
 import ru.master.service.repository.SubserviceRepo;
 import ru.master.service.service.*;
 import ru.master.service.util.AuthUtil;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -41,6 +49,60 @@ public class MasterProfileServiceImpl implements MasterProfileService {
     private final SubserviceRepo subserviceRepo;
     private final MasterRequestService masterRequestService;
     private final ClientProfileRepo clientProfileRepo;
+    private final OrderRepo orderRepo;
+
+    @Override
+    public List<AllMastersResDto> getAll() {
+        var users = userRepo.findByVerificationStatus(VerificationStatus.APPROVED);
+
+        return users.stream()
+                .map(user -> {
+                    var exsistUser = userRepo.findById(user.getId())
+                            .orElseThrow(() -> new AppException(
+                                    ErrorMessage.USER_NOT_FOUND,
+                                    HttpStatus.NOT_FOUND
+                            ));
+                    var masterProfile = masterProfileRepo.findByUserId(exsistUser.getId())
+                            .orElseThrow(() -> new AppException(
+                                    ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                                    HttpStatus.NOT_FOUND
+                            ));
+                    int completedOrdersCount = orderRepo.countByMasterProfileIdAndMasterOrderStatus(
+                            masterProfile.getId(), MasterOrderStatus.COMPLETED
+                    );
+                    return masterProfileMapper.toAllMastersResDto(
+                            masterProfile, completedOrdersCount
+                    );
+                })
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @Override
+    public MasterProfileResDto getById(UUID id) {
+        var masterProfile = masterProfileRepo.findByUserId(id)
+                .orElseThrow(() -> new AppException(
+                        ErrorMessage.MASTER_PROFILE_NOT_FOUND,
+                        HttpStatus.NOT_FOUND
+                ));
+
+        Instant now = Instant.now();
+        Instant monthAgo = now.minus(30, ChronoUnit.DAYS);
+
+        var completedOrdersThisMonth = orderRepo.countByMasterProfileIdAndMasterOrderStatusAndClosedAtBetween(
+                masterProfile.getId(),
+                MasterOrderStatus.COMPLETED,
+                monthAgo,
+                now
+        );
+
+        var totalCompletedOrders= orderRepo.countByMasterProfileIdAndMasterOrderStatus(
+                masterProfile.getId(),
+                MasterOrderStatus.COMPLETED
+        );
+
+        return masterProfileMapper.toMasterProfileResDto(masterProfile, completedOrdersThisMonth, totalCompletedOrders);
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

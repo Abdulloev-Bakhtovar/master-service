@@ -27,6 +27,16 @@ public class MasterProfileController {
     private final MasterPaymentHistoryService payHistoryService;
     private final PaymentService paymentService;
 
+    @GetMapping
+    public List<AllMastersResDto> getAll() {
+        return masterProfileService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public MasterProfileResDto getById(@PathVariable UUID id) {
+        return masterProfileService.getById(id);
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@ModelAttribute CreateMasterProfileReqDto reqDto) throws Exception {

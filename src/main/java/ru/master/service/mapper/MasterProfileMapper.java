@@ -6,7 +6,9 @@ import ru.master.service.model.MasterProfile;
 import ru.master.service.model.Subservice;
 import ru.master.service.model.dto.MasterProfileForCreateDto;
 import ru.master.service.model.dto.request.CreateMasterProfileReqDto;
+import ru.master.service.model.dto.response.AllMastersResDto;
 import ru.master.service.model.dto.response.MasterInfoForProfileResDto;
+import ru.master.service.model.dto.response.MasterProfileResDto;
 
 import java.util.List;
 
@@ -18,7 +20,15 @@ public interface MasterProfileMapper {
     MasterProfile toMasterProfileEntity(MasterProfileForCreateDto masterProfileDto,
                                         User user,
                                         City city,
-                                        List<Subservice> subservices);
+                                        List<Subservice> subservices
+    );
 
     MasterInfoForProfileResDto toMasterInfoForProfileResDto(MasterProfile master);
+
+    AllMastersResDto toAllMastersResDto(MasterProfile masterProfile, int completedOrderCount);
+
+    MasterProfileResDto toMasterProfileResDto(MasterProfile masterProfile,
+                                              int completedOrdersThisMonth,
+                                              int totalCompletedOrders
+    );
 }
